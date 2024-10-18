@@ -122,3 +122,19 @@
   line-height: 24.0px;
   white-space: nowrap;
 }
+.item {
+  background-color: transparent; /* Giữ nguyên màu nền của div */
+  border: none; /* Loại bỏ đường viền mặc định của button */
+  padding: 0; /* Xóa phần đệm mặc định của button */
+  margin: 0; /* Xóa phần khoảng cách mặc định */
+  cursor: pointer; /* Hiển thị con trỏ khi hover */
+  width: 100%; /* Đảm bảo button chiếm đủ kích thước */
+  height: auto; /* Để chiều cao tự động theo nội dung */
+  text-align: left; /* Căn chỉnh văn bản giống như div */
+  font: inherit; /* Giữ nguyên phông chữ như div */
+  color: inherit; /* Giữ nguyên màu chữ */
+}
+
+.item:focus {
+  outline: none; /* Loại bỏ viền bao quanh khi button được focus */
+}
