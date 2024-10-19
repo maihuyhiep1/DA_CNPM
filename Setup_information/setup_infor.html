@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="globals.css" />
+    <link rel="stylesheet" href="style_setup.css" />
+  </head>
+  <body>
+    <div class="element-light">
+        <div class="navbar">
+            <div class="container">
+              <div class="list">
+                <div class="item-link"><img class="logo-small-png" src="img/logo.png" /></div>
+                <div class="item">
+                  <div class="div-wrapper"><div class="tag1">ĐIỆN THOẠI</div></div>
+                </div>
+                <div class="link-wrapper">
+                  <div class="div-wrapper"><div class="tag2">CÔNG NGHỆ</div></div>
+                </div>
+                <div class="item-2">
+                  <div class="div-wrapper"><div class="tag3">MÁY TÍNH </div></div>
+                </div>
+                <div class="item-3">
+                  <div class="div-wrapper"><div class="tag4">DIỄN ĐÀN CHUNG</div></div>
+                </div>
+              </div>
+              <div class="item-wrapper">
+                <div class="item-4">
+                  <div class="div-wrapper"><div class="strong-ng-nh-p">ĐĂNG NHẬP</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+      <div class="body">
+        <div class="information-form">
+            <!-- Thêm thẻ <form> để tạo thành form HTML chuẩn -->
+            <form action="/submit-form" method="POST" class="form">
+              
+              <!-- Trường nhập tên -->
+              <div class="name">
+                <label for="name" class="text-wrapper">Tên</label>
+                <input type="text" id="name" class="name-input" placeholder="Nhập tên của bạn" required />
+              </div>
+          
+              <!-- Trường nhập ngày sinh -->
+              <div class="date">
+                <label for="birthdate" class="text-wrapper">Ngày sinh</label>
+                <input type="date" id="birthdate" class="date-input" required />
+              </div>
+          
+              <!-- Thông báo -->
+              <div class="notice">
+                <p class="div">
+                  Đây là tên sẽ xuất hiện trong các bài viết của bạn. Bạn có thể sử dụng tên thật hoặc nick. Bạn không thể
+                  thay đổi tên này về sau.
+                </p>
+              </div>
+          
+              <!-- Link trở về trang chủ -->
+              <div class="link">
+                <div class="text-wrapper-2">Trở về trang chủ</div>
+              </div>
+          
+              <!-- Điều khoản dịch vụ và chính sách quyền riêng tư -->
+              <div class="privacy">
+                <p class="t-i-ng-v-i-i-u-kho-n">
+                  <span class="span">Tôi đồng ý với </span>
+                  <span class="text-wrapper-3">điều khoản dịch vụ</span>
+                  <span class="span"> và </span>
+                  <span class="text-wrapper-3">chính sách quyền riêng tư.</span>
+                </p>
+              </div>
+          
+              <!-- Nút đăng ký -->
+              <button type="submit" class="login-button">
+                <div class="text-wrapper-4">Đăng ký ngay</div>
+              </button>
+          
+            </form>
+          
+            <!-- Nút quay về -->
+            <div class="back">
+              <div class="nav">
+                <div class="icon"><img class="image" src="img/home.png" alt="Trang chủ" /></div>
+              </div>
+            </div>
+          </div>          
+      </div>
+    </div>
+  </body>
+</html>
