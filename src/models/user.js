@@ -22,7 +22,6 @@ module.exports = (sequelize, DataTypes) => {
     avatar: DataTypes.STRING,
     follower_count: DataTypes.STRING,
     description: DataTypes.STRING,
-    role: DataTypes.STRING,
     role: {
         type: DataTypes.ENUM,
         values: ['admin', 'user', 'moderator'],
