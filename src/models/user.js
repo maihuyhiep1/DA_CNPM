@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
     hashed_pw: DataTypes.STRING,
     post_count: DataTypes.STRING,
     like_count: DataTypes.STRING,
-    avatar: DataTypes.STRING,
+    avatar: DataTypes.TEXT,
     follower_count: DataTypes.STRING,
     description: DataTypes.STRING,
     role: {

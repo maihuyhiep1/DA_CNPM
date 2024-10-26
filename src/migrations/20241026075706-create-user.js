@@ -45,7 +45,7 @@ module.exports = {
         defaultValue: '0',
       },
       avatar: {
-        type: Sequelize.STRING
+        type: Sequelize.TEXT
       },
       follower_count: {
         type: Sequelize.INTEGER,
