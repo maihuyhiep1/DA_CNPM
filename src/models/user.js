@@ -1,7 +1,6 @@
 'use strict';
-const {
-  Model
-} = require('sequelize');
+const { Model } = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     /**
@@ -23,13 +22,14 @@ module.exports = (sequelize, DataTypes) => {
     follower_count: DataTypes.STRING,
     description: DataTypes.STRING,
     role: {
-        type: DataTypes.ENUM,
-        values: ['admin', 'user', 'moderator'],
-        defaultValue: 'user'
+      type: DataTypes.ENUM,
+      values: ['admin', 'user', 'moderator'],
+      defaultValue: 'user'
     }
   }, {
     sequelize,
     modelName: 'User',
+    timestamps: false, // Prevents createdAt and updatedAt columns
   });
   return User;
 };
