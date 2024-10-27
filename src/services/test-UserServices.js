@@ -17,25 +17,40 @@ async function testCreateUser() {
   }
 }
 
-testGetUserByID = async (id) => {
+testGetUserInfoByID = async (id) => {
   try {
-    let user = await userService.getUserByID(id);
+    let user = await userService.getUserInfoByID(id);
     console.log(user);
   } catch (e) {
-    if (e.name === 'SequelizeEmptyResultError') {
-      console.log('User not found. do something!');
-    }
-    else {  console.log("Error in testGetUserByID:", e); }
+    console.log("Error in testGetUserByID:", e);
   }
 }
+
+
+async function testUpdateUserInfo(id) {
+  try {
+    const testBody = {
+      name: 'updated user',
+      avatar: 'https:/example',
+      password: 'hahahihihih'
+    };
+    await userService.updateUserInfo(id, testBody);
+  } catch (error) {
+    console.error("Error in testUpdateUserInfo:", error);
+  }
+}
+
+
 
 
 // Run all tests in sequence
 (async () => {
   // await testCreateUser();
-  await testGetUserByID(0);
+  // await testGetUserInfoByID(1);
+  await testUpdateUserInfo(1);
   // Add more test functions as needed and call them here
 })();
+
 
 
 // Use node {directory}/test-UserServices.js to run
