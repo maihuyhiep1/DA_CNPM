@@ -16,10 +16,10 @@ module.exports = (sequelize, DataTypes) => {
     name: DataTypes.STRING,
     email: DataTypes.STRING,
     hashed_pw: DataTypes.STRING,
-    post_count: DataTypes.STRING,
-    like_count: DataTypes.STRING,
+    post_count: DataTypes.INTEGER,
+    like_count: DataTypes.INTEGER,
     avatar: DataTypes.TEXT,
-    follower_count: DataTypes.STRING,
+    follower_count: DataTypes.INTEGER,
     description: DataTypes.STRING,
     role: {
       type: DataTypes.ENUM,
