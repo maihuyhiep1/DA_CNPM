@@ -30,12 +30,23 @@ let createUser = async (body) => { //body of html file which contains register i
 }
 
 let hashUserPassword = (password) => {
-  return new Promise(async (resolve, reject) => {
+  return new Promise((resolve, reject) => {
     try {
-      let hashed_pw = await bcrypt.hashSync(password, salt);
+      let hashed_pw =  bcrypt.hashSync(password, salt);
       resolve(hashed_pw);
     } catch (e) {
         reject(e);
+    }
+  })
+}
+
+let checkUserPassword = (password, hashed_pw) => {
+  return new Promise((resolve, reject) => {
+    try {
+      let isMatch = bcrypt.compareSync(password, hashed_pw);
+      resolve(isMatch);
+    } catch(e) {
+      reject(e);
     }
   })
 }
@@ -110,5 +121,7 @@ let updateUserInfo = (id, updateData) => {
 module.exports = {
   createUser: createUser,
   getUserInfoByID: getUserInfoByID,
-  updateUserInfo: updateUserInfo
+  updateUserInfo: updateUserInfo,
+  checkUserPassword: checkUserPassword,
+  hashUserPassword: hashUserPassword,
 }
