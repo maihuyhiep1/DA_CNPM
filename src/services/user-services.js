@@ -30,8 +30,21 @@ let hashUserPassword = (password) => {
   })
 }
 
-
+let getUserByID = (id) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let user = db.User.findByPk(id, {
+        raw: true,
+        rejectOnEmpty: true
+      });
+      resolve(user);
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
 
 module.exports = {
-  createUser: createUser
+  createUser: createUser,
+  getUserByID: getUserByID
 }
