@@ -2,6 +2,16 @@ const db = require('../models/index');
 var bcrypt = require('bcryptjs');
 var salt = bcrypt.genSaltSync(10);
 
+/**
+ * Creates a new user in the database.
+ * 
+ * This function takes user registration information from the request body,
+ * hashes the password, and then saves the new user in the database.
+ *
+ * @param {Object} body - The registration information for the new user.
+ * @returns {Promise<string>} A promise that resolves to a success message 
+ * @throws {Error} Will throw an error if there is an issue during user creation.
+ */
 let createUser = async (body) => { //body of html file which contains register information
   return new Promise(async (resolve, reject) => {
     try {
@@ -30,21 +40,75 @@ let hashUserPassword = (password) => {
   })
 }
 
-let getUserByID = (id) => {
+/**
+ * Retrieves user information by user ID.
+ * 
+ * If the user is found, it resolves with the user data; 
+ * otherwise, it resolves with an empty object.
+ *
+ * @param {number} id - The ID of the user to retrieve.
+ * @returns {Promise<Object>} A promise that resolves to the user object if found, or an empty object if not found.
+ * @throws {Error} Will throw an error if there is an issue during the retrieval process.
+ */
+let getUserInfoByID = (id) => {
   return new Promise(async (resolve, reject) => {
     try {
-      let user = db.User.findByPk(id, {
-        raw: true,
-        rejectOnEmpty: true
-      });
-      resolve(user);
+      let user = await db.User.findByPk(id, { raw: true, });
+      if (user) {
+        resolve(user);
+      } else {
+        resolve({});
+      }
     } catch (e) {
       reject(e);
     }
   });
 };
 
+
+/**
+ * Updates user information for a given user ID.
+ * 
+ * This function updates only the fields specified in the `updatedata` object. 
+ * If the user does not exist or no fields have changed, the function resolves 
+ * without making any updates.
+ * 
+ * Password will be hashed during update.
+ * 
+ * @param {number} id - The ID of the user to update.
+ * @param {Object} [updateData] - An object containing the fields to update, can be leaved as null.
+ */
+let updateUserInfo = (id, updateData) => {
+  return new Promise(async(resolve, reject) => {
+    try {
+      if (!updateData || Object.keys(updateData).length === 0) {
+        resolve(); 
+      }     
+      let user = await db.User.findByPk(id);
+      if (user) {
+        for (const key in updateData) {
+          if (key === 'password') {
+            // Hash the new password if it is being updated
+            user.hashed_pw = await hashUserPassword(updateData[key]);
+          } else if (updateData[key] !== user[key]) {
+            user[key] = updateData[key];
+          }
+        }
+        await user.save();
+        resolve();
+      } else {
+        resolve();
+      }
+    } catch (e) {
+      reject(e);
+    }
+  })
+}
+
+
+
 module.exports = {
   createUser: createUser,
-  getUserByID: getUserByID
+  getUserInfoByID: getUserInfoByID,
+  updateUserInfo: updateUserInfo
 }
