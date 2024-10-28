@@ -1,89 +1,95 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Danh sách bài viết</title>
+    <title>Test Đăng Bài</title>
 </head>
 <body>
-    <h1>Danh sách bài viết</h1>
-
-    <!-- Container để hiển thị bài viết -->
-    <div id="postsContainer"></div>
-
-    <!-- Form để đăng bài mới -->
-    <h2>Đăng bài viết mới</h2>
+    <h1>Đăng Bài Viết</h1>
     <form id="postForm">
-        <label for="title">Tiêu đề:</label>
-        <input type="text" id="title" name="title" required><br>
+        <label for="title">Tiêu đề:</label><br>
+        <input type="text" id="title" name="title" required><br><br>
 
-        <label for="avatar">Avatar:</label>
-        <input type="text" id="avatar" name="avatar"><br>
+        <label for="content">Nội dung:</label><br>
+        <textarea id="content" name="content" required></textarea><br><br>
 
-        <label for="isQnA">QnA:</label>
-        <input type="checkbox" id="isQnA" name="isQnA"><br>
-
-        <label for="content">Nội dung:</label>
-        <textarea id="content" name="content" required></textarea><br>
+        <label for="isQnA">Là Q&A:</label>
+        <input type="checkbox" id="isQnA" name="isQnA"><br><br>
 
         <button type="submit">Đăng bài</button>
     </form>
 
+    <h2>Danh sách bài viết</h2>
+    <div id="postsContainer"></div>
+
     <script>
-        // Lấy và hiển thị bài viết
-        async function displayPosts() {
+        // Hàm để đăng bài viết
+        async function createPost(event) {
+            event.preventDefault();
+
+            const title = document.getElementById("title").value;
+            const content = document.getElementById("content").value;
+            const isQnA = document.getElementById("isQnA").checked;
+
             try {
-                const response = await fetch("http://localhost:3000/api/posts");
+                const response = await fetch('http://localhost:3000/api/posts', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        title,
+                        content,
+                        isQnA
+                    })
+                });
+
+                if (response.ok) {
+                    alert("Bài viết đã được đăng thành công!");
+                    document.getElementById("postForm").reset();
+                    fetchPosts();
+                } else {
+                    const error = await response.json();
+                    alert("Lỗi đăng bài: " + error.message);
+                }
+            } catch (error) {
+                console.error("Lỗi:", error);
+                alert("Có lỗi xảy ra khi đăng bài.");
+            }
+        }
+
+        // Hàm để lấy và hiển thị danh sách bài viết
+        async function fetchPosts() {
+            try {
+                const response = await fetch('http://localhost:3000/api/posts');
                 const posts = await response.json();
 
                 const postsContainer = document.getElementById("postsContainer");
-                postsContainer.innerHTML = posts.map(post => `
-                    <div>
+                postsContainer.innerHTML = "";
+
+                posts.forEach(post => {
+                    const postElement = document.createElement("div");
+                    postElement.innerHTML = `
                         <h3>${post.title}</h3>
-                        <img src="${post.avatar}" alt="Avatar" width="50">
-                        <p>Nội dung: ${post.content}</p>
-                        <p>QnA: ${post.is_qna}</p>
-                        <p>Thích: ${post.like_count} | Bình luận: ${post.cmt_count}</p>
+                        <p><strong>Nội dung:</strong> ${post.content}</p>
+                        <p><strong>Ngày đăng:</strong> ${post.date}</p>
+                        <p><strong>Like count:</strong> ${post.like_count}</p>
+                        <p><strong>Comment count:</strong> ${post.cmt_count}</p>
                         <hr>
-                    </div>
-                `).join("");
+                    `;
+                    postsContainer.appendChild(postElement);
+                });
             } catch (error) {
                 console.error("Lỗi khi lấy danh sách bài viết:", error);
             }
         }
 
-        // Xử lý sự kiện khi gửi form
-        document.getElementById("postForm").addEventListener("submit", async (event) => {
-            event.preventDefault();
-            
-            const title = document.getElementById("title").value;
-            const avatar = document.getElementById("avatar").value;
-            const isQnA = document.getElementById("isQnA").checked;
-            const content = document.getElementById("content").value;
+        // Lắng nghe sự kiện submit của form
+        document.getElementById("postForm").addEventListener("submit", createPost);
 
-            try {
-                const response = await fetch("http://localhost:3000/api/posts", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({ title, avatar, isQnA, content })
-                });
-                
-                if (response.ok) {
-                    alert("Đăng bài thành công!");
-                    displayPosts();  // Cập nhật lại danh sách bài viết sau khi thêm mới
-                } else {
-                    const errorData = await response.json();
-                    alert("Lỗi: " + errorData.message);
-                }
-            } catch (error) {
-                console.error("Lỗi khi đăng bài viết:", error);
-            }
-        });
-
-        // Gọi hàm hiển thị bài viết khi tải trang
-        displayPosts();
+        // Lấy danh sách bài viết khi trang được tải
+        fetchPosts();
     </script>
 </body>
 </html>
