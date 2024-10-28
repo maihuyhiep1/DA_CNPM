@@ -80,7 +80,7 @@ let getUserInfoByID = (id) => {
 /**
  * Updates user information for a given user ID.
  * 
- * Field name should be the same as ones stored in database.
+ * Field name must be the same as ones stored in database.
  * 
  * @param {number} id - The ID of the user to update.
  * @param {Object} [updateData] - An object containing the fields to update, can be leaved as null.
