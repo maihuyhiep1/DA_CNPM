@@ -1,69 +1,89 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trang chủ - Mạng xã hội</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
-        .container {
-            width: 80%;
-            margin: 0 auto;
-        }
-        h1 {
-            text-align: center;
-            color: #333;
-        }
-        .post-list {
-            list-style: none;
-            padding: 0;
-        }
-        .post-item {
-            padding: 15px;
-            border-bottom: 1px solid #ccc;
-        }
-        .post-title {
-            font-size: 1.5em;
-            color: #0073e6;
-            text-decoration: none;
-        }
-        .post-title:hover {
-            color: #005bb5;
-        }
-    </style>
+    <title>Danh sách bài viết</title>
 </head>
 <body>
-    <div class="container">
-        <h1>Danh sách bài viết</h1>
-        <ul class="post-list" id="postList">
-            <!-- Các bài viết sẽ được thêm vào đây bằng JavaScript -->
-        </ul>
-    </div>
+    <h1>Danh sách bài viết</h1>
+
+    <!-- Container để hiển thị bài viết -->
+    <div id="postsContainer"></div>
+
+    <!-- Form để đăng bài mới -->
+    <h2>Đăng bài viết mới</h2>
+    <form id="postForm">
+        <label for="title">Tiêu đề:</label>
+        <input type="text" id="title" name="title" required><br>
+
+        <label for="avatar">Avatar:</label>
+        <input type="text" id="avatar" name="avatar"><br>
+
+        <label for="isQnA">QnA:</label>
+        <input type="checkbox" id="isQnA" name="isQnA"><br>
+
+        <label for="content">Nội dung:</label>
+        <textarea id="content" name="content" required></textarea><br>
+
+        <button type="submit">Đăng bài</button>
+    </form>
 
     <script>
-        // Dữ liệu giả cho danh sách bài viết
-        const posts = [
-            { id: 1, title: "Học Node.js cơ bản cho người mới bắt đầu" },
-            { id: 2, title: "Lựa chọn database nào cho ứng dụng web?" },
-            { id: 3, title: "Kinh nghiệm cải thiện kỹ năng lập trình" },
-        ];
+        // Lấy và hiển thị bài viết
+        async function displayPosts() {
+            try {
+                const response = await fetch("http://localhost:3000/api/posts");
+                const posts = await response.json();
 
-        // Tạo danh sách bài viết
-        const postList = document.getElementById('postList');
-        posts.forEach(post => {
-            const postItem = document.createElement('li');
-            postItem.classList.add('post-item');
+                const postsContainer = document.getElementById("postsContainer");
+                postsContainer.innerHTML = posts.map(post => `
+                    <div>
+                        <h3>${post.title}</h3>
+                        <img src="${post.avatar}" alt="Avatar" width="50">
+                        <p>Nội dung: ${post.content}</p>
+                        <p>QnA: ${post.is_qna}</p>
+                        <p>Thích: ${post.like_count} | Bình luận: ${post.cmt_count}</p>
+                        <hr>
+                    </div>
+                `).join("");
+            } catch (error) {
+                console.error("Lỗi khi lấy danh sách bài viết:", error);
+            }
+        }
 
-            const postLink = document.createElement('a');
-            postLink.classList.add('post-title');
-            postLink.href = `post.html?id=${post.id}`; // Đường dẫn đến trang bài viết chi tiết
-            postLink.textContent = post.title;
+        // Xử lý sự kiện khi gửi form
+        document.getElementById("postForm").addEventListener("submit", async (event) => {
+            event.preventDefault();
+            
+            const title = document.getElementById("title").value;
+            const avatar = document.getElementById("avatar").value;
+            const isQnA = document.getElementById("isQnA").checked;
+            const content = document.getElementById("content").value;
 
-            postItem.appendChild(postLink);
-            postList.appendChild(postItem);
+            try {
+                const response = await fetch("http://localhost:3000/api/posts", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ title, avatar, isQnA, content })
+                });
+                
+                if (response.ok) {
+                    alert("Đăng bài thành công!");
+                    displayPosts();  // Cập nhật lại danh sách bài viết sau khi thêm mới
+                } else {
+                    const errorData = await response.json();
+                    alert("Lỗi: " + errorData.message);
+                }
+            } catch (error) {
+                console.error("Lỗi khi đăng bài viết:", error);
+            }
         });
+
+        // Gọi hàm hiển thị bài viết khi tải trang
+        displayPosts();
     </script>
 </body>
 </html>
