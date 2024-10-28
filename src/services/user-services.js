@@ -80,11 +80,7 @@ let getUserInfoByID = (id) => {
 /**
  * Updates user information for a given user ID.
  * 
- * This function updates only the fields specified in the `updatedata` object. 
- * If the user does not exist or no fields have changed, the function resolves 
- * without making any updates.
- * 
- * Password will be hashed during update.
+ * Field name should be the same as ones stored in database.
  * 
  * @param {number} id - The ID of the user to update.
  * @param {Object} [updateData] - An object containing the fields to update, can be leaved as null.
@@ -98,12 +94,7 @@ let updateUserInfo = (id, updateData) => {
       let user = await db.User.findByPk(id);
       if (user) {
         for (const key in updateData) {
-          if (key === 'password') {
-            // Hash the new password if it is being updated
-            user.hashed_pw = await hashUserPassword(updateData[key]);
-          } else if (updateData[key] !== user[key]) {
-            user[key] = updateData[key];
-          }
+          user[key] = updateData[key];
         }
         await user.save();
         resolve();
