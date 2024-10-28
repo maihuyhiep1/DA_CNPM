@@ -46,25 +46,6 @@ let hashUserPassword = (password) => {
 }
 
 /**
- * Checks if a given plain text password matches a hashed password.
- *
- * @param {string} password - The plain text password provided by the user.
- * @param {string} hashed_pw - The hashed password stored in the database to compare against.
- * @returns {Promise<boolean>} A promise that resolves to true if the password matches, otherwise false.
- * @throws {Error} Will throw an error if there is an issue during comparison.
- */
-let checkUserPassword = (password, hashed_pw) => {
-  return new Promise((resolve, reject) => {
-    try {
-      let isMatch = bcrypt.compareSync(password, hashed_pw);
-      resolve(isMatch);
-    } catch(e) {
-      reject(e);
-    }
-  })
-}
-
-/**
  * Retrieves user information by user ID.
  * 
  * If the user is found, it resolves with the user data; 
@@ -120,12 +101,77 @@ let updateUserInfo = (id, updateData) => {
   })
 }
 
+let handleUserLogin = (userEmail, userPassword) => {
+  return new Promise(async(resolve, reject) => {
+    try {
+      let userData = {};
+      let isExist = await checkUserEmail(userEmail);
+      if(isExist) {
+        let user = await db.User.findOne({
+          where: {email:  userEmail},
+          attributes: ['email', 'role', 'hashed_pw'],
+          raw: true
+        })
+        if(user) {
+          //compare password
+          let isMatch = bcrypt.compareSync(userPassword, user.hashed_pw);
+          if(isMatch) {
+            userData.errCode = 0;
+            userData.errMessage = 'Ok';
+            delete user.hashed_pw;
+            userData.user = user;
+          } else {
+            userData.errCode = 3;
+            userData.errMessage = 'Wrong password';
+          }
+        } else {
+          userData.errCode = 2,
+          userData.errMessage = 'User is not found'
+        }
+      } else {
+        userData.errCode = 1;
+        userData.errMessage = 'Account is not exist.';
+      }
+      resolve(userData);
+    } catch (e) {
+      reject(e);
+    }
+  })
+}
+
+
+let checkUserEmail = (userEmail) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let user = await db.User.findOne({
+        where: { email: userEmail },
+      });
+      if (user) {
+        resolve(true);
+      } else {
+        resolve(false);
+      }
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
+
+let compareUserPassword = (userPassword) => {
+  return new Promise(async(resolve, reject) => {
+    try{
+
+    } catch (e) {
+      reject(e);
+    }
+  })
+}
 
 
 module.exports = {
   createUser: createUser,
   getUserInfoByID: getUserInfoByID,
   updateUserInfo: updateUserInfo,
-  checkUserPassword: checkUserPassword,
   hashUserPassword: hashUserPassword,
+  handleUserLogin: handleUserLogin,
 }
