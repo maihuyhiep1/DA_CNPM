@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang chủ - Mạng xã hội</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .post-list {
+            list-style: none;
+            padding: 0;
+        }
+        .post-item {
+            padding: 15px;
+            border-bottom: 1px solid #ccc;
+        }
+        .post-title {
+            font-size: 1.5em;
+            color: #0073e6;
+            text-decoration: none;
+        }
+        .post-title:hover {
+            color: #005bb5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Danh sách bài viết</h1>
+        <ul class="post-list" id="postList">
+            <!-- Các bài viết sẽ được thêm vào đây bằng JavaScript -->
+        </ul>
+    </div>
+
+    <script>
+        // Dữ liệu giả cho danh sách bài viết
+        const posts = [
+            { id: 1, title: "Học Node.js cơ bản cho người mới bắt đầu" },
+            { id: 2, title: "Lựa chọn database nào cho ứng dụng web?" },
+            { id: 3, title: "Kinh nghiệm cải thiện kỹ năng lập trình" },
+        ];
+
+        // Tạo danh sách bài viết
+        const postList = document.getElementById('postList');
+        posts.forEach(post => {
+            const postItem = document.createElement('li');
+            postItem.classList.add('post-item');
+
+            const postLink = document.createElement('a');
+            postLink.classList.add('post-title');
+            postLink.href = `post.html?id=${post.id}`; // Đường dẫn đến trang bài viết chi tiết
+            postLink.textContent = post.title;
+
+            postItem.appendChild(postLink);
+            postList.appendChild(postItem);
+        });
+    </script>
+</body>
+</html>
