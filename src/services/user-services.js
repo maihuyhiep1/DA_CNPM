@@ -28,7 +28,12 @@ let createUser = async (body) => { //body of html file which contains register i
     }
   })
 }
-
+/**
+ * This function hash a string.
+ * 
+ * @param {string} password - The password string that need to be hashed. 
+ * @returns {Promise<string>} - The hashed password.
+ */
 let hashUserPassword = (password) => {
   return new Promise((resolve, reject) => {
     try {
@@ -40,6 +45,14 @@ let hashUserPassword = (password) => {
   })
 }
 
+/**
+ * Checks if a given plain text password matches a hashed password.
+ *
+ * @param {string} password - The plain text password provided by the user.
+ * @param {string} hashed_pw - The hashed password stored in the database to compare against.
+ * @returns {Promise<boolean>} A promise that resolves to true if the password matches, otherwise false.
+ * @throws {Error} Will throw an error if there is an issue during comparison.
+ */
 let checkUserPassword = (password, hashed_pw) => {
   return new Promise((resolve, reject) => {
     try {
