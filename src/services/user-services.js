@@ -101,6 +101,20 @@ let updateUserInfo = (id, updateData) => {
   })
 }
 
+
+
+/**
+ * Handles user login by checking email and password credentials.
+ *
+ * @param {string} userEmail - The email of the user trying to log in.
+ * @param {string} userPassword - The password of the user trying to log in.
+ * @returns {Promise<Object>} - A promise that resolves to an object containing:
+ * - `errCode` {number}: An error code (0 for success, 1 if account doesn't exist, 2 if user not found, 3 if wrong password).
+ * - `errMessage` {string}: A message describing the result.
+ * - `user` {Object|undefined}: An object with the user information (excluding `hashed_pw`) if login is successful, otherwise undefined.
+ *
+ * @throws Will reject with an error if any exception occurs during the login process.
+ */
 let handleUserLogin = (userEmail, userPassword) => {
   return new Promise(async(resolve, reject) => {
     try {
