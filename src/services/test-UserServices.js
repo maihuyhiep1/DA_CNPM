@@ -29,11 +29,13 @@ testGetUserInfoByID = async (id) => {
 
 async function testUpdateUserInfo(id) {
   try {
-    const testBody = {
+    let testBody = {
       name: 'updated user',
       avatar: 'https:/example',
-      password: 'hahahihihih'
+      hashed_pw: 'hahahihihih'
     };
+    
+    testBody.hashed_pw = await userService.hashUserPassword(testBody.hashed_pw);
     await userService.updateUserInfo(id, testBody);
   } catch (error) {
     console.error("Error in testUpdateUserInfo:", error);
