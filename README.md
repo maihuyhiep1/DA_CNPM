@@ -1,4 +1,6 @@
 # DA_CNPM
+Clone repo về thư mục khác, chuyển sang nhánh KhoaPham
+
 Cài package còn thiếu: npm install
 
 Đổi tên .env.example thành .env, điền thông tin database.
