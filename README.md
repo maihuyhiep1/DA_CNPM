@@ -8,7 +8,7 @@ Sửa file ./src/config/config.json (mục developement)
 
 Tạo bảng users trong database: npx sequelize-cli db:migrate
 
-Tạo User trong database dể test: node .\src\services\test-UserServices.js
+Tạo User trong database để test: node .\src\services\test-UserServices.js
 
 Chạy project: npm start
 
