@@ -12,4 +12,4 @@ Tạo User trong database dể test: node .\src\services\test-UserServices.js
 
 Chạy project: npm start
 
-Gọi api bằng postman hoặc bằng cách nào đó
+Gọi api bằng postman hoặc bằng cách nào đó. nhập đúng email, mật khẩu thì trả về errCode = 0, errMessage = 'Ok', và role của user (xem thêm ở file userService)
