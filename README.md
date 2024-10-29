@@ -3,7 +3,7 @@ Clone repo về thư mục khác, chuyển sang nhánh KhoaPham
 
 Cài package còn thiếu: npm install
 
-Đổi tên .env.example thành .env, điền thông tin database.
+Đổi tên .env.example thành .env, điền thông tin database. (NODE_ENV để là developement)
 Sửa file ./src/config/config.json (mục developement)
 
 Tạo bảng users trong database: npx sequelize-cli db:migrate
