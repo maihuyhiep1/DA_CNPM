@@ -1,14 +1,4 @@
 
 .env
-.bebelrc
-/.vscode
 /node_modules
-src/config/config.json
-src/controllers/homeController.js
-src/route/web.js
-src/server.js
-src/seeders/20241026111034-demo-user.js
-
-src/config/viewEngine.js
-/src/public
-/src/views
+/.vscode
