@@ -47,9 +47,9 @@ async function testUpdateUserInfo(id) {
 
 // Run all tests in sequence
 (async () => {
-  // await testCreateUser();
+  await testCreateUser();
   // await testGetUserInfoByID(1);
-  await testUpdateUserInfo(1);
+  // await testUpdateUserInfo(1);
   // Add more test functions as needed and call them here
 })();
 
