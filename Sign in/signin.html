@@ -2,26 +2,62 @@
 <html>
   <head>
     <meta charset="utf-8" />
+    <link rel="stylesheet" href="globals.css" />
     <link rel="stylesheet" href="style_signin.css" />
   </head>
   <body>
-    <div class="element-light">
-      <div class="container">
-        <div class="form">
-          <div class="heading">
-            <div class="link"><img class="back_img" src="img/image-1.png" /></div>
-            <div class="text-wrapper">Đăng ký tài khoản</div>
-        <div class="close"><img class="image" src="img/image.png" /></div>
+      <div class="form">
+        <form action="/submit-login" method="POST">
 
-        </div>
-          <button class="item">
-            <div class="overlap-group">
-              <img class="google-png" src="img/google-png.png" />
-              <div class="frame"><div class="div">Đăng ký bằng Google</div></div>
+          <div class="title">
+            <div class="title_text">Đăng ký tài khoản</div>
+            <div class="close_button">
+              <img class="close_image" src="img/image.png" />
             </div>
+          </div>
+
+          <div class="username">
+            <input type="username" id="username" class="username_input" placeholder="Username" required />
+          </div>
+
+          <div class="nickname">
+            <input type="nickname" id="nickname" class="nickname_input" placeholder="Nickname" required />
+          </div>
+
+          <p class="notice">
+            Đây là tên sẽ xuất hiện trong các bài viết của bạn. Bạn có thể sử dụng tên thật hoặc nick. Bạn không thể thay
+            đổi tên này về sau.
+          </p>
+
+          <div class="date">
+            <input type="date" id="birthdate" class="date-input" required />
+          </div>
+
+          <div class="email">
+            <input type="email" id="email" class="email_input" placeholder="Email" required />
+          </div>
+
+          <div class="password">
+            <input type="password" id="password" class="password_input" placeholder="Nhập mật khẩu" required />
+          </div>
+
+          <div class="check_password">
+            <input type="check_password" id="check_password" class="check_password_input" placeholder="Nhập lại mật khẩu" required />
+          </div>
+
+          <button type="submit" class="sign_in_button">
+            <div class="text_in_sign_in_button">Đăng ký</div>
           </button>
-        </div>
+
+          <button class="google_button">
+            <div class="google_png"></div>
+            <div class="text_in_google_button">Đăng ký bằng Google</div>
+          </button>
+
+          <div class="privacy_and_policy">
+              <div class="text_privacy_and_policy">Tôi đồng ý với điều khoản dịch vụ và chính sách quyền riêng tư</div>
+          </div>
+        </form>
       </div>
-    </div>
   </body>
 </html>

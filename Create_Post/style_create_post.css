@@ -1,31 +1,179 @@
-.element-light {
-  position: relative;
-  width: 1920px;
-  height: 1084px;
-  background-color: #ffffff;
+
+.navbar .logo_brand {
+  position: absolute;
+  width: 131px;
+  height: 40px;
+  top: 16px;
+  left: 20px;
 }
 
-.element-light .background {
+
+.navbar .logo {
   position: absolute;
-  width: 1920px;
-  height: 1012px;
-  top: 72px;
+  width: 115px;
+  height: 40px;
+  top: 0;
   left: 0;
-  background-color: #ffffff;
 }
 
-.element-light .link {
+.navbar .brand {
   position: absolute;
+  width: 69px;
+  height: 24px;
+  top: 2px;
+  left: 52px;
+  font-family: "Lato-SemiBold", Helvetica;
+  font-weight: 600;
+  color: #2d3748;
+  font-size: 24px;
+  letter-spacing: 0;
+  line-height: 24px;
+  white-space: nowrap;
+}
+
+.navbar .brand_title {
+  position: absolute;
+  width: 79px;
+  height: 7px;
+  top: 29px;
+  left: 52px;
+  font-family: "Lato-SemiBold", Helvetica;
+  font-weight: 600;
+  color: #2d3748;
+  font-size: 8px;
+  letter-spacing: 2.20px;
+  line-height: 7px;
+  white-space: nowrap;
+}
+
+.navbar .search_box {
+  position: absolute;
+  width: 1635px;
+  height: 40px;
+  top: 16px;
+  left: 177px;
+}
+
+.navbar .shape {
+  position: relative;
+  width: 386px;
+  height: 33px;
+  top: 1px;
+  left: 1px;
+  background-color: #e5e6ed;
+  border-radius: 50px;
+}
+
+.navbar .input {
+  position: relative;
+  width: 352px;
+  height: 24px;
+  top: 5px;
+  left: 15px;
+}
+
+
+.navbar .text {
+  position: absolute;
+  width: 360px;
+  height: 16px;
+  top: 0px;
+  left: 0;
+  font-family: "Inter-Regular", Helvetica;
+  font-weight: 400;
+  color: #757575;
+  font-size: 15px;
+  letter-spacing: 0;
+  line-height: normal;
+  border: none;
+  padding: 0;
+  background: none;
+  outline: none;
+  width: 100%;
+  height: 100%;
+}
+
+.function {
+  position: relative;
+  width: 276px;
+  height: 40px;
+  top: 8px;
+  left: 1220px;
+}
+
+.function .post_button {
+  position: absolute;
+  width: 134px;
+  height: 40px;
+  top: 0;
+  left: 0;
+  background-color: #1570ef;
+  border-radius: 50px;
+}
+
+.function .text_in_post_button {
+  position: absolute;
+  width: 98px;
+  height: 17px;
+  top: 8.5px;
+  left: 16px;
+  font-family: "Lato-Regular", Helvetica;
+  font-weight: 400;
+  color: #ffffff;
+  font-size: 14px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: 24px;
+  white-space: nowrap;
+}
+
+
+.function .notice {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  top: 0;
+  left: 156px;
+}
+
+.function .avt_button {
+  position: absolute;
+  width: 68px;
+  height: 40px;
+  top: 0;
+  left: 208px;
+}
+
+.function .drop_down {
+  position: absolute;
+  width: 13px;
+  height: 8px;
+  top: 16px;
+  left: 55px;
+  object-fit: cover;
+}
+
+.function .avt-png {
+  position: absolute;
+  width: 41px;
+  height: 40px;
+  top: 0;
+  left: 0;
+  object-fit: cover;
+}
+
+ .guide {
+  position: relative;
   width: 231px;
   height: 175px;
-  top: 12px;
-  left: 1689px;
+  top: 29px;
+  left: 1275px;
   border-radius: 8px 0px 0px 8px;
   border: 1px solid;
   border-color: #cbd5e0;
 }
 
-.element-light .text-wrapper {
+ .text_in_guide {
   position: absolute;
   width: 136px;
   height: 24px;
@@ -40,7 +188,7 @@
   white-space: nowrap;
 }
 
-.element-light .hd {
+ .guide_image {
   position: absolute;
   width: 197px;
   height: 107px;
@@ -51,17 +199,17 @@
   background-position: 50% 50%;
 }
 
-.element-light .content-form {
-  position: absolute;
+ .post_content {
+  position: relative;
   width: 800px;
   height: 484px;
-  top: 12px;
-  left: 560px;
+  top: -150px;
+  margin: 0 auto;
   background-color: #ffffff;
   border-radius: 12px;
 }
 
-.element-light .button {
+ .upload_button {
   all: unset;
   box-sizing: border-box;
   position: absolute;
@@ -73,7 +221,7 @@
   border-radius: 4px;
 }
 
-.element-light .div {
+ .text_in_upload_button {
   position: absolute;
   width: 43px;
   height: 22px;
@@ -89,7 +237,7 @@
   white-space: nowrap;
 }
 
-.element-light .count {
+ .count {
   position: absolute;
   width: 96px;
   height: 19px;
@@ -97,7 +245,7 @@
   left: 692px;
 }
 
-.element-light .text-wrapper-2 {
+ .text_count {
   position: absolute;
   width: 96px;
   height: 19px;
@@ -113,7 +261,7 @@
   white-space: nowrap;
 }
 
-.element-light .content {
+ .content {
   position: absolute;
   width: 776px;
   height: 104px;
@@ -124,9 +272,9 @@
   overflow-y: hidden;
 }
 
-.element-light .textbox-rich-text {
+ .textbox {
   position: relative;
-  width: 772px;
+  width: 770px;
   height: 100px;
   top: 2px;
   left: 2px;
@@ -136,7 +284,7 @@
   resize: none; /* Vô hiệu hóa thay đổi kích thước */
 
 }
-.textbox-rich-text {
+.textbox {
     border: none; /* Loại bỏ viền */
     outline: none; /* Loại bỏ viền focus mặc định */
     overflow: hidden; /* Ẩn thanh cuộn */
@@ -144,22 +292,7 @@
   }
   
 
-.element-light .p {
-  position: absolute;
-  width: 772px;
-  height: 25px;
-  top: 14px;
-  left: 0;
-  font-family: "Lato-Regular", Helvetica;
-  font-weight: 400;
-  color: #707070;
-  font-size: 17px;
-  letter-spacing: 0;
-  line-height: 25px;
-  white-space: nowrap;
-}
-
-.element-light .drop-and-drag {
+ .drop_and_drag {
   position: absolute;
   width: 772px;
   height: 130px;
@@ -171,7 +304,7 @@
   border-color: #cbd5e0;
 }
 
-.element-light .SVG {
+ .add_image_icon {
   position: absolute;
   width: 22px;
   height: 20px;
@@ -179,7 +312,7 @@
   left: 375px;
 }
 
-.element-light .text-wrapper-3 {
+ .text_add_avt {
   position: absolute;
   width: 129px;
   height: 24px;
@@ -194,7 +327,7 @@
   white-space: nowrap;
 }
 
-.element-light .text-wrapper-4 {
+ .text_drop_and_drag {
   position: absolute;
   width: 85px;
   height: 24px;
@@ -209,52 +342,9 @@
   white-space: nowrap;
 }
 
-.element-light .header {
-  position: absolute;
-  width: 1920px;
-  height: 72px;
-  top: 0;
-  left: 0;
-  background-color: #ffffff;
-}
 
-.element-light .overlap-group-wrapper {
-  position: absolute;
-  width: 131px;
-  height: 40px;
-  top: 16px;
-  left: 20px;
-}
 
-.element-light .overlap-group {
-  position: relative;
-  height: 40px;
-}
-
-.element-light .img {
-  position: absolute;
-  width: 115px;
-  height: 40px;
-  top: 0;
-  left: 0;
-}
-
-.element-light .text-wrapper-5 {
-  position: absolute;
-  width: 69px;
-  height: 24px;
-  top: 2px;
-  left: 52px;
-  font-family: "Lato-SemiBold", Helvetica;
-  font-weight: 600;
-  color: #2d3748;
-  font-size: 24px;
-  letter-spacing: 0;
-  line-height: 24px;
-  white-space: nowrap;
-}
-
-.element-light .logo_title {
+ .logo_title {
   position: absolute;
   width: 79px;
   height: 7px;
@@ -268,118 +358,7 @@
   line-height: 7px;
   white-space: nowrap;
 }
-
-.element-light .container {
-  position: absolute;
-  width: 1635px;
-  height: 40px;
-  top: 16px;
-  left: 177px;
-}
-
-.element-light .background-border {
-  position: relative;
-  width: 400px;
-  height: 39px;
-  left: 16px;
+body {
   background-color: #ffffff;
-  border: 1px solid;
+  overflow-x: hidden; /* Ẩn thanh cuộn ngang của trang */
 }
-
-.element-light .form-body-row-data {
-  position: relative;
-  width: 386px;
-  height: 33px;
-  top: 1px;
-  left: 1px;
-  background-color: #e5e6ed;
-  border-radius: 50px;
-}
-
-.element-light .body-row-data-input {
-  position: relative;
-  width: 352px;
-  height: 24px;
-  top: 5px;
-  left: 15px;
-}
-
-.element-light .div-wrapper {
-  position: relative;
-  height: 17px;
-  top: 4px;
-}
-
-.element-light .text-wrapper-6 {
-  position: absolute;
-  width: 360px;
-  height: 16px;
-  top: -1px;
-  left: 0;
-  font-family: "Inter-Regular", Helvetica;
-  font-weight: 400;
-  color: #757575;
-  font-size: 15px;
-  letter-spacing: 0;
-  line-height: normal;
-}
-
-.element-light .button-2 {
-  position: absolute;
-  width: 88px;
-  height: 40px;
-  top: 16px;
-  left: 1812px;
-  background-color: #e5e6ed;
-  border-radius: 40px;
-}
-
-.element-light .SVG-2 {
-  position: absolute;
-  width: 32px;
-  height: 32px;
-  top: 4px;
-  left: 8px;
-}
-
-.element-light .horizontal-divider {
-  position: absolute;
-  width: 16px;
-  height: 2px;
-  top: 15px;
-  left: 56px;
-  background-color: #393a3b;
-  border-radius: 3px;
-}
-
-.element-light .horizontal-divider-2 {
-  top: 19px;
-  position: absolute;
-  width: 16px;
-  height: 2px;
-  left: 56px;
-  background-color: #393a3b;
-  border-radius: 3px;
-}
-
-.element-light .horizontal-divider-3 {
-  top: 23px;
-  position: absolute;
-  width: 16px;
-  height: 2px;
-  left: 56px;
-  background-color: #393a3b;
-  border-radius: 3px;
-}
-.text-wrapper-6 {
-    border: none; /* Loại bỏ viền mặc định */
-    padding: 0;   /* Loại bỏ khoảng cách mặc định */
-    background: none; /* Loại bỏ nền mặc định */
-    outline: none; /* Loại bỏ viền focus mặc định */
-    width: 100%; /* Đảm bảo ô tìm kiếm chiếm toàn bộ chiều rộng khung chứa */
-    height: 100%; /* Đảm bảo chiều cao tương tự văn bản cũ */
-  }
-  ::-webkit-scrollbar {
-    display: none; /* Ẩn thanh cuộn trên các trình duyệt WebKit (Chrome, Safari) */
-  }
- 

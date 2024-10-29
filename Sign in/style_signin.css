@@ -1,26 +1,220 @@
-.element-light {
-  width: 1920px;
-  height: 1200px;
-  background-color: #f0f0f0;
-}
+body {background-color:  #f0f0f0;}
 
-.element-light .container {
-  height: 1200px;
-}
-
-.element-light .form {
+ .form {
   position: relative;
   width: 481px;
-  height: 167px;
-  top: 144px;
-  left: 719px;
+  height: 630px;
+  top: 20px;
+  left: 0;
+  margin: 0 auto; /* Centers the form horizontally */
   background-color: #fcfdfd;
   border-radius: 16px;
-  border: 1px solid;
-  border-color: #e5e6ed;
+  border: 1px solid #e5e6ed;
 }
 
-.element-light .heading {
+ .sign_in_and_forget_password {
+  position: absolute;
+  width: 172px;
+  height: 16px;
+  top: 495px;
+  left: 156px;
+}
+
+ .privacy_and_policy {
+  position: relative;
+  width: 123px;
+  height: 16px;
+  top: 187px;
+  left: 24.5px;
+  font-family: "Roboto-Regular", Helvetica;
+  font-weight: 400;
+  color: #141414;
+  font-size: 14px;
+  display: flex;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: 17.9px;
+  white-space: nowrap;
+}
+
+
+ .forget_password {
+  position: absolute;
+  width: 50px;
+  height: 16px;
+  top: 1px;
+  right: -83px;
+}
+
+ .link {
+  width: 50px;
+  height: 16px;
+  top: 0px;
+  left: 0;
+  font-family: "Roboto-Regular", Helvetica;
+  font-weight: 400;
+  color: #176093;
+  font-size: 14px;
+  line-height: 17.9px;
+  position: absolute;
+  text-align: center;
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+
+ .google_button {
+  position: absolute;
+  width: 431px;
+  height: 43px;
+  top: 560px;
+  left: 25px;
+  background-color: #f9f9fb;
+  border-radius: 8px;
+  border: 1px solid;
+  border-color: #c3c4c9;
+}
+
+ .google_png {
+  position: absolute;
+  width: 24px;
+  height: 25px;
+  top: 9px;
+  left: 115px;
+  background-image: url(./img/google-png.png);
+  background-size: cover;
+  background-position: 50% 50%;
+}
+
+.text_in_google_button {
+  position: absolute;
+  width: 171px;
+  height: 24px;
+  font-family: "Roboto-Regular", Helvetica;
+  font-weight: 400;
+  color: #000000d9;
+  font-size: 16px;
+  letter-spacing: 0;
+  line-height: 24px;
+  white-space: nowrap;
+  display: flex;
+  align-items: center; /* Centers text vertically */
+  top: 50%;
+  left: 146px;
+  transform: translateY(-50%); /* Adjusts the position to center vertically */
+}
+
+
+ .form .sign_in_button {
+  position: absolute;
+  width: 431px;
+  height: 40px;
+  top: 500px;
+  left: 25px;
+  background-color: #0768ea;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0px 2px 0px #0000000b;
+}
+
+.text_in_sign_in_button {
+  width: 77px;
+  height: 19px;
+  font-family: "Roboto-Bold", Helvetica;
+  font-weight: 700;
+  color: #ffffff;
+  font-size: 16px;
+  line-height: 24px;
+  position: absolute;
+  display: flex;
+  align-items: center; /* Centers text vertically */
+  justify-content: center; /* Centers text horizontally */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Adjusts the position to center accurately */
+  text-align: center;
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+
+
+ .password {
+  top: 170.5px;
+  position: relative;
+  width: 431px;
+  height: 36px;
+  margin: 0 auto;
+  background-color: #fcfdfd;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid;
+  border-color: #c3c4c9;
+}
+.check_password {
+  top: 176px;
+  position: relative;
+  width: 431px;
+  height: 36px;
+  margin: 0 auto;
+  background-color: #fcfdfd;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid;
+  border-color: #c3c4c9;
+}
+
+
+ .username {
+  top: 100px;
+  position: relative;
+  width: 431px;
+  height: 36px;
+  margin: 0 auto;
+  background-color: #fcfdfd;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid;
+  border-color: #c3c4c9;
+}
+
+.nickname {
+  top: 115px;
+  position: relative;
+  width: 431px;
+  height: 36px;
+  margin: 0 auto;
+  background-color: #fcfdfd;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid;
+  border-color: #c3c4c9;
+}
+.email {
+  top: 155.5px;
+  position: relative;
+  width: 431px;
+  height: 36px;
+  margin: 0 auto;
+  background-color: #fcfdfd;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid;
+  border-color: #c3c4c9;
+}
+
+
+
+ .logo {
+  position: absolute;
+  width: 66px;
+  height: 60px;
+  top: 124px;
+  left: 208px;
+  background-image: url(./img/logo.png);
+  background-size: cover;
+  background-position: 50% 50%;
+}
+
+ .title {
   position: absolute;
   width: 479px;
   height: 72px;
@@ -30,29 +224,22 @@
   box-shadow: inset 0px -1px 0px #f0f0f0;
 }
 
-.element-light .link {
+ .title_text {
   position: absolute;
-  width: 14px;
-  height: 16px;
-  top: 29px;
+  width: 165px;
+  height: 24px;
+  top: 23px;
   left: 24px;
-}
-
-.element-light .text-wrapper {
-  position: absolute;
-  width: 144px;
-  height: 21px;
-  top: 26px;
-  left: 54px;
   font-family: "Roboto-SemiBold", Helvetica;
   font-weight: 600;
   color: #000000;
   font-size: 18px;
   letter-spacing: 0;
-  line-height: 24.0px;
+  line-height: 24px;
   white-space: nowrap;
 }
-.close {
+
+.close_button {
   position: absolute;
   width: 40px;
   height: 40px;
@@ -64,7 +251,7 @@
   border-color: #edeef2;
 }
 
-.close .image {
+.close_button .close_image {
   position: absolute;
   width: 28px;
   height: 28px;
@@ -73,56 +260,7 @@
   object-fit: cover;
 }
 
-.element-light .item {
-  position: absolute;
-  width: 431px;
-  height: 43px;
-  top: 89px;
-  left: 25px;
-  background-color: #f9f9fb;
-  border-radius: 8px;
-  border: 1px solid;
-  border-color: #c3c4c9;
-}
-
-.element-light .overlap-group {
-  position: relative;
-  width: 192px;
-  height: 44px;
-  top: -1px;
-  left: 115px;
-}
-
-.element-light .google-png {
-  position: absolute;
-  width: 24px;
-  height: 25px;
-  top: 10px;
-  left: 0;
-}
-
-.element-light .frame {
-  position: absolute;
-  width: 171px;
-  height: 44px;
-  top: 2px;
-  left: 21px;
-}
-
-.element-light .div {
-  position: absolute;
-  height: 24px;
-  top: 9px;
-  left: 10px;
-  font-family: "Roboto-Regular", Helvetica;
-  font-weight: 400;
-  color: #000000d9;
-  font-size: 16px;
-  letter-spacing: 0;
-  line-height: 24.0px;
-  white-space: nowrap;
-}
-.item {
+.sign_in_button {
   background-color: transparent; /* Giữ nguyên màu nền của div */
   border: none; /* Loại bỏ đường viền mặc định của button */
   padding: 0; /* Xóa phần đệm mặc định của button */
@@ -135,6 +273,118 @@
   color: inherit; /* Giữ nguyên màu chữ */
 }
 
-.item:focus {
+.sign_in_button:focus {
   outline: none; /* Loại bỏ viền bao quanh khi button được focus */
+}
+/* Đặt kích thước và căn chỉnh của phần tử chứa */
+.password {
+  display: block;
+  margin-bottom: 10px; /* Khoảng cách dưới, có thể tùy chỉnh */
+}
+
+
+/* Thiết lập giao diện cho input mật khẩu */
+.password_input {
+  width: 100%; /* Hoặc kích thước mong muốn */
+  padding: 8px; /* Khoảng cách bên trong cho input */
+  border: 1px solid #ffffff;
+  border-radius: 8px; /* Giữ viền tròn như mong muốn */
+  font-size: 16px;
+  background-color: #f9f9fb;
+  outline:  none; /* Loại bỏ viền khi focus */
+}
+
+.password_input:focus {
+  border-color: none; /* Thay đổi màu viền khi input được focus, có thể thay đổi */
+}
+.username_input {
+  width: 100%; /* Hoặc kích thước mong muốn */
+  padding: 8px; /* Khoảng cách bên trong cho input */
+  border: 1px solid #ffffff;
+  border-radius: 8px; /* Giữ viền tròn như mong muốn */
+  font-size: 16px;
+  background-color: #f9f9fb;
+  outline:  none; /* Loại bỏ viền khi focus */
+}
+
+.username_input:focus {
+  border-color: none; /* Thay đổi màu viền khi input được focus, có thể thay đổi */
+}
+
+.nickname_input {
+  width: 100%; /* Hoặc kích thước mong muốn */
+  padding: 8px; /* Khoảng cách bên trong cho input */
+  border: 1px solid #ffffff;
+  border-radius: 8px; /* Giữ viền tròn như mong muốn */
+  font-size: 16px;
+  background-color: #f9f9fb;
+  outline:  none; /* Loại bỏ viền khi focus */
+}
+
+.nickname_input:focus {
+  border-color: none; /* Thay đổi màu viền khi input được focus, có thể thay đổi */
+}
+.email_input {
+  width: 100%; /* Hoặc kích thước mong muốn */
+  padding: 8px; /* Khoảng cách bên trong cho input */
+  border: 1px solid #ffffff;
+  border-radius: 8px; /* Giữ viền tròn như mong muốn */
+  font-size: 16px;
+  background-color: #f9f9fb;
+  outline:  none; /* Loại bỏ viền khi focus */
+}
+
+.email_input:focus {
+  border-color: none; /* Thay đổi màu viền khi input được focus, có thể thay đổi */
+}
+
+.check_password_input {
+  width: 100%; /* Hoặc kích thước mong muốn */
+  padding: 8px; /* Khoảng cách bên trong cho input */
+  border: 1px solid #ffffff;
+  border-radius: 8px; /* Giữ viền tròn như mong muốn */
+  font-size: 16px;
+  background-color: #f9f9fb;
+  outline:  none; /* Loại bỏ viền khi focus */
+}
+
+.check_password_input:focus {
+  border-color: none; /* Thay đổi màu viền khi input được focus, có thể thay đổi */
+}
+
+
+.notice {
+  position: relative;
+  width: 431px;
+  height: 34px;
+  top: 125px;
+  margin: 0 auto;
+  font-family: "Inter-Regular", Helvetica;
+  font-weight: 400;
+  color: #000000;
+  font-size: 14px;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.date {
+  top: 140px;
+  position: relative;
+  width: 431px;
+  height: 36px;
+  margin: 0 auto;
+  background-color: #fcfdfd;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid;
+  border-color: #c3c4c9;
+}
+.date-input {
+  width: 28%; /* Hoặc kích thước mong muốn */
+  padding: 8px; /* Khoảng cách bên trong cho input */
+  border: 1px solid #ffffff;
+  border-radius: 8px; /* Giữ viền tròn như mong muốn */
+  font-size: 16px;
+  background-color: #f9f9fb;
+  outline:  none; /* Loại bỏ viền khi focus */
 }

@@ -6,54 +6,45 @@
     <link rel="stylesheet" href="style_login.css" />
   </head>
   <body>
-    <div class="element-light">
       <div class="form">
         <form action="/submit-login" method="POST">
-          <!-- Heading with logo and close button -->
-          <div class="heading">
-            <div class="text-wrapper-6">Đăng nhập tài khoản</div>
-            <div class="close">
-              <img class="image" src="img/image.png" />
+
+          <div class="title">
+            <div class="title_text">Đăng nhập tài khoản</div>
+            <div class="close_button">
+              <img class="close_image" src="img/image.png" />
             </div>
           </div>
 
-          <!-- Logo (the icon) -->
           <div class="logo">
             <img src="img/logo.png" alt="Logo">
           </div>
 
-          <!-- Email input field -->
-          <div class="input-email">
-            <input type="email" id="email" class="email-input" placeholder="Nhập email" required />
+          <div class="username">
+            <input type="username" id="username" class="username_input" placeholder="Username" required />
           </div>
 
-          <!-- Password input field -->
-          <div class="input-password">
-            <input type="password" id="password" class="password-input" placeholder="Nhập mật khẩu" required />
+          <div class="password">
+            <input type="password" id="password" class="password_input" placeholder="Nhập mật khẩu" required />
           </div>
 
-          <!-- Login button -->
-          <button type="submit" class="login-button">
-            <div class="text-wrapper-3">Đăng nhập</div>
+          <button type="submit" class="login_button">
+            <div class="text_in_login_button">Đăng nhập</div>
           </button>
 
-          <!-- Google login button -->
-          <button class="google-button">
-            <div class="google-png"></div>
-            <div class="text-wrapper-2">Đăng nhập bằng Google</div>
+          <button class="google_button">
+            <div class="google_png"></div>
+            <div class="text_in_google_button">Đăng nhập bằng Google</div>
           </button>
 
-          <!-- Sign-up link -->
-          <div class="sign-in">
-            <div class="overlap-group">
-              <div class="text-wrapper">Chưa có tài khoản?</div>
-              <div class="link">
-                <div class="div">Đăng ký</div>
+          <div class="sign_in_and_forget_password">
+              <div class="text_in_sign_in">Chưa có tài khoản?</div>
+                <div class="link">Đăng ký</div>
+              <div class="forget_password">
+                <div class="link">Quên mật khẩu</div>
               </div>
-            </div>
           </div>
         </form>
       </div>
-    </div>
   </body>
 </html>

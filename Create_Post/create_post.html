@@ -6,63 +6,60 @@
     <link rel="stylesheet" href="style_create_post.css" />
   </head>
   <body>
-    <div class="element-light">
-        <header class="header">
-            <div class="overlap-group-wrapper">
-              <div class="overlap-group">
-                <img class="img" src="img/logo.png" />
-                <div class="text-wrapper-5">Tinhte</div>
-                <div class="logo_title">MẠNG XÃ HỘI</div>
-              </div>
-            </div>
-            <div class="container">
-                  <div class="form-body-row-data">
-                    <div class="body-row-data-input">
-                      <div class="div-wrapper">
-                        <input 
-                          type="search" 
-                          class="text-wrapper-6" 
-                          placeholder="Tìm sản phẩm công nghệ, cộng đồng, bạn bè..." 
-                        />
-                    </div>
-                  </div>
-                </div>
-              </div>
-                     
-            <div class="button-2">
-              <img class="SVG-2" src="img/profile.png" />
-              <div class="horizontal-divider"></div>
-              <div class="horizontal-divider-2"></div>
-              <div class="horizontal-divider-3"></div>
-            </div>
-          </header>
-      <div class="background">
-        <div class="link">
-          <div class="text-wrapper">Hướng dẫn viết bài</div>
-          <div class="hd"></div>
+    <header class="navbar">
+      <div class="logo_brand">
+          <img class="logo" src="img/logo.png" alt="Tinhte Logo" />
+          <div class="brand">Tinhte</div>
+          <div class="brand_title">MẠNG XÃ HỘI</div>
+      </div>
+
+
+      <div class="search_box">
+        <div class="shape">
+          <div class="input">
+              <input
+                type="search"
+                class="text"
+                placeholder="Tìm sản phẩm công nghệ, cộng đồng, bạn bè..."
+                aria-label="Search"
+              />
+          </div>
+        </div>
+      </div>
+
+      <div class="function">
+        <div class="post_button"><div class="text_in_post_button">Viết Bài Chia Sẻ</div></div>
+        <img class="notice" src="img/notice.png" />
+        <div class="avt_button">
+          <img class="drop_down" src="img/dropdown.png" /> <img class="avt-png" src="img/avt.png" />
+        </div>
+      </div>
+    </header>
+        <div class="guide">
+          <div class="text_in_guide">Hướng dẫn viết bài</div>
+          <div class="guide_image"></div>
         </div>
         
-        <!-- Thẻ content-form được biến thành form -->
-        <form action="/submit-post" method="POST" class="content-form">
+        <form action="/submit-post" method="POST" class="post_content">
           
           <!-- Input file cho ảnh với chức năng kéo thả -->
-          <div class="drop-and-drag">
+          <div class="drop_and_drag">
             <input 
               type="file" 
               id="file-input" 
-              class="file-input" 
+              class="file_input" 
               accept="image/*" 
               style="display: none;" 
             />
-            <img class="SVG" src="img/add_img.png" />
-            <div class="text-wrapper-3">Thêm ảnh đại diện</div>
-            <div class="text-wrapper-4">Hoặc kéo và thả</div>
+            <img class="add_image_icon" src="img/add_img.png" />
+            <div class="text_add_avt">Thêm ảnh đại diện</div>
+            <div class="text_drop_and_drag">Hoặc kéo và thả</div>
           </div>
 
           <!-- Textarea cho phần nội dung -->
           <div class="content">
-            <textarea 
-              class="textbox-rich-text" 
+            <textarea   
+              class="textbox" 
               name="content" 
               placeholder="Nhập đoạn giới thiệu tổng quan của bài để anh em hiểu được nội dung bài viết..." 
               rows="5"
@@ -71,15 +68,13 @@
 
           <!-- Đếm số chữ -->
           <div class="count">
-            <div class="text-wrapper-2">Bài viết 0 chữ</div>
+            <div class="text_count">Bài viết 0 chữ</div>
           </div>
 
           <!-- Nút đăng -->
-          <button type="submit" class="button">
-            <div class="div">Đăng</div>
+          <button type="submit" class="upload_button">
+            <div class="text_in_upload_button">Đăng</div>
           </button>
         </form>
-      </div>  
-    </div>
   </body>
 </html>
