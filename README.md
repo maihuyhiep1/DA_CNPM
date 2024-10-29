@@ -1,7 +1,13 @@
 # DA_CNPM
+Cài package còn thiếu: npm install
+
 Đổi tên .env.example thành .env, điền thông tin database.
 Sửa file ./src/config/config.json (mục developement)
 
-Cài package còn thiếu: npm install
+Tạo bảng users trong database: npx sequelize-cli db:migrate
+
+Tạo User trong database dể test: node .\src\services\test-UserServices.js
 
 Chạy project: npm start
+
+Gọi api bằng postman hoặc bằng cách nào đó
