@@ -1,73 +1,67 @@
 const Post = require('../models/Post');
-const posts = [];  // Dữ liệu tạm thời cho các bài viết, sẽ được thay thế bằng cơ sở dữ liệu thực tế
 
-// Tạo bài viết mới
-const createPost = (req, res) => {
-    const { title, avatar, isQnA, content } = req.body;
-    const author_id = req.user ? req.user.user_id : 1; // Lấy user_id từ người dùng đã xác thực
-// Gán tạm `author_id` bằng một số cố định để test (ví dụ: 1)
-
-    if (isQnA && content.length > 500) {
-        return res.status(400).json({ message: "Nội dung QnA không được vượt quá 500 ký tự" });
+// Lấy tất cả bài đăng
+exports.getAllPosts = (req, res) => {
+  Post.getAllPosts((err, results) => {
+    if (err) {
+      return res.status(500).json({ message: 'Lỗi khi lấy danh sách bài đăng' });
     }
-
-    const newPost = new Post(title, author_id, avatar, isQnA, content);
-    posts.push(newPost);
-
-    res.status(201).json(newPost);
+    res.status(200).json(results);
+  });
 };
 
-// Xem toàn bộ bài viết
-const getAllPosts = (req, res) => {
-    res.json(posts);
-};
-
-// Xem bài viết theo ID
-const getPostById = (req, res) => {
-    const { postId } = req.params;
-    const post = posts.find((p) => p.post_Id === postId);
-
-    if (!post) {
-        return res.status(404).json({ message: "Không tìm thấy bài viết" });
+// Lấy bài đăng theo ID
+exports.getPostById = (req, res) => {
+  const post_id = req.params.postId;
+  Post.getPostById(post_id, (err, result) => {
+    if (err) {
+      return res.status(500).json({ message: 'Lỗi khi lấy bài đăng' });
     }
-
-    res.json(post);
-};
-
-// Cập nhật bài viết
-const updatePost = (req, res) => {
-    const { postId } = req.params;
-    const { title, avatar, content } = req.body;
-    const post = posts.find((p) => p.post_Id === postId);
-
-    if (!post) {
-        return res.status(404).json({ message: "Không tìm thấy bài viết" });
+    if (result.length === 0) {
+      return res.status(404).json({ message: 'Không tìm thấy bài đăng' });
     }
-
-    post.title = title || post.title;
-    post.avatar = avatar || post.avatar;
-    post.content = content || post.content;
-
-    res.json(post);
+    res.status(200).json(result[0]);
+  });
 };
 
-// Xóa bài viết
-const deletePost = (req, res) => {
-    const { postId } = req.params;
-    const index = posts.findIndex((p) => p.post_Id === postId);
+// Tạo bài đăng mới
+exports.createPost = (req, res) => {
+    const { title, author_id, avatar, is_qna, content } = req.body;
 
-    if (index === -1) {
-        return res.status(404).json({ message: "Không tìm thấy bài viết" });
+    // Gọi hàm createPost từ model
+    Post.createPost(title, author_id, avatar, is_qna, content, (err, result) => {
+        if (err) {
+            console.error('Error creating post:', err);
+            return res.status(500).json({ error: 'An error occurred while creating the post.' });
+        }
+        return res.status(201).json(result);
+    });
+};
+// Cập nhật bài đăng
+exports.updatePost = (req, res) => {
+    const { postId } = req.params;  // Lấy postId từ req.params
+    const updatedFields = req.body; // Dữ liệu cần cập nhật từ req.body
+
+    Post.updatePost(postId, updatedFields, (err, result) => {
+        if (err) {
+            return res.status(500).json({ error: 'An error occurred while updating the post.' });
+        }
+        res.status(200).json(result);
+    });
+};
+
+
+// Xóa bài đăng
+exports.deletePost = (req, res) => {
+  const post_id = req.params.postId;
+
+  Post.deletePost(post_id, (err, result) => {
+    if (err) {
+      return res.status(500).json({ message: 'Lỗi khi xóa bài đăng' });
     }
-
-    posts.splice(index, 1);
-    res.json({ message: "Xóa bài viết thành công" });
-};
-
-module.exports = {
-    createPost,
-    getAllPosts,
-    getPostById,
-    updatePost,
-    deletePost,
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: 'Không tìm thấy bài đăng để xóa' });
+    }
+    res.status(200).json({ message: 'Xóa bài đăng thành công' });
+  });
 };
