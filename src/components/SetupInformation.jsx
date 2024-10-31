@@ -8,7 +8,7 @@ const SetupInformation = () => {
         <div className="title">
           <div className="title_text">Đăng ký thông tin</div>
           <div className="close_button">
-            <img className="close_image" src="img/image.png" alt="Close" />
+            <img className="close_image" src="img_setup_information/image.png" alt="Close" />
           </div>
         </div>
 
@@ -50,4 +50,4 @@ const SetupInformation = () => {
   );
 };
 
-export default SetupInfo;
+export default SetupInformation;
