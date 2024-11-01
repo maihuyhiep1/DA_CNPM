@@ -1,5 +1,5 @@
 
-.navbar .logo_brand {
+.navbar .logoBrand { /* navbar .logo_brand */
   position: absolute;
   width: 131px;
   height: 40px;
@@ -31,7 +31,7 @@
   white-space: nowrap;
 }
 
-.navbar .brand_title {
+.navbar .brandTitle { /* navbar .brand_title */ 
   position: absolute;
   width: 79px;
   height: 7px;
@@ -46,7 +46,7 @@
   white-space: nowrap;
 }
 
-.navbar .search_box {
+.navbar .searchBox { /* navbar .search_box */
   position: absolute;
   width: 1635px;
   height: 40px;
@@ -101,7 +101,7 @@
   left: 1220px;
 }
 
-.function .post_button {
+.function .postButton { /* function .post_button */
   position: absolute;
   width: 134px;
   height: 40px;
@@ -111,7 +111,7 @@
   border-radius: 50px;
 }
 
-.function .text_in_post_button {
+.function .textInPostButton { /* function .text_in_post_button */
   position: absolute;
   width: 98px;
   height: 17px;
@@ -136,7 +136,7 @@
   left: 156px;
 }
 
-.function .avt_button {
+.function .avtButton { /* function .avt_button */
   position: absolute;
   width: 68px;
   height: 40px;
@@ -144,7 +144,7 @@
   left: 208px;
 }
 
-.function .drop_down {
+.function .dropDown { /* function .drop_down */
   position: absolute;
   width: 13px;
   height: 8px;
@@ -153,7 +153,7 @@
   object-fit: cover;
 }
 
-.function .avt-png {
+.function .avtPng { /* function .avt-png */
   position: absolute;
   width: 41px;
   height: 40px;

@@ -3,7 +3,7 @@ body {background-color:  #f0f0f0;}
  .form {
   position: relative;
   width: 481px;
-  height: 360px;
+  height: 250px;
   top: 20px;
   left: 0;
   margin: 0 auto; /* Centers the form horizontally */
@@ -12,29 +12,11 @@ body {background-color:  #f0f0f0;}
   border: 1px solid #e5e6ed;
 }
 
-
- .privacy_and_policy {
-  position: relative;
-  width: 123px;
-  height: 16px;
-  top: 130px;
-  left: 24.5px;
-  font-family: "Roboto-Regular", Helvetica;
-  font-weight: 400;
-  color: #141414;
-  font-size: 14px;
-  display: flex;
-  text-align: center;
-  letter-spacing: 0;
-  line-height: 17.9px;
-  white-space: nowrap;
-}
-
- .form .sign_in_button {
+ .form .verifyButton {
   position: absolute;
   width: 431px;
   height: 40px;
-  top: 280px;
+  top: 180px;
   left: 25px;
   background-color: #0768ea;
   border-radius: 8px;
@@ -42,7 +24,7 @@ body {background-color:  #f0f0f0;}
   box-shadow: 0px 2px 0px #0000000b;
 }
 
-.text_in_sign_in_button {
+.textInVerifyButton {
   width: 77px;
   height: 19px;
   font-family: "Roboto-Bold", Helvetica;
@@ -62,7 +44,7 @@ body {background-color:  #f0f0f0;}
   white-space: nowrap;
 }
 
-.nickname {
+.otp {
   top: 90px;
   position: relative;
   width: 431px;
@@ -89,27 +71,7 @@ body {background-color:  #f0f0f0;}
   line-height: normal;
 }
 
-.date {
-  top: 117px;
-  position: relative;
-  width: 431px;
-  height: 36px;
-  margin: 0 auto;
-  background-color: #fcfdfd;
-  border-radius: 8px;
-  overflow: hidden;
-  border: 1px solid;
-  border-color: #c3c4c9;
-}
-.date-input {
-  width: 28%; /* Hoặc kích thước mong muốn */
-  padding: 8px; /* Khoảng cách bên trong cho input */
-  border: 1px solid #ffffff;
-  border-radius: 8px; /* Giữ viền tròn như mong muốn */
-  font-size: 16px;
-  background-color: #f9f9fb;
-  outline:  none; /* Loại bỏ viền khi focus */
-}
+
 
  .title {
   position: absolute;
@@ -121,7 +83,7 @@ body {background-color:  #f0f0f0;}
   box-shadow: inset 0px -1px 0px #f0f0f0;
 }
 
- .title_text {
+ .titleText {
   position: absolute;
   width: 165px;
   height: 24px;
@@ -136,7 +98,7 @@ body {background-color:  #f0f0f0;}
   white-space: nowrap;
 }
 
-.close_button {
+.closeButton {
   position: absolute;
   width: 40px;
   height: 40px;
@@ -148,7 +110,7 @@ body {background-color:  #f0f0f0;}
   border-color: #edeef2;
 }
 
-.close_button .close_image {
+.closeButton .closeImage {
   position: absolute;
   width: 28px;
   height: 28px;
@@ -157,7 +119,7 @@ body {background-color:  #f0f0f0;}
   object-fit: cover;
 }
 
-.sign_in_button {
+.verifyButton {
   background-color: transparent; /* Giữ nguyên màu nền của div */
   border: none; /* Loại bỏ đường viền mặc định của button */
   padding: 0; /* Xóa phần đệm mặc định của button */
@@ -170,11 +132,11 @@ body {background-color:  #f0f0f0;}
   color: inherit; /* Giữ nguyên màu chữ */
 }
 
-.sign_in_button:focus {
+.verifyButton:focus {
   outline: none; /* Loại bỏ viền bao quanh khi button được focus */
 }
 
-.nickname_input {
+.otpInput {
   width: 100%; /* Hoặc kích thước mong muốn */
   padding: 8px; /* Khoảng cách bên trong cho input */
   border: 1px solid #ffffff;

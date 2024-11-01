@@ -11,7 +11,7 @@ import SetupInformation from './components/SetupInformation'
 function App() {
   return (
     <div>
-      <Login/>
+      <Verify />
     </div>
   );
 }

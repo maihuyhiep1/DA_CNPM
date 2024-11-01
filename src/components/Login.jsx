@@ -1,55 +1,55 @@
 import React from 'react';
-import './style_login.css';
+import styles from'./style_login.module.css';
 
 const Login = () => {
   return (
-    <div className="form">
+    <div className={styles.form}>
       <form action="/submit-login" method="POST">
-        <div className="title">
-          <div className="title_text">Đăng nhập tài khoản</div>
-          <div className="close_button">
-            <img className="close_image" src="img_login/image.png" alt="Close" />
+        <div className={styles.title}>
+          <div className={styles.titleText}>Đăng nhập tài khoản</div>
+          <div className={styles.closeButton}>
+            <img className={styles.closeImage} src="img_login/image.png" alt="Close" />
           </div>
         </div>
 
-        <div className="logo">
+        <div className={styles.logo}>
           <img src="img_login/logo.png" alt="Logo" />
         </div>
 
-        <div className="username">
+        <div className={styles.username}>
           <input
             type="text"
             id="username"
-            className="username_input"
+            className={styles.usernameInput}
             placeholder="Username"
             required
           />
         </div>
 
-        <div className="password">
+        <div className={styles.password}>
           <input
             type="password"
             id="password"
-            className="password_input"
+            className={styles.passwordInput}
             placeholder="Nhập mật khẩu"
             required
           />
         </div>
 
-        <button type="submit" className="login_button">
-          <div className="text_in_login_button">Đăng nhập</div>
+        <button type="submit" className={styles.loginButton}>
+          <div className={styles.textInLoginButton}>Đăng nhập</div>
         </button>
 
-        <button className="google_button">
-          <div className="google_png"></div>
-          <div className="text_in_google_button">Đăng nhập bằng Google</div>
+        <button className={styles.googleButton}>
+          <div className={styles.googlePng}></div>
+          <div className={styles.textInGoogleButton}>Đăng nhập bằng Google</div>
         </button>
 
-        <div className="sign_in_and_forget_password">
-          <div className="text_in_sign_in">Chưa có tài khoản?</div>
-          <div className="link">Đăng ký</div>
-          <div className="forget_password">
-            <div className="link">Quên mật khẩu</div>
+        <div className={styles.signInAndForgetPassword}>
+          <div className={styles.textInSignIn}>Chưa có tài khoản?</div>
+          <div className={styles.link}>Đăng ký</div>
+          <div className={styles.forgetPassword}>
+            <div className={styles.link}>Quên mật khẩu</div>
           </div>
         </div>
       </form>

@@ -1,31 +1,31 @@
 import React from 'react';
-import './style_verify.css';
+import styles from './style_verify.module.css';
 
 const Verify = () => {
   return (
-    <div className="form">
+    <div className={styles.form}>
       <form action="/submit-login" method="POST">
-        <div className="title">
-          <div className="title_text">Xác thực gmail</div>
-          <div className="close_button">
-            <img className="close_image" src="img_verify/image.png" alt="Close" />
+        <div className={styles.title}>
+          <div className={styles.titleText}>Xác thực gmail</div>
+          <div className={styles.closeButton}>
+            <img className={styles.closeImage} src="img_verify/image.png" alt="Close" />
           </div>
         </div>
 
-        <div className="otp">
+        <div className={styles.otp}>
           <input
             type="text"
             id="otp"
-            className="otp_input"
+            className={styles.otpInput}
             placeholder="OTP"
             required
           />
         </div>
 
-        <p className="notice">Vui lòng nhập mã OTP</p>
+        <p className={styles.notice}>Vui lòng nhập mã OTP</p>
 
-        <button type="submit" className="verify_button">
-          <div className="text_in_verify_button">Xác thực</div>
+        <button type="submit" className={styles.verifyButton}>
+          <div className={styles.textInVerifyButton}>Xác thực</div>
         </button>
       </form>
     </div>

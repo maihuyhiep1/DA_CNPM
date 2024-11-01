@@ -1,91 +1,91 @@
 import React from 'react';
-import './style_signin.css';
+import styles from './style_signin.module.css';
 
 const SignIn = () => {
   return (
-    <div className="form">
+    <div className={styles.form}>
       <form action="/submit-login" method="POST">
-        <div className="title">
-          <div className="title_text">Đăng ký tài khoản</div>
-          <div className="close_button">
-            <img className="close_image" src="img_signin/image.png" alt="Close" />
+        <div className={styles.title}>
+          <div className={styles.titleText}>Đăng ký tài khoản</div>
+          <div className={styles.closeButton}>
+            <img className={styles.closeImage} src="img_signin/image.png" alt="Close" />
           </div>
         </div>
 
-        <div className="username">
+        <div className={styles.username}>
           <input
             type="text"
             id="username"
-            className="username_input"
+            className={styles.usernameInput}
             placeholder="Username"
             required
           />
         </div>
 
-        <div className="nickname">
+        <div className={styles.nickname}>
           <input
             type="text"
             id="nickname"
-            className="nickname_input"
+            className={styles.nicknameInput}
             placeholder="Nickname"
             required
           />
         </div>
 
-        <p className="notice">
+        <p className={styles.notice}>
           Đây là tên sẽ xuất hiện trong các bài viết của bạn. Bạn có thể sử dụng tên thật hoặc nick. Bạn không thể thay đổi tên này về sau.
         </p>
 
-        <div className="date">
+        <div className={styles.date}>
           <input
             type="date"
             id="birthdate"
-            className="date-input"
+            className={styles.dateInput}
             required
           />
         </div>
 
-        <div className="email">
+        <div className={styles.email}>
           <input
             type="email"
             id="email"
-            className="email_input"
+            className={styles.emailInput}
             placeholder="Email"
             required
           />
         </div>
 
-        <div className="password">
+        <div className={styles.password}>
           <input
             type="password"
             id="password"
-            className="password_input"
+            className={styles.passwordInput}
             placeholder="Nhập mật khẩu"
             required
           />
         </div>
 
-        <div className="check_password">
+        <div className={styles.checkPassword}>
           <input
             type="password"
             id="check_password"
-            className="check_password_input"
+            className={styles.checkPasswordInput}
             placeholder="Nhập lại mật khẩu"
             required
           />
         </div>
 
-        <button type="submit" className="sign_in_button">
-          <div className="text_in_sign_in_button">Đăng ký</div>
+        <button type="submit" className={styles.signInButton}>
+          <div className={styles.textInSignInButton}>Đăng ký</div>
         </button>
 
-        <button className="google_button">
-          <div className="google_png"></div>
-          <div className="text_in_google_button">Đăng ký bằng Google</div>
+        <button className={styles.googleButton}>
+          <div className={styles.googlePng}></div>
+          <div className={styles.textInGoogleButton}>Đăng ký bằng Google</div>
         </button>
 
-        <div className="privacy_and_policy">
-          <div className="text_privacy_and_policy">
+        <div className={styles.privacyAndPolicy}>
+          <div className={styles.textPrivacyAndPolicy}>
             Tôi đồng ý với điều khoản dịch vụ và chính sách quyền riêng tư
           </div>
         </div>
