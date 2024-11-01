@@ -59,7 +59,7 @@ exports.getPostById = (post_id, callback) => {
             title = COALESCE(?, title), 
             avatar = COALESCE(?, avatar), 
             content = COALESCE(?, content) 
-        WHERE post_id = ?;
+        WHERE post_id = ? AND author_id = ?;
     `;
 
     // Mảng giá trị cho các trường được cập nhật
@@ -67,7 +67,8 @@ exports.getPostById = (post_id, callback) => {
         updatedFields.title || null,
         updatedFields.avatar || null,
         updatedFields.content || null,
-        postId
+        postId,
+        author_id
     ];
 
     // Thực hiện truy vấn

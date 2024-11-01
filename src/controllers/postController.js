@@ -26,8 +26,8 @@ exports.getPostById = (req, res) => {
 
 // Tạo bài đăng mới
 exports.createPost = (req, res) => {
-    const { title, author_id, avatar, is_qna, content } = req.body;
-
+    const { title,  avatar, is_qna, content } = req.body;
+    const author_id = req.user_id;
     // Gọi hàm createPost từ model
     Post.createPost(title, author_id, avatar, is_qna, content, (err, result) => {
         if (err) {
@@ -41,7 +41,7 @@ exports.createPost = (req, res) => {
 exports.updatePost = (req, res) => {
     const { postId } = req.params;  // Lấy postId từ req.params
     const updatedFields = req.body; // Dữ liệu cần cập nhật từ req.body
-
+    const author_id = req.user_id;
     Post.updatePost(postId, updatedFields, (err, result) => {
         if (err) {
             return res.status(500).json({ error: 'An error occurred while updating the post.' });
