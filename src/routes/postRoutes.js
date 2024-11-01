@@ -1,8 +1,8 @@
 const express = require('express');
 const postController = require('../controllers/postController');
 const router = express.Router();
-const authenticateToken = require('./middlewares/authenticateToken');
-const checkDeletePermission = require('./middlewares/checkDeletePermission');
+const authenticateToken = require('../middlewares/authenticateToken');
+const checkDeletePermission = require('../middlewares/checkDeletePermission');
 
 router.post('/posts', postController.createPost);       // Tạo bài viết
 router.get('/posts', postController.getAllPosts);       // Xem toàn bộ bài viết

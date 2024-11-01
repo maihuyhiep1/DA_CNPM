@@ -1,10 +1,11 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const postRoutes = require('./src/routes/postRoutes');
+const authenticateToken = require('./src/middlewares/authenticateToken');
 require('dotenv').config();
 
 const app = express();
-
+app.use(authenticateToken);
 // Middleware để parse body từ request
 app.use(bodyParser.json());
 
