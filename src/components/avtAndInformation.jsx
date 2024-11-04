@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './style_avtAndInformation.module.css';
 
-function AvtAndInformation() {
+const AvtAndInformation = () => {
   return (
     <div className={styles.AvtAndInformation}>
       <div className={styles.container}>

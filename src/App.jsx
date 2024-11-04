@@ -8,14 +8,16 @@ import Verify from './components/Verify'
 import SignIn from './components/SignIn'
 import SetupInformation from './components/SetupInformation'
 import AvtAndInformation from './components/avtAndInformation'
+import postInProfile from './components/postInProfile'
 
-function App() {
+function App() {  
   return (
     <div>
-      <AvtAndInformation />
+      <postInProfile />  
     </div>
   );
 }
 
 
 export default App
+    
