@@ -65,3 +65,15 @@ exports.deletePost = (req, res) => {
     res.status(200).json({ message: 'Xóa bài đăng thành công' });
   });
 };
+
+exports.likePost = (req, res) => {
+  const postId = req.params.postId;
+  const userId = req.user.user_id; // Lấy user_id từ token đã được xác thực
+
+  postModel.toggleLikePost(userId, postId, (err, result) => {
+      if (err) {
+          return res.status(500).json({ error: 'Có lỗi xảy ra khi xử lý lượt thích.' });
+      }
+      return res.json(result);
+  });
+};

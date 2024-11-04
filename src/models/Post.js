@@ -96,3 +96,48 @@ exports.getPostById = (post_id, callback) => {
     });
   };
   
+
+  exports.toggleLikePost = (userId, postId, callback) => {
+    const checkLikeSql = `SELECT * FROM post_likes WHERE user_id = ? AND post_id = ?`;
+    db.query(checkLikeSql, [userId, postId], (err, results) => {
+        if (err) {
+            return callback(err, null);
+        }
+
+        if (results.length === 0) {
+            // Nếu người dùng chưa like bài viết, thêm lượt thích
+            const insertSql = `INSERT INTO post_likes (user_id, post_id) VALUES (?, ?)`;
+            db.query(insertSql, [userId, postId], (err, result) => {
+                if (err) {
+                    return callback(err, null);
+                }
+
+                // Cập nhật like_count trong bảng posts
+                const updatePostSql = `UPDATE posts SET like_count = like_count + 1 WHERE post_id = ?`;
+                db.query(updatePostSql, [postId], (err, result) => {
+                    if (err) {
+                        return callback(err, null);
+                    }
+                    return callback(null, { message: 'Đã like bài viết thành công!' });
+                });
+            });
+        } else {
+            // Nếu người dùng đã like bài viết, xóa lượt thích
+            const deleteSql = `DELETE FROM post_likes WHERE user_id = ? AND post_id = ?`;
+            db.query(deleteSql, [userId, postId], (err, result) => {
+                if (err) {
+                    return callback(err, null);
+                }
+
+                // Cập nhật like_count trong bảng posts
+                const updatePostSql = `UPDATE posts SET like_count = like_count - 1 WHERE post_id = ?`;
+                db.query(updatePostSql, [postId], (err, result) => {
+                    if (err) {
+                        return callback(err, null);
+                    }
+                    return callback(null, { message: 'Đã bỏ like bài viết thành công!' });
+                });
+            });
+        }
+    });
+};
