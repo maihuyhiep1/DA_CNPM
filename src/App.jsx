@@ -8,12 +8,12 @@ import Verify from './components/Verify'
 import SignIn from './components/SignIn'
 import SetupInformation from './components/SetupInformation'
 import AvtAndInformation from './components/avtAndInformation'
-import postInProfile from './components/postInProfile'
+import PostInProfile from './components/postInProfile'
 
 function App() {  
   return (
     <div>
-      <postInProfile />  
+      <PostInProfile />  
     </div>
   );
 }

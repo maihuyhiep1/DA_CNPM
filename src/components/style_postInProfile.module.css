@@ -1,36 +1,26 @@
-.frame {
-  border: 1px solid;
+.postItem {
   border-color: #000000;
   height: 199px;
   position: relative;
   width: 725px;
+  background-color: white;
 }
 
-.frame .heading {
-  height: 28px;
-  left: 0;
-  position: absolute;
-  top: 0;
-  width: 714px;
+.title {
+  display: flex;
+  width: 725px;
+  height: 24.227px;
+  margin-top: -10px;
+  flex-direction: column;
+  color: #2D3748;
+  font-family: "Lato-SemiBold", Helvetica;
+font-size: 18px;
+font-style: normal;
+font-weight: 700;
+line-height: 28.265px; /* 140% */
 }
 
-.frame .title {
-  color: #2d3748;
-  font-family: "Lato-Bold", Helvetica;
-  font-size: 20.2px;
-  font-weight: 700;
-  height: 24px;
-  left: 0;
-  letter-spacing: 0;
-  line-height: 28.3px;
-  position: absolute;
-  top: -1px;
-  white-space: nowrap;
-  width: 606px;
-}
-
-.frame .buttoncover {
-  background-image: url(./button-8458962-cover-amd-strix-halo-hp-zbook-ultra-g1a-tinhte-jpg.png);
+.image {
   background-position: 50% 50%;
   background-size: cover;
   border-bottom-style: solid;
@@ -45,25 +35,42 @@
   width: 225px;
 }
 
-.frame .noidung {
-  height: 163px;
-  left: 251px;
-  overflow: hidden;
+.content {
   position: absolute;
+  width: 490px;
+  height: 163px;
+  left: 230px;
   top: 37px;
-  width: 474px;
+  padding: 10px; /* Add some internal padding for spacing */
+  overflow: hidden; /* Hide text that overflows */
+  box-sizing: border-box; /* Include padding and border in the total width and height */
+  word-wrap: break-word; /* Ensure long words break and wrap onto the next line */
 }
 
-.frame .text {
+.contentValue {
   color: #000000;
   font-family: "Lato-Regular", Helvetica;
-  font-size: 20.2px;
+  font-size: 16px;
   font-weight: 400;
-  height: 152px;
-  left: 0;
+  letter-spacing: 0;
+  line-height: 30.3px;
+  width: 100%; /* Make the text take up the full width of the parent */
+  height: auto; /* Allow the height to adjust based on the content */
+  word-wrap: break-word; /* Ensure long words break and wrap to the next line */
+  overflow-wrap: break-word; /* Break words when necessary */
+}
+
+
+.more {
+  color: #000000;
+  font-family: "Lato-Regular", Helvetica;
+  font-size: 16px;
+  font-weight: 400;
+  height: 31px;
+  right: 0px;
   letter-spacing: 0;
   line-height: 30.3px;
   position: absolute;
-  top: 4px;
-  width: 474px;
+  bottom: 0;
+  white-space: nowrap;
 }
