@@ -7,11 +7,12 @@ import Login from './components/Login'
 import Verify from './components/Verify'
 import SignIn from './components/SignIn'
 import SetupInformation from './components/SetupInformation'
+import AvtAndInformation from './components/avtAndInformation'
 
 function App() {
   return (
     <div>
-      <Verify />
+      <AvtAndInformation />
     </div>
   );
 }
