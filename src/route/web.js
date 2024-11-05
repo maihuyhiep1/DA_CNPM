@@ -9,15 +9,14 @@ let initWebRoutes = (app) => {
   //   return res.sendFile(path.join(__dirname, 'login.html'));
   // });
 
-  router.get('/Login', homeController.getLoginPage);
+  // router.get('/Login', homeController.getLoginPage);
   
-  router.get('/SignIn', homeController.getSignInPage);
   router.post('/submit-login', homeController.postSignIn);
 
 
-  router.get('/Setup_iformation', (req, res) => {
-    return res.send("Setup_iformation");
-  });
+  // router.get('/Setup_iformation', (req, res) => {
+  //   return res.send("Setup_iformation");
+  // });
 
   router.post('/api/login', userController.handleLogin);
 
