@@ -1,5 +1,10 @@
+const nodemailer = require("nodemailer");
+const crypto = require('crypto'); 
 const db = require('../models/index');
 var bcrypt = require('bcryptjs');
+const { error } = require("console");
+const { resolve } = require("path");
+const { rejects } = require("assert");
 var salt = bcrypt.genSaltSync(10);
 
 /**
@@ -15,6 +20,19 @@ var salt = bcrypt.genSaltSync(10);
 let createUser = async (body) => { //body of html file which contains register information
   return new Promise(async (resolve, reject) => {
     try {
+      if (!body.email) {
+        resolve({
+          errCode: 2,
+          message: 'Missing email'
+        })
+      }
+      let check = await checkUserEmail(body.email);
+      if (check) {
+        resolve({
+          errCode: 1,
+          message: 'This email is already in used.'
+        })
+      } 
       let hashedPwFromBcrypt = await hashUserPassword(body.password);
       await db.User.create({
         name: body.name,
@@ -22,12 +40,109 @@ let createUser = async (body) => { //body of html file which contains register i
         hashed_pw: hashedPwFromBcrypt,
         role: 'user',
       })
-      resolve('New user has been created.');
+      resolve({
+        errCode: 0,
+        message: 'Ok'
+      });
     } catch (e) {
       reject(e);
     }
   })
 }
+
+
+
+
+let generateOTP = () => {
+    const otp = crypto.randomInt(100000, 999999); 
+    return otp.toString();
+}
+let sendOtpEmail = async (email, otp) => {
+    const transporter = nodemailer.createTransport({
+        service: 'Gmail', 
+        auth: {
+            user: 'dacnpm.tuanphatfanclub@gmail.com',
+            pass: 'tfdx qucb ypqg wtut', 
+        },
+    });
+
+    const htmlTemplate = `<p>OTP xác thực:<br><br>
+        <strong style="font-size: 20px; color: red;">${otp}</strong>
+        <br><br>
+        Vui lòng không tiết lộ OTP cho bất kỳ ai.
+        <br><br>
+        </p>`;
+
+    const mailOptions = {
+        from: 'dacnpm.tuanphatfanclub@gmail.com',
+        to: email,
+        subject: 'Xác thực OTP',
+        html: htmlTemplate,
+    };
+
+    await transporter.sendMail(mailOptions);
+    return otp;
+}
+let handleUserSignin_sentAuthCode = (email) => {
+  return new Promise( async (resolve, reject) => {
+    try {
+      if (!email) {
+        resolve({
+          errCode: 1,
+          message: "Missing email"
+        })
+      }
+      let check = await checkUserEmail(email);
+      if (check) {
+        resolve({
+          errCode: 1,
+          message: 'This email is already in used.'
+        })
+      }
+      await db.ConfirmationCode.update(
+        { status: 'used' }, // New status
+        { where: { email: email, status: 'active' } } // Conditions for the update
+      );
+      let otp = await sendOtpEmail(email, generateOTP());
+      const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
+      await db.ConfirmationCode.create({
+        email: email,
+        code: otp,
+        expiresAt: expiresAt
+      })
+      resolve({
+        errCode: 0,
+        message: 'Ok. Authentication code has been sent'
+      })
+    } catch (e) {
+      reject(e);
+    }
+  })
+}
+
+let handleUserSignin_verifyAuthCode = (email, password, authCode) => {
+  return new Promise( async (resolve, reject) => {
+    try {
+      let check = await checkAuthCode(email, authCode);
+      if(check) {
+        let createUserMessage = await createUser({ email: email, password: password });
+        resolve({
+          errCode: createUserMessage.errCode,
+          message: createUserMessage.message
+        })
+      } else {
+        resolve({
+          errCode: 3,
+          message: 'Invalid authentication code.'
+        })
+      }
+    } catch(e){
+      reject(e);
+    }
+  })
+
+}
+
 /**
  * This function hash a string.
  * 
@@ -44,6 +159,34 @@ let hashUserPassword = (password) => {
     }
   })
 }
+
+let checkAuthCode = (email, userAuthCode) => {
+  return new Promise( async (resolve, reject) => {
+    try {
+      let authCodeInDb = await db.ConfirmationCode.findOne({
+        where: {
+          email: email,
+          status: 'active'
+        },
+      })
+      if(authCodeInDb) {
+        if(authCodeInDb.code === userAuthCode ) {
+          authCodeInDb.status = 'used';
+          await authCodeInDb.save();
+          if (authCodeInDb.expiresAt > new Date()) {
+            resolve(true);
+          }
+          resolve(false);
+        }
+      }
+      resolve(false);
+    } catch(e) {
+      reject(e);
+    }
+  })
+}
+
+
 
 /**
  * Retrieves user information by user ID.
@@ -110,7 +253,7 @@ let updateUserInfo = (id, updateData) => {
  * @param {string} userPassword - The password of the user trying to log in.
  * @returns {Promise<Object>} - A promise that resolves to an object containing:
  * - `errCode` {number}: An error code (0 for success, 1 if account doesn't exist, 2 if user not found, 3 if wrong password).
- * - `errMessage` {string}: A message describing the result.
+ * - `message` {string}: A message describing the result.
  * - `user` {Object|undefined}: An object with the user information (excluding `hashed_pw`) if login is successful, otherwise undefined.
  *
  * @throws Will reject with an error if any exception occurs during the login process.
@@ -131,20 +274,20 @@ let handleUserLogin = (userEmail, userPassword) => {
           let isMatch = bcrypt.compareSync(userPassword, user.hashed_pw);
           if(isMatch) {
             userData.errCode = 0;
-            userData.errMessage = 'Ok';
+            userData.message = 'Ok';
             delete user.hashed_pw;
             userData.user = user;
           } else {
             userData.errCode = 3;
-            userData.errMessage = 'Wrong password';
+            userData.message = 'Wrong password';
           }
         } else {
           userData.errCode = 2,
-          userData.errMessage = 'User is not found'
+          userData.message = 'User is not found'
         }
       } else {
         userData.errCode = 1;
-        userData.errMessage = 'Account is not exist.';
+        userData.message = 'Account is not exist.';
       }
       resolve(userData);
     } catch (e) {
@@ -152,6 +295,7 @@ let handleUserLogin = (userEmail, userPassword) => {
     }
   })
 }
+
 
 
 let checkUserEmail = (userEmail) => {
@@ -171,10 +315,15 @@ let checkUserEmail = (userEmail) => {
   });
 };
 
+
+
+
 module.exports = {
   createUser: createUser,
   getUserInfoByID: getUserInfoByID,
   updateUserInfo: updateUserInfo,
   hashUserPassword: hashUserPassword,
   handleUserLogin: handleUserLogin,
+  handleUserSignin_sentAuthCode: handleUserSignin_sentAuthCode,
+  handleUserSignin_verifyAuthCode: handleUserSignin_verifyAuthCode,
 }

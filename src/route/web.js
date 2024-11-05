@@ -21,6 +21,10 @@ let initWebRoutes = (app) => {
 
   router.post('/api/login', userController.handleLogin);
 
+  router.post('/api/signin-send', userController.handleUserSignin_sentAuthCode);
+
+  router.post('/api/signin-verify', userController.handleUserSignin_verifyAuthCode);
+
 
   return app.use("/", router);
 };
