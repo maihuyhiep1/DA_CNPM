@@ -67,7 +67,7 @@
   width: 495px;
   height: 60px;
   top: 40px;
-  left: 328px;
+  margin: auto;
 }
 
 .AvtAndInformation .date {
@@ -80,10 +80,10 @@
 
 .AvtAndInformation .dateLabel {
   position: absolute;
-  width: 105px;
+  width: 95px;
   height: 30px;
   top: -1px;
-  left: 0;
+  left: -18px;
   font-family: "Lato-Regular", Helvetica;
   font-weight: 400;
   color: #00000073;
@@ -96,10 +96,10 @@
 
 .AvtAndInformation .dateValue {
   position: absolute;
-  width: 105px;
+  width: 80px;
   height: 30px;
   top: -1px;
-  left: 111px;
+  left: 94px;
   font-family: "Lato-Regular", Helvetica;
   font-weight: 400;
   color: #00000073;
@@ -115,7 +115,6 @@
   width: 187px;
   height: 30px;
   top: 30px;
-  left: 0;
   border-right-width: 1.01px;
   border-right-style: solid;
   border-color: #e5e6ed;
@@ -199,10 +198,11 @@
 
 .AvtAndInformation .follow {
     position: absolute;
-    width: 40px;
+    width: 165px;
     height: 30px;
     top: 30px;
-    left: 380px;
+    left: 374px;
+
   }
 
 .AvtAndInformation .followLabel {
@@ -237,7 +237,9 @@
   white-space: nowrap;
 }
 .informationCount{
+  width: 543px;
   position: relative;
   top:-40px;
- left: 320px;
+  margin: auto;
+
 }

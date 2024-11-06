@@ -13,7 +13,7 @@ import PostInProfile from './components/postInProfile'
 function App() {  
   return (
     <div>
-      <PostInProfile />  
+      <AvtAndInformation />  
     </div>
   );
 }

@@ -1,4 +1,8 @@
+.navbar{
+  height: 52px;
 
+
+}
 .navbar .logoBrand { /* navbar .logo_brand */
   position: absolute;
   width: 131px;
@@ -93,12 +97,13 @@
   height: 100%;
 }
 
-.function {
+.navbar .function {
   position: relative;
   width: 276px;
   height: 40px;
   top: 8px;
-  left: 1220px;
+  float: right;
+  padding-left: 1%;
 }
 
 .function .postButton { /* function .post_button */
