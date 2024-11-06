@@ -1,3 +1,39 @@
+<<<<<<< HEAD
+# Node.js dependencies
+node_modules/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment variables
+.env
+
+# Build directories
+dist/
+build/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# IDE/editor specific files
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# Coverage directory used by tools like istanbul
+coverage/
+
+# Temporary files
+*.tmp
+*.temp
+
+# Miscellaneous
+*.log
+=======
 # Logs
 logs
 *.log
@@ -22,3 +58,4 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+>>>>>>> 8bfd7303aa5bdd91343203d31dc258ef6a159838
