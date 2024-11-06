@@ -1,22 +1,18 @@
-.element-light {
-  width: 1920px;
-  height: 1200px;
-  background-color: #f0f0f0;
-}
+body {background-color:  #f0f0f0;}
 
-.element-light .form {
+ .form {
   position: relative;
   width: 481px;
   height: 559px;
-  top: 84px;
-  left: 720px;
+  top: 20px;
+  left: 0;
+  margin: 0 auto; /* Centers the form horizontally */
   background-color: #fcfdfd;
   border-radius: 16px;
-  border: 1px solid;
-  border-color: #e5e6ed;
+  border: 1px solid #e5e6ed;
 }
 
-.element-light .sign-in {
+ .signInAndForgetPassword { /* sign_in_and_forget_passwor */
   position: absolute;
   width: 172px;
   height: 16px;
@@ -24,18 +20,12 @@
   left: 156px;
 }
 
-.element-light .overlap-group {
-  position: relative;
-  height: 17px;
-  top: -1px;
-}
-
-.element-light .text-wrapper {
+ .textInSignIn { /* text_in_sign_in */
   position: absolute;
   width: 123px;
   height: 16px;
   top: 0;
-  left: 0;
+  left: -132px;
   font-family: "Roboto-Regular", Helvetica;
   font-weight: 400;
   color: #141414;
@@ -46,18 +36,19 @@
   white-space: nowrap;
 }
 
-.element-light .link {
+
+ .forgetPassword { /* forget_password */
   position: absolute;
   width: 50px;
   height: 16px;
   top: 1px;
-  left: 123px;
+  right: -83px;
 }
 
-.element-light .div {
+ .link {
   width: 50px;
   height: 16px;
-  top: -1px;
+  top: 0px;
   left: 0;
   font-family: "Roboto-Regular", Helvetica;
   font-weight: 400;
@@ -70,7 +61,7 @@
   white-space: nowrap;
 }
 
-.element-light .google-button {
+ .googleButton { /* google_button */
   position: absolute;
   width: 431px;
   height: 43px;
@@ -82,23 +73,21 @@
   border-color: #c3c4c9;
 }
 
-.element-light .google-png {
+ .googlePng { /* google_png */
   position: absolute;
   width: 24px;
   height: 25px;
   top: 9px;
   left: 115px;
-  background-image: url(./img/google-png.png);
+  background-image: url(./img_login/google-png.png);
   background-size: cover;
   background-position: 50% 50%;
 }
 
-.element-light .text-wrapper-2 {
+.textInGoogleButton { /* text_in_google_button */ 
   position: absolute;
   width: 171px;
   height: 24px;
-  top: 9px;
-  left: 146px;
   font-family: "Roboto-Regular", Helvetica;
   font-weight: 400;
   color: #000000d9;
@@ -106,9 +95,15 @@
   letter-spacing: 0;
   line-height: 24px;
   white-space: nowrap;
+  display: flex;
+  align-items: center; /* Centers text vertically */
+  top: 50%;
+  left: 146px;
+  transform: translateY(-50%); /* Adjusts the position to center vertically */
 }
 
-.element-light .login-button {
+
+ .form .loginButton { /* login_button */
   position: absolute;
   width: 431px;
   height: 40px;
@@ -120,28 +115,33 @@
   box-shadow: 0px 2px 0px #0000000b;
 }
 
-.element-light .text-wrapper-3 {
+.textInLoginButton { /* text_in_login_button */
   width: 77px;
   height: 19px;
-  top: 9px;
-  left: 177px;
   font-family: "Roboto-Bold", Helvetica;
   font-weight: 700;
   color: #ffffff;
   font-size: 16px;
   line-height: 24px;
   position: absolute;
+  display: flex;
+  align-items: center; /* Centers text vertically */
+  justify-content: center; /* Centers text horizontally */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Adjusts the position to center accurately */
   text-align: center;
   letter-spacing: 0;
   white-space: nowrap;
 }
 
-.element-light .input-password {
-  top: 254px;
-  position: absolute;
+
+ .password {
+  top: 230px;
+  position: relative;
   width: 431px;
   height: 36px;
-  left: 25px;
+  margin: 0 auto; /* Centers horizontally */
   background-color: #fcfdfd;
   border-radius: 8px;
   overflow: hidden;
@@ -149,48 +149,19 @@
   border-color: #c3c4c9;
 }
 
-.element-light .text-wrapper-4 {
-  position: absolute;
-  width: 66px;
-  height: 17px;
-  top: 8px;
-  left: 13px;
-  font-family: "Inter-Regular", Helvetica;
-  font-weight: 400;
-  color: #00000073;
-  font-size: 14.9px;
-  letter-spacing: 0;
-  line-height: normal;
-  white-space: nowrap;
-}
 
-.element-light .input-email {
-  top: 202px;
-  position: absolute;
+.username {
+  top: 220px;
+  position: relative; /* Change to relative for centering */
   width: 431px;
   height: 36px;
-  left: 25px;
+  margin: 0 auto; /* Centers horizontally */
   background-color: #fcfdfd;
   border-radius: 8px;
   overflow: hidden;
-  border: 1px solid;
-  border-color: #c3c4c9;
+  border: 1px solid #c3c4c9;
 }
 
-.element-light .text-wrapper-5 {
-  position: absolute;
-  width: 46px;
-  height: 17px;
-  top: 8px;
-  left: 13px;
-  font-family: "Inter-Regular", Helvetica;
-  font-weight: 400;
-  color: #00000073;
-  font-size: 15.4px;
-  letter-spacing: 0;
-  line-height: normal;
-  white-space: nowrap;
-}
 
  .logo {
   position: absolute;
@@ -203,7 +174,7 @@
   background-position: 50% 50%;
 }
 
-.element-light .heading {
+ .title {
   position: absolute;
   width: 479px;
   height: 72px;
@@ -213,7 +184,7 @@
   box-shadow: inset 0px -1px 0px #f0f0f0;
 }
 
-.element-light .text-wrapper-6 {
+ .titleText { /* title_text */
   position: absolute;
   width: 165px;
   height: 24px;
@@ -228,7 +199,7 @@
   white-space: nowrap;
 }
 
-.close {
+.closeButton { /* close_button */
   position: absolute;
   width: 40px;
   height: 40px;
@@ -240,7 +211,7 @@
   border-color: #edeef2;
 }
 
-.close .image {
+.closeButton .closeImage { /* close_button .close_image */
   position: absolute;
   width: 28px;
   height: 28px;
@@ -249,7 +220,7 @@
   object-fit: cover;
 }
 
-.login-button {
+.loginButton { /* login_button */
   background-color: transparent; /* Giữ nguyên màu nền của div */
   border: none; /* Loại bỏ đường viền mặc định của button */
   padding: 0; /* Xóa phần đệm mặc định của button */
@@ -262,18 +233,18 @@
   color: inherit; /* Giữ nguyên màu chữ */
 }
 
-.login-button:focus {
+.loginButton:focus { /* login_button */
   outline: none; /* Loại bỏ viền bao quanh khi button được focus */
 }
 /* Đặt kích thước và căn chỉnh của phần tử chứa */
-.input-password {
+.password {
   display: block;
   margin-bottom: 10px; /* Khoảng cách dưới, có thể tùy chỉnh */
 }
 
 
 /* Thiết lập giao diện cho input mật khẩu */
-.password-input {
+.passwordInput { /* password_input */
   width: 100%; /* Hoặc kích thước mong muốn */
   padding: 8px; /* Khoảng cách bên trong cho input */
   border: 1px solid #ffffff;
@@ -283,10 +254,10 @@
   outline:  none; /* Loại bỏ viền khi focus */
 }
 
-.password-input:focus {
+.passwordInput:focus { /* password_input */
   border-color: none; /* Thay đổi màu viền khi input được focus, có thể thay đổi */
 }
-.email-input {
+.usernameInput { /* username_input */
   width: 100%; /* Hoặc kích thước mong muốn */
   padding: 8px; /* Khoảng cách bên trong cho input */
   border: 1px solid #ffffff;
@@ -296,6 +267,6 @@
   outline:  none; /* Loại bỏ viền khi focus */
 }
 
-.email-input:focus {
+.usernameInput:focus { /* username_input */
   border-color: none; /* Thay đổi màu viền khi input được focus, có thể thay đổi */
 }
