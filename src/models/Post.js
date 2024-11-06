@@ -51,7 +51,7 @@ exports.getPostById = (post_id, callback) => {
 };
   
   // Cập nhật bài đăng
-  exports.updatePost = (postId, updatedFields, callback) => {
+  exports.updatePost = (postId,author_id, updatedFields, callback) => {
     // Chỉ cập nhật các trường title, avatar, và content
     const sql = `
         UPDATE posts 
