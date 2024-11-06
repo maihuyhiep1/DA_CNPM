@@ -1,3 +1,65 @@
+<<<<<<< HEAD
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thêm bài viết mới</title>
+</head>
+<body>
+    <h2>Thêm bài viết mới</h2>
+    <form id="postForm">
+        <label for="title">Tiêu đề:</label>
+        <input type="text" id="title" name="title" required><br><br>
+
+        <label for="avatar">Link Avatar:</label>
+        <input type="text" id="avatar" name="avatar"><br><br>
+
+        <label for="content">Nội dung:</label>
+        <textarea id="content" name="content" rows="4" required></textarea><br><br>
+
+        <label for="isQnA">Là QnA:</label>
+        <input type="checkbox" id="isQnA" name="isQnA"><br><br>
+
+        <button type="submit">Đăng bài</button>
+    </form>
+
+    <script>
+        document.getElementById('postForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const postData = {
+                title: document.getElementById('title').value,
+                avatar: document.getElementById('avatar').value,
+                content: document.getElementById('content').value,
+                isQnA: document.getElementById('isQnA').checked
+            };
+
+            try {
+                const response = await fetch('/posts', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(postData)
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    alert('Bài viết đã được thêm thành công!');
+                    console.log(result); // In kết quả để kiểm tra
+                } else {
+                    const error = await response.json();
+                    alert('Lỗi: ' + error.message);
+                }
+            } catch (error) {
+                console.error('Đã xảy ra lỗi:', error);
+                alert('Đã xảy ra lỗi khi thêm bài viết.');
+            }
+        });
+    </script>
+</body>
+=======
 <!doctype html>
 <html lang="en">
   <head>
@@ -10,4 +72,5 @@
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
+>>>>>>> 8bfd7303aa5bdd91343203d31dc258ef6a159838
 </html>
