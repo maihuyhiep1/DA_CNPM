@@ -42,7 +42,7 @@ exports.updatePost = (req, res) => {
     const { postId } = req.params;  // Lấy postId từ req.params
     const updatedFields = req.body; // Dữ liệu cần cập nhật từ req.body
     const author_id = req.user_id;
-    Post.updatePost(postId, updatedFields, (err, result) => {
+    Post.updatePost(postId,author_id, updatedFields, (err, result) => {
         if (err) {
             return res.status(500).json({ error: 'An error occurred while updating the post.' });
         }
