@@ -1,4 +1,10 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
+
+.env
+/node_modules
+/.vscode
+=======
 # Node.js dependencies
 node_modules/
 
@@ -33,6 +39,7 @@ coverage/
 
 # Miscellaneous
 *.log
+>>>>>>> 59622b5e483f47a2dc074705774ab2338929d342
 =======
 # Logs
 logs
@@ -58,4 +65,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+<<<<<<< HEAD
+>>>>>>> main
+=======
 >>>>>>> 8bfd7303aa5bdd91343203d31dc258ef6a159838
+>>>>>>> 59622b5e483f47a2dc074705774ab2338929d342

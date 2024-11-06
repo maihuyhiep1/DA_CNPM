@@ -5,6 +5,31 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+<<<<<<< HEAD
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon --exec babel-node ./src/server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.20.3",
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
+    "express": "^4.21.1",
+    "mysql2": "^3.11.3",
+    "nodemailer": "^6.9.16",
+    "passport": "^0.7.0",
+    "passport-google-oauth20": "^2.0.0",
+    "sequelize": "^6.37.5"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.26.0",
+    "@babel/node": "^7.26.0",
+    "@babel/preset-env": "^7.26.0",
+    "nodemon": "^3.1.7",
+    "sequelize-cli": "^6.6.2"
+=======
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -19,6 +44,7 @@
     "mysql": "^2.18.1",
     "mysql2": "^3.11.3",
     "uuid": "^11.0.1"
+>>>>>>> 59622b5e483f47a2dc074705774ab2338929d342
 =======
   "name": "my-react-app",
   "private": true,
@@ -47,6 +73,10 @@
     "eslint-plugin-react-refresh": "^0.4.14",
     "globals": "^15.11.0",
     "vite": "^5.4.10"
+<<<<<<< HEAD
+>>>>>>> main
+=======
 >>>>>>> 8bfd7303aa5bdd91343203d31dc258ef6a159838
+>>>>>>> 59622b5e483f47a2dc074705774ab2338929d342
   }
 }
