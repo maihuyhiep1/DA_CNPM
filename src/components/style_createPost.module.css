@@ -1,0 +1,148 @@
+body {
+    background-color: #ffffff;
+  }
+  
+  .background {
+    position: relative;
+    padding: 1%;
+    background-color: #ffffff;
+  }
+  
+  /* Guide Section */
+  .guideLink {
+    position: absolute;
+    width: 231px;
+    height: 175px;
+    top: 2rem;
+    float: right;
+    border-radius: 8px 8px 8px 8px;
+    border: 1px solid #cbd5e0;
+  }
+  
+  .guideText {
+    position: absolute;
+    width: 136px;
+    height: 24px;
+    top: 16px;
+    left: 17px;
+    font-family: "Lato-Bold", Helvetica;
+    font-weight: 700;
+    color: #2d3748;
+    font-size: 16px;
+    line-height: 24px;
+    white-space: nowrap;
+  }
+  
+  .guideImage {
+    position: absolute;
+    width: 197px;
+    height: 107px;
+    top: 51px;
+    left: 17px;
+    background-image: url(./img_createPost/hd.png);
+    background-size: cover;
+    background-position: center;
+  }
+  
+  /* Post Form */
+  .postForm {
+    position: relative;
+    width: 800px;
+    height:460px;
+    top: 2 rem;
+    margin: auto;
+    background-color: #f7f7f7;
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .titleTextArea {
+    width: 97.25%;
+    border-radius: 4px;
+    border: 1px solid #cbd5e0;
+    padding: 10px;
+    font-family: "Lato-Bold", Helvetica;
+    font-size: 24px;
+    outline: none;
+    resize: none;
+  }
+  
+  .fileUpload {
+    max-width: 100%;
+    height: 130px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #e2e8f040;
+    border-radius: 8px;
+    border: 2px dashed #cbd5e0;
+  }
+  
+  .fileInput {
+    display: none;
+  }
+  
+  .uploadIcon {
+    width: 22px;
+    height: 20px;
+  }
+  
+  .uploadText {
+    height: 24px;
+    font-family: "Lato-Regular", Helvetica;
+    font-weight: 400;
+    color: #222b45;
+    font-size: 16px;
+    line-height: 24px;
+    white-space: nowrap;
+  }
+  
+  .dragDropText {
+    height: 24px;
+    font-family: "Lato-Regular", Helvetica;
+    font-weight: 400;
+    color: #222b45;
+    font-size: 12px;
+    line-height: 24px;
+    white-space: nowrap;
+  }
+  
+  .textArea {
+    min-height: 100px;
+    border-radius: 4px;
+    border: 1px solid #cbd5e0;
+    padding: 10px;
+    font-family: "Lato-Regular", Helvetica;
+    font-size: 14px;
+    outline: none;
+    resize: none;
+  }
+  
+  .wordCount {
+    text-align: right;
+    font-family: "Lato-Regular", Helvetica;
+    font-weight: 400;
+    color: #2d3748;
+    font-size: 16px;
+    line-height: 24px;
+  }
+  
+  .submitButton {
+    align-self: flex-end;
+    padding: 10px 24px;
+    background-color: #e5e6ed;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+  }
+  
+  .submitButton:hover {
+    background-color: #d4d4d4;
+  }
+  
+  
