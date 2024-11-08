@@ -11,10 +11,13 @@ import AvtAndInformation from './components/avtAndInformation'
 import PostInProfile from './components/postInProfile'
 import CreatePost from  './components/createPost'
 import QnA from './components/QnA'
+import WriteComment from './components/writeComment'
+
+
 function App() {  
   return (
     <div>
-      <QnA />  
+      <WriteComment />  
     </div>
   );
 }
@@ -22,3 +25,28 @@ function App() {
 
 export default App
     
+
+
+
+
+
+
+// writeComment run test
+// const App = () => {
+//   const handleSubmit = (comment) => {
+//     console.log('Dữ liệu gửi:', comment);
+//     alert(`Bình luận của bạn: ${comment}`);
+//   };
+
+//   return (
+//     <div>
+//       <h1>Viết bình luận</h1>
+//       <WriteComment
+//         placeholder="Nhập bình luận của bạn..."
+//         onSubmit={handleSubmit}
+//         avatarUrl="img_profile/avt.png" // Đường dẫn ảnh avatar
+//       />
+//     </div>
+//   );
+// };
+// export default App;
