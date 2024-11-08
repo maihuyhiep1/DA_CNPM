@@ -43,7 +43,10 @@ const CreatePost = () => {
         <div className={styles.wordCount}>
           <span>Bài viết 0 từ</span>
         </div>
-
+        <div className={styles.checkboxWrapper}>
+      <input id="example-1" className={styles.substituted} type="checkbox" aria-hidden="true" />
+      <label htmlFor="example-1" className={styles.label}>QnA</label>
+     </div>
         <button type="submit" className={styles.submitButton}>
           <span>Đăng</span>
         </button>
