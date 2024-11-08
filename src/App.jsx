@@ -10,11 +10,11 @@ import SetupInformation from './components/SetupInformation'
 import AvtAndInformation from './components/avtAndInformation'
 import PostInProfile from './components/postInProfile'
 import CreatePost from  './components/createPost'
-
+import QnA from './components/QnA'
 function App() {  
   return (
     <div>
-      <CreatePost />  
+      <QnA />  
     </div>
   );
 }

@@ -1,0 +1,40 @@
+.background {
+  background-image: url('./img_QnA/QnA.png');
+  background-size: cover; /* Ensures the image covers the entire background */
+  background-position: center; /* Centers the image */
+  background-repeat: no-repeat; /* Avoids tiling */
+
+  border-radius: 8px;
+  height: 180px;
+  overflow: hidden;
+  width: 108px;
+}
+
+.name{
+width: 56px;
+height: 16px;
+color: #FFfffF;
+font-family: "Roboto-Regular", Helvetica;
+font-size: 15px;
+font-style: normal;
+font-weight: 500;
+line-height: 24px; 
+position: relative;
+top :117px;
+left: 10px;
+}
+
+.avt{
+width: 32px;
+height: 32px;
+flex-shrink: 0;
+position: relative;
+top:10px;
+left: 5px;
+border-radius: 32px;
+border: 1px solid #1570EF;
+background-image: url('./img_QnA/avt.png');
+background-size: cover; /* Ensures the image covers the entire background */
+background-position: center; /* Centers the image */
+background-repeat: no-repeat; /* Avoids tiling */
+}
