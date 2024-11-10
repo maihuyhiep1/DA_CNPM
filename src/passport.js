@@ -22,6 +22,7 @@ passport.use(
             name: profile.displayName,
             profilePicture: profile.photos[0].value,
             authProvider: "google",
+            role: 'user',
           });
         }
 

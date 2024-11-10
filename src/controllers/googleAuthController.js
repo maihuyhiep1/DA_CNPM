@@ -1,5 +1,15 @@
 const passport = require("passport");
 
+let callbackUser = (req, res) => {
+   // Successful authentication
+    const { id, name, email, role } = req.user;
+    res.status(200).json({
+      errCode: 0,
+      message: 'Ok',
+      user: { id, name, email, role },
+    });
+}
+
 const loginSuccess = (req, res) => {
   if (req.user) {
     res.status(200).json({
@@ -37,4 +47,5 @@ module.exports = {
   loginSuccess: loginSuccess,
   loginFailed: loginFailed,
   userLogout: userLogout,
+  callbackUser: callbackUser,
 };

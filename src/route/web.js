@@ -19,9 +19,8 @@ let initWebRoutes = (app) => {
   router.get('/login/success',googleAuthController.loginSuccess)
   router.get('/login/failed', googleAuthController.loginFailed)
   router.get('/auth/google/callback', passport.authenticate('google', { 
-    successRedirect: '/', 
     failureRedirect: '/login/failed' 
-  }));
+  }), googleAuthController.callbackUser);
   router.get('/google/auth', passport.authenticate("google", { scope: ["profile", "email"] }));
   router.get('/logout', googleAuthController.userLogout);
 
