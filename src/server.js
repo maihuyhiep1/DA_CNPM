@@ -5,10 +5,24 @@ const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
 dotenv.config();
 
+const passport = require('passport');
+const psssportSetup = require('./passport.js');
+const session = require('express-session');
+
 const app = express();
+
+
+app.use(session({
+  secret: 'yourSecretKey', // Replace with a strong secret
+  resave: false,
+  saveUninitialized: true
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
 
 initWebRoutes(app);
 connectDB();

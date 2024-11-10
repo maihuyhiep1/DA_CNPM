@@ -12,33 +12,59 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
+
   User.init({
-    name: DataTypes.STRING,
-    email: DataTypes.STRING,
-    hashed_pw: DataTypes.STRING,
+    username: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      unique: true,
+    },
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+    },
+    hashed_pw: {
+      type: DataTypes.STRING,
+      allowNull: true, // For local accounts only
+    },
+    googleId: {
+      type: DataTypes.STRING,
+      allowNull: true, // For Google accounts only
+    },
+    authProvider: {
+      type: DataTypes.ENUM,
+      values: ['local', 'google'],
+      allowNull: false,
+    },
     post_count: {
       type: DataTypes.INTEGER,
-      defaultValue: 0
+      defaultValue: 0,
     },
     like_count: {
       type: DataTypes.INTEGER,
-      defaultValue: 0
+      defaultValue: 0,
     },
     avatar: DataTypes.TEXT,
     follower_count: {
       type: DataTypes.INTEGER,
-      defaultValue: 0
+      defaultValue: 0,
     },
     description: DataTypes.STRING,
     role: {
       type: DataTypes.ENUM,
       values: ['admin', 'user', 'moderator'],
-      defaultValue: 'user'
+      defaultValue: 'user',
     }
   }, {
     sequelize,
     modelName: 'User',
     timestamps: false, // Prevents createdAt and updatedAt columns
   });
+
   return User;
 };

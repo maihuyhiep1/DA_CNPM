@@ -1,9 +1,9 @@
-const path = require('path');
-
 let getHomePage = (req, res) => {
   return res.send("This is a home page.")
 }
-
+let getLoginPage = (req, res) => {
+  return res.send("This is login page");
+}
 
 let postSignIn = (req, res) => {
   console.log(req.body);
@@ -13,6 +13,7 @@ let postSignIn = (req, res) => {
 
 module.exports = {
   getHomePage: getHomePage,
+  getLoginPage:getLoginPage,
   
   postSignIn: postSignIn,
 }

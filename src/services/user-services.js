@@ -2,9 +2,6 @@ const nodemailer = require("nodemailer");
 const crypto = require('crypto'); 
 const db = require('../models/index');
 var bcrypt = require('bcryptjs');
-const { error } = require("console");
-const { resolve } = require("path");
-const { rejects } = require("assert");
 var salt = bcrypt.genSaltSync(10);
 
 /**
@@ -39,6 +36,7 @@ let createUser = async (body) => { //body of html file which contains register i
         email: body.email,
         hashed_pw: hashedPwFromBcrypt,
         role: 'user',
+        authProvider: 'local',
       })
       resolve({
         errCode: 0,
@@ -314,8 +312,6 @@ let checkUserEmail = (userEmail) => {
     }
   });
 };
-
-
 
 
 module.exports = {

@@ -1,4 +1,3 @@
-const { promises } = require('nodemailer/lib/xoauth2');
 const userService = require('../services/user-services');
 //API
 
