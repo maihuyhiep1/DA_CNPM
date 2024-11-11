@@ -12,12 +12,13 @@ import PostInProfile from './components/postInProfile'
 import CreatePost from  './components/createPost'
 import QnA from './components/QnA'
 import WriteComment from './components/writeComment'
+import Footer from './components/Footer'
 
 
 function App() {  
   return (
     <div>
-      <WriteComment />  
+      <SetupInformation/>
     </div>
   );
 }
