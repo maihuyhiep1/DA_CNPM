@@ -12,13 +12,20 @@ import PostInProfile from './components/postInProfile'
 import CreatePost from  './components/createPost'
 import QnA from './components/QnA'
 import WriteComment from './components/writeComment'
-
+import Footer from './components/Footer'
+import { BrowserRouter as Router, Routes, Route} from 'react-router-dom'
+import { publicRoutes } from './RoutesFE'
 
 function App() {  
   return (
-    <div>
-      <WriteComment />  
-    </div>
+    <Router>
+      <Routes>
+        {publicRoutes.map((route, index) => {
+          const Page = route.component
+          return <Route key={index} path={route.path} element={<Page />} />;
+        })}
+      </Routes>
+    </Router>
   );
 }
 

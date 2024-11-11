@@ -1,0 +1,31 @@
+.footer{
+    height: 330px;
+}
+.container{
+    display: flex;
+height: 59px;
+justify-content: center;
+align-items: center;
+flex-shrink: 0;
+background: #1570EF;
+}
+.orderedList{
+    display: flex;
+}
+.orderedList > div {
+  margin:30px;
+}
+.text{
+    color: #FFF;
+font-family: "Lato-Bold", Helvetica;
+font-size: 16px;
+font-style: normal;
+font-weight: 700;
+line-height: 30.284px; /* 171.429% */
+text-transform: uppercase;
+white-space: no;
+}
+.link{
+    height: 271px;
+    border: solid 1px;
+}

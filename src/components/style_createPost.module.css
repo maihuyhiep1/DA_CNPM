@@ -48,7 +48,7 @@ body {
   .postForm {
     position: relative;
     width: 800px;
-    height:460px;
+    min-height:460px;
     top: 2 rem;
     margin: auto;
     background-color: #f7f7f7;
@@ -72,7 +72,7 @@ body {
   
   .fileUpload {
     max-width: 100%;
-    height: 130px;
+    min-height: 130px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -80,10 +80,13 @@ body {
     background-color: #e2e8f040;
     border-radius: 8px;
     border: 2px dashed #cbd5e0;
+    cursor: pointer;
   }
-  
-  .fileInput {
-    display: none;
+
+  .previewImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
   
   .uploadIcon {

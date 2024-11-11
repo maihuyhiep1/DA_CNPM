@@ -12,33 +12,40 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@ckeditor/ckeditor5-build-classic": "^43.3.1",
+    "@ckeditor/ckeditor5-image": "^43.3.1",
+    "@ckeditor/ckeditor5-react": "^9.3.1",
+    "@ckeditor/ckeditor5-upload": "^43.3.1",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.3",
+    "ckeditor5": "^43.3.1",
+    "ckeditor5-premium-features": "^43.3.1",
+    "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "ejs": "^3.1.10",
     "express": "^4.21.1",
+    "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.11.3",
     "nodemailer": "^6.9.16",
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0",
-    "sequelize": "^6.37.5",
-    "jsonwebtoken": "^9.0.2",
-    "cors": "^2.8.5",
-    "uuid": "^11.0.1",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.28.0",
+    "sequelize": "^6.37.5",
+    "uuid": "^11.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.26.0",
     "@babel/node": "^7.26.0",
     "@babel/preset-env": "^7.26.0",
-    "nodemon": "^3.1.7",
-    "sequelize-cli": "^6.6.2",
     "@vitejs/plugin-react": "^4.3.3",
     "eslint": "^9.13.0",
     "eslint-plugin-react": "^7.37.2",
     "eslint-plugin-react-hooks": "^5.0.0",
     "eslint-plugin-react-refresh": "^0.4.14",
+    "nodemon": "^3.1.7",
+    "sequelize-cli": "^6.6.2",
     "vite": "^5.4.10"
   }
 }
