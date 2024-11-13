@@ -3,7 +3,7 @@ const crypto = require('crypto');
 const db = require('../models/index');
 var bcrypt = require('bcryptjs');
 var salt = bcrypt.genSaltSync(10);
-
+require('dotenv').config();
 /**
  * Creates a new user in the database.
  * 
@@ -23,15 +23,32 @@ let createUser = async (body) => { //body of html file which contains register i
           message: 'Missing email'
         })
       }
-      let check = await checkUserEmail(body.email);
-      if (check) {
+      if (!body.name) {
+        resolve({
+          errCode: 6,
+          message: 'Missing nickname.'
+        })
+      }
+      let emailExists = await checkUserEmail(body.email);
+      if (emailExists) {
         resolve({
           errCode: 1,
-          message: 'This email is already in used.'
+          message: 'This email is already in use.'
         })
       } 
+       // Check if username is provided and already exists
+      if (body.name) {
+        let usernameExists = await checkUsername(body.name);
+        if (usernameExists) {
+          resolve({
+            errCode: 5,
+            message: 'This username is already taken.'
+          });
+        }
+      }
       let hashedPwFromBcrypt = await hashUserPassword(body.password);
       await db.User.create({
+        username: body.username || null,
         name: body.name,
         email: body.email,
         hashed_pw: hashedPwFromBcrypt,
@@ -59,8 +76,8 @@ let sendOtpEmail = async (email, otp) => {
     const transporter = nodemailer.createTransport({
         service: 'Gmail', 
         auth: {
-            user: 'dacnpm.tuanphatfanclub@gmail.com',
-            pass: 'tfdx qucb ypqg wtut', 
+            user: process.env.OTP_EMAIL_ADDRESS,
+            pass: process.env.OTP_EMAIL_PASSWORD
         },
     });
 
@@ -86,7 +103,7 @@ let handleUserSignin_sentAuthCode = (email) => {
     try {
       if (!email) {
         resolve({
-          errCode: 1,
+          errCode: 4,
           message: "Missing email"
         })
       }
@@ -118,12 +135,12 @@ let handleUserSignin_sentAuthCode = (email) => {
   })
 }
 
-let handleUserSignin_verifyAuthCode = (email, password, authCode) => {
+let handleUserSignin_verifyAuthCode = (userData, authCode) => {
   return new Promise( async (resolve, reject) => {
     try {
-      let check = await checkAuthCode(email, authCode);
+      let check = await checkAuthCode(userData.email, authCode);
       if(check) {
-        let createUserMessage = await createUser({ email: email, password: password });
+        let createUserMessage = await createUser(userData);
         resolve({
           errCode: createUserMessage.errCode,
           message: createUserMessage.message
@@ -247,7 +264,7 @@ let updateUserInfo = (id, updateData) => {
 /**
  * Handles user login by checking email and password credentials.
  *
- * @param {string} userEmail - The email of the user trying to log in.
+ * @param {string} username - The email of the user trying to log in.
  * @param {string} userPassword - The password of the user trying to log in.
  * @returns {Promise<Object>} - A promise that resolves to an object containing:
  * - `errCode` {number}: An error code (0 for success, 1 if account doesn't exist, 2 if user not found, 3 if wrong password).
@@ -256,15 +273,15 @@ let updateUserInfo = (id, updateData) => {
  *
  * @throws Will reject with an error if any exception occurs during the login process.
  */
-let handleUserLogin = (userEmail, userPassword) => {
+let handleUserLogin = (username, userPassword) => {
   return new Promise(async(resolve, reject) => {
     try {
       let userData = {};
-      let isExist = await checkUserEmail(userEmail);
+      let isExist = await checkUsername(username);
       if(isExist) {
         let user = await db.User.findOne({
-          where: {email:  userEmail},
-          attributes: ['email', 'role', 'hashed_pw'],
+          where: {username:  username},
+          attributes: ['id', 'role', 'hashed_pw'],
           raw: true
         })
         if(user) {
@@ -294,6 +311,23 @@ let handleUserLogin = (userEmail, userPassword) => {
   })
 }
 
+
+let checkUsername = (username) => {
+  return new Promise( async (resolve, reject) => {
+    try {
+      let user = await db.User.findOne({
+        where: { username: username},
+      });
+      if (user) {
+        resolve(true);
+      } else {
+        resolve(false);
+      }
+    } catch(e) {
+      reject(e);
+    }
+  })
+}
 
 
 let checkUserEmail = (userEmail) => {

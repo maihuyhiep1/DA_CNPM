@@ -10,9 +10,6 @@ let initWebRoutes = (app) => {
   //   return res.sendFile(path.join(__dirname, 'login.html'));
   // });
 
-  router.get('/login', homeController.getLoginPage);
-  
-  router.post('/submit-login', homeController.postSignIn);
 
 
   // Routes for google authentication
