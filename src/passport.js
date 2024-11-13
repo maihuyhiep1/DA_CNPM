@@ -20,7 +20,7 @@ passport.use(
             email: profile.emails[0].value,
             googleId: profile.id,
             name: profile.displayName,
-            profilePicture: profile.photos[0].value,
+            avatar: profile.photos[0].value,
             authProvider: "google",
             role: 'user',
           });
