@@ -100,6 +100,7 @@ body {background-color:  #f0f0f0;}
   top: 50%;
   left: 146px;
   transform: translateY(-50%); /* Adjusts the position to center vertically */
+  cursor: pointer;
 }
 
 

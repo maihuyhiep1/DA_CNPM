@@ -1,14 +1,25 @@
-import React from 'react';
-import styles from './style_setup.module.css';
+import React from "react";
+import styles from "./style_setup.module.css";
+import { useState } from "react";
+import axios from "axios";
 
 const SetupInformation = () => {
+  const [value, setValue] = useState({});
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(value);
+  }
   return (
     <div className={styles.form}>
-      <form action="/submit-login" method="POST">
+      <form action="/submit-login" method="POST" onSubmit={handleSubmit}>
         <div className={styles.title}>
           <div className={styles.titleText}>Đăng ký thông tin</div>
           <div className={styles.closeButton}>
-            <img className={styles.closeImage} src="img_setup_information/image.png" alt="Close" />
+            <img
+              className={styles.closeImage}
+              src="img_setup_information/image.png"
+              alt="Close"
+            />
           </div>
         </div>
 
@@ -19,12 +30,13 @@ const SetupInformation = () => {
             className={styles.nicknameInput}
             placeholder="Nickname"
             required
+            onChange={(e) => setValue({ ...value, name: e.target.value })}
           />
         </div>
 
         <p className={styles.notice}>
-          Đây là tên sẽ xuất hiện trong các bài viết của bạn. Bạn có thể sử dụng tên thật hoặc nick. Bạn không thể thay
-          đổi tên này về sau.
+          Đây là tên sẽ xuất hiện trong các bài viết của bạn. Bạn có thể sử dụng
+          tên thật hoặc nick. Bạn không thể thay đổi tên này về sau.
         </p>
 
         <div className={styles.date}>
@@ -33,6 +45,7 @@ const SetupInformation = () => {
             id="birthdate"
             className={styles.dateInput}
             required
+            onChange={(e) => setValue({ ...value, birthdate: e.target.value })}
           />
         </div>
 

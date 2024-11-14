@@ -1,42 +1,86 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import Navbar from './components/Navbar'
-import Login from './components/Login'
-import Verify from './components/Verify'
-import SignIn from './components/SignIn'
-import SetupInformation from './components/SetupInformation'
-import AvtAndInformation from './components/avtAndInformation'
-import PostInProfile from './components/postInProfile'
-import CreatePost from  './components/createPost'
-import QnA from './components/QnA'
-import WriteComment from './components/writeComment'
-import Footer from './components/Footer'
-import { BrowserRouter as Router, Routes, Route} from 'react-router-dom'
-import { publicRoutes } from './RoutesFE'
+import "./App.css";
+import {
+  createBrowserRouter,
+  Navigate,
+  Outlet,
+  RouterProvider,
+} from "react-router-dom";
+import Login from "./pages/login/Login";
+import SignIn from "./pages/signin/SignIn";
+import SetupInformation from "./pages/signup/SetupInformation";
+import Verify from "./pages/verify/Verify";
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
+import Home from "./pages/home/Home";
+import CreatePost from './components/createPost'
+import AvtAndInformation from "./pages/profile/avtAndInformation";
+import { useContext } from "react";
+import { AuthContext } from "./context/authContext";
 
-function App() {  
-  return (
-    <Router>
-      <Routes>
-        {publicRoutes.map((route, index) => {
-          const Page = route.component
-          return <Route key={index} path={route.path} element={<Page />} />;
-        })}
-      </Routes>
-    </Router>
-  );
+function App() {
+  const {currentUser} = useContext(AuthContext);
+
+  const Layout = () => {
+    return (
+      <div>
+        <Navbar />
+        <Outlet />
+        <Footer />
+      </div>
+    );
+  };
+
+  const ProtectedRoute = ({ children }) => {
+    if (!currentUser) {
+      return <Navigate to="/login" />;
+    }
+    return children;
+  };
+
+  const router = createBrowserRouter([
+    {
+      element: (
+        <ProtectedRoute>
+          <Layout />
+        </ProtectedRoute>
+      ),
+      children: [
+        {
+          path: "/",
+          element: <Home />,
+        },
+        {
+          path: "/profile",
+          element: <AvtAndInformation />,
+        },
+        {
+          path: "/create-post",
+          element: <CreatePost />,
+        },
+      ],
+    },
+    {
+      path: "/login",
+      element: <Login />,
+    },
+    {
+      path: "/sign-in",
+      element: <SignIn />,
+    },
+    {
+      path: "/sign-up",
+      element: <SetupInformation />,
+    },
+    {
+      path: "/verify",
+      element: <Verify />,
+    },
+  ]);
+
+  return <RouterProvider router={router} />;
 }
 
-
-export default App
-    
-
-
-
-
-
+export default App;
 
 // writeComment run test
 // const App = () => {
