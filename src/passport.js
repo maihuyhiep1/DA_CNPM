@@ -1,6 +1,34 @@
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const db = require('./models/index');
+const userService = require('./services/user-services')
+const LocalStrategy = require('passport-local').Strategy;
+// Local strategy for local login
+passport.use(
+  new LocalStrategy(
+    {
+      usernameField: 'username',
+      passwordField: 'password',
+    },
+    async (username, password, done) => {
+      try {
+        let userData = await userService.handleUserLogin(username, password);
+        if (userData.errCode!==0) {
+          return done(null,false, {errCode: userData.errCode, message:userData.message})
+        }
+        return done(null, userData.user)
+      } catch (error) {
+        return done(error);
+      }
+    }
+  )
+);
+
+
+
+
+
+
 
 // Set up Passport with Google Strategy
 passport.use(
@@ -35,12 +63,20 @@ passport.use(
 );
 
 passport.serializeUser((user, done) => {
+  // done(null, { id: user.id, role: user.role, avatar: user.avatar});
+  console.log("Serializing user:", user); 
   done(null, user.id);
 });
 
 passport.deserializeUser(async (id, done) => {
+   console.log("Deserializing user with ID:", id);  // Check the ID being passed for deserialization
   try {
-    const user = await db.User.findOne({where: {id: id}});
+    const user = await db.User.findOne({
+      where: {id: id},
+      attributes: ['id', 'name', 'role', 'avatar'],
+      // raw:true // Only retrieve the fields you need
+    });
+    console.log("Deserialized user:", user);  // Check the full user object
     done(null, user);
   } catch (error) {
     done(error, null);
