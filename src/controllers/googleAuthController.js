@@ -2,11 +2,11 @@ const passport = require("passport");
 
 let callbackUser = (req, res) => {
    // Successful authentication
-    const { id, name, email, role } = req.user;
+    const { id, name, avatar, role } = req.user;
     res.status(200).json({
       errCode: 0,
       message: 'Ok',
-      user: { id, name, email, role },
+      user: { id, name, avatar, role },
     });
 }
 
