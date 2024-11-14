@@ -9,8 +9,26 @@ let initWebRoutes = (app) => {
   // router.get('/Login', (req, res) => {
   //   return res.sendFile(path.join(__dirname, 'login.html'));
   // });
+  router.get("/auth/session", (req, res) => {
+    if (req.isAuthenticated()) {
+      res.status(200).json({
+        message: "User is logged in",
+        user: req.user, // The user data is available in the session
+      });
+    } else {
+      res.status(401).json({
+        message: "User is not logged in",
+      });
+    }
+  });
 
-
+  router.get("/profile", (req, res) => {
+    if (req.isAuthenticated()) {
+      res.json(req.user); // Send the user object (stored in session) to the frontend
+    } else {
+      res.status(401).json({ message: "User not authenticated" });
+    }
+  });
 
   // Routes for google authentication
   router.get('/login/success',googleAuthController.loginSuccess)
