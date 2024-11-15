@@ -13,12 +13,14 @@ import CreatePost from  './components/createPost'
 import QnA from './components/QnA'
 import WriteComment from './components/writeComment'
 import Footer from './components/Footer'
-
+import ReplyComment from './components/repplyComment'
+import ReactBarQnA from './components/reactInQnA'
 
 function App() {  
   return (
+
     <div>
-      <SignIn/>
+      <ReactBarQnA/>
     </div>
   );
 }

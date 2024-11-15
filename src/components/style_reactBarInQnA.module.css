@@ -1,0 +1,112 @@
+/* Frame.module.css */
+.frame-container {
+    height: 32px;
+    position: relative;
+    width: 397px;
+  }
+  
+  .comment-button {
+    all: unset;
+    border-radius: 4px;
+    box-sizing: border-box;
+    height: 32px;
+    left: 133px;
+    position: absolute;
+    top: 0;
+    width: 132px;
+  }
+  
+  .comment-icon {
+    height: 18px;
+    left: 21px;
+    position: absolute;
+    top: 7px;
+    width: 19px;
+  }
+  
+  .comment-text {
+    color: #2d3748;
+    font-family: "Lato-Regular", Helvetica;
+    font-size: 16px;
+    font-weight: 400;
+    height: 19px;
+    left: 46px;
+    letter-spacing: 0;
+    line-height: 24px;
+    position: absolute;
+    text-align: center;
+    top: 5px;
+    white-space: nowrap;
+    width: 66px;
+  }
+  
+  .like-button {
+    all: unset;
+    border-radius: 4px;
+    box-sizing: border-box;
+    height: 32px;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 132px;
+  }
+  
+  .like-icon {
+    height: 19px;
+    left: 21px;
+    position: absolute;
+    top: 6px;
+    width: 25px;
+  }
+  
+  .like-text {
+    color: #2d3748;
+    font-family: "Lato-Regular", Helvetica;
+    font-size: 16px;
+    font-weight: 400;
+    height: 19px;
+    left: 46px;
+    letter-spacing: 0;
+    line-height: 24px;
+    position: absolute;
+    text-align: center;
+    top: 5px;
+    white-space: nowrap;
+    width: 50px;
+  }
+  
+  .share-button {
+    all: unset;
+    border-radius: 4px;
+    box-sizing: border-box;
+    height: 32px;
+    left: 265px;
+    position: absolute;
+    top: 0;
+    width: 132px;
+  }
+  
+  .share-icon {
+    height: 19px;
+    left: 28px;
+    position: absolute;
+    top: 7px;
+    width: 20px;
+  }
+  
+  .share-text {
+    color: #2d3748;
+    font-family: "Lato-Regular", Helvetica;
+    font-size: 16px;
+    font-weight: 400;
+    height: 19px;
+    left: 54px;
+    letter-spacing: 0;
+    line-height: 24px;
+    position: absolute;
+    text-align: center;
+    top: 5px;
+    white-space: nowrap;
+    width: 51px;
+  }
+  
