@@ -16,11 +16,13 @@ app.use(express.json());
 app.use('/api', postRoutes);
 
 // Đồng bộ hóa cơ sở dữ liệu
-sequelize.sync({ force: true }).then(() => {
-    console.log('Cơ sở dữ liệu đã được đồng bộ hóa.');
-}).catch((error) => {
-    console.error('Lỗi khi đồng bộ cơ sở dữ liệu:', error);
-});
+sequelize.sync({ alter: true })
+  .then(() => {
+    console.log('Cơ sở dữ liệu đã được đồng bộ hóa!');
+  })
+  .catch(err => {
+    console.error('Lỗi khi đồng bộ cơ sở dữ liệu:', err);
+  });
 
 // Khởi động server
 const PORT = process.env.PORT || 3000;
