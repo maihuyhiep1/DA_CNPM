@@ -46,9 +46,25 @@ exports.createPost = async (req, res) => {
 exports.updatePost = async (req, res) => {
     try {
         const { postId } = req.params;
-        const updatedFields = req.body;
         const author_id = req.user_id;
 
+        // Chỉ cho phép cập nhật các thuộc tính cụ thể
+        const allowedFields = ['title', 'avatar', 'content'];
+        const updatedFields = {};
+
+        // Kiểm tra từng thuộc tính trong `req.body` để xem có hợp lệ không
+        for (const key of Object.keys(req.body)) {
+            if (allowedFields.includes(key)) {
+                updatedFields[key] = req.body[key];
+            }
+        }
+
+        // Kiểm tra nếu không có thuộc tính nào hợp lệ để cập nhật
+        if (Object.keys(updatedFields).length === 0) {
+            return res.status(400).json({ message: 'Không có thuộc tính hợp lệ để cập nhật' });
+        }
+
+        // Thực hiện cập nhật với các trường hợp lệ
         const result = await Post.update(updatedFields, {
             where: {
                 post_id: postId,

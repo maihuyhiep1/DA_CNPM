@@ -1,5 +1,5 @@
 // middleware/checkDeletePermission.js
-const postModel = require('../models/Post');
+const postModel = require('../models/post');
 
 const checkDeletePermission = (req, res, next) => {
     const { postId } = req.params;
