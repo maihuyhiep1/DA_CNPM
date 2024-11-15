@@ -281,7 +281,7 @@ let handleUserLogin = (username, userPassword) => {
       if(isExist) {
         let user = await db.User.findOne({
           where: {username:  username},
-          attributes: ['id', 'role', 'avatar', 'hashed_pw'],
+          attributes: ['id', 'name', 'role', 'avatar', 'hashed_pw'],
           raw: true
         })
         if(user) {
@@ -334,7 +334,7 @@ let checkUserEmail = (userEmail) => {
   return new Promise(async (resolve, reject) => {
     try {
       let user = await db.User.findOne({
-        where: { email: userEmail },
+        where: { email: userEmail, authProvider: 'local' },
       });
       if (user) {
         resolve(true);
