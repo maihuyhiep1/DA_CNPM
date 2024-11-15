@@ -1,5 +1,6 @@
+// models/Post.js
 const { DataTypes } = require('sequelize');
-const sequelize = require('../config/db');
+const sequelize = require('../config/db.js');
 
 const Post = sequelize.define('Post', {
     post_id: {
@@ -44,4 +45,14 @@ const Post = sequelize.define('Post', {
     timestamps: false,
 });
 
-module.exports = Post;
+module.exports = Post; // Đảm bảo export đúng mô hình Post
+
+const PostImage = require('./postImage.js'); // Import mô hình PostImage
+
+
+
+Post.hasMany(PostImage, {
+    foreignKey: 'post_id',
+    as: 'images',
+    onDelete: 'CASCADE',
+});
