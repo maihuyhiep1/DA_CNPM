@@ -1,4 +1,5 @@
 const Post = require('../models/post');
+const upload = require('../multerConfig'); // Import cấu hình multer
 
 // Lấy tất cả bài đăng
 exports.getAllPosts = async (req, res) => {
@@ -27,45 +28,45 @@ exports.getPostById = async (req, res) => {
 // Tạo bài đăng mới
 exports.createPost = async (req, res) => {
     try {
-        const { title, avatar, is_qna, content } = req.body;
-        const author_id = req.user_id; // Lấy ID người dùng từ middleware
+        console.log("SUBMIT");
+        console.log(req.body);  // Kiểm tra nội dung body (dữ liệu không phải file)
+        console.log(req.file);   // Kiểm tra file upload nếu có
+        
+        // Lấy dữ liệu từ body (trừ avatar)
+        const { title, author_id, content, is_qna } = req.body;
+        
+        // Lấy đường dẫn ảnh nếu có
+        const avatar = req.file ? req.file.path : null;
 
-        let finalContent = content; // Nội dung bài viết (bao gồm HTML)
-
-        // Nếu có ảnh được tải lên, thay thế "upload-path" trong nội dung
-        if (req.file) {
-            const imageUrl = `http://localhost:3000/uploads/${req.file.filename}`;
-            finalContent = content.replace('<img src="upload-path">', `<img src="${imageUrl}">`);
-
-            // Lưu ảnh vào bảng `post_images`
-            await PostImage.create({
-                post_id: null, // Tạm thời chưa có ID bài viết
-                image_url: imageUrl,
-            });
-        }
-
-        // Lưu bài viết vào cơ sở dữ liệu
+        // Tạo một bài đăng mới
         const newPost = await Post.create({
             title,
             author_id,
+            content,
+            is_qna: is_qna || false,
             avatar,
-            is_qna,
-            content: finalContent,
         });
 
-        // Cập nhật post_id trong bảng `post_images` (nếu có ảnh)
-        if (req.file) {
-            await PostImage.update(
-                { post_id: newPost.id },
-                { where: { image_url: `http://localhost:3000/uploads/${req.file.filename}` } }
-            );
+        // Nếu có ảnh tải lên, lưu vào bảng PostImage
+        if (avatar) {
+            await PostImage.create({
+                post_id: newPost.post_id,
+                image_path: avatar, // Đường dẫn ảnh đã tải lên
+            });
         }
 
-        res.status(201).json({ message: 'Tạo bài viết thành công', postId: newPost.id });
-    } catch (err) {
-        res.status(500).json({ message: 'Lỗi khi tạo bài đăng', error: err.message });
+        res.status(201).json({
+            message: 'Bài đăng đã được tạo thành công!',
+            post: newPost,
+        });
+    } catch (error) {
+        console.error('Lỗi khi tạo bài đăng:', error);
+        res.status(500).json({
+            message: 'Có lỗi xảy ra khi tạo bài đăng.',
+        });
     }
 };
+
 
 // Cập nhật bài đăng
 exports.updatePost = async (req, res) => {

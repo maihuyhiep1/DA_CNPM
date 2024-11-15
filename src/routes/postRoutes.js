@@ -17,7 +17,9 @@ router.get('/posts', postController.getAllPosts);               // Xem toàn b�
 router.get('/posts/:postId', postController.getPostById);       // Xem bài viết theo ID
 
 // Các route cần xác thực
-router.post('/posts', authenticateToken, postController.createPost);        // Tạo bài viết
+router.post('/posts', 
+    // authenticateToken, test thôi nhé :v
+    postController.createPost);        // Tạo bài viết
 router.put('/posts/:postId', authenticateToken, postController.updatePost); // Cập nhật bài viết
 router.delete('/posts/:postId', authenticateToken, checkDeletePermission, postController.deletePost); // Xóa bài viết
 router.post('/posts/:postId/like', authenticateToken, postController.likePost);  // like bài viết

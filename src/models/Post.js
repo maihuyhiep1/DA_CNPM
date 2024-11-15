@@ -1,6 +1,7 @@
 // models/Post.js
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/db.js');
+const Sequelize = require('sequelize');
 
 const Post = sequelize.define('Post', {
     post_id: {
@@ -21,7 +22,7 @@ const Post = sequelize.define('Post', {
         defaultValue: DataTypes.NOW,
     },
     avatar: {
-        type: DataTypes.STRING,
+        type: Sequelize.TEXT('long'),
         allowNull: true,
     },
     is_qna: {
@@ -37,7 +38,7 @@ const Post = sequelize.define('Post', {
         defaultValue: 0,
     },
     content: {
-        type: DataTypes.TEXT,
+        type: Sequelize.TEXT('long'),
         allowNull: false,
     }
 }, {
