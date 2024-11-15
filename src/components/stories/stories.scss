@@ -1,0 +1,14 @@
+.container-stories {
+    gap: 10px;
+    height: 250px;
+    margin: 1rem 10rem  ;
+    background-color: bisque;
+    
+
+    .stories {
+        justify-content: center;
+        align-items: center;
+        display: flex;
+        gap: 10px;
+    }
+}

@@ -16,6 +16,8 @@ import CreatePost from './components/createPost'
 import AvtAndInformation from "./pages/profile/avtAndInformation";
 import { useContext } from "react";
 import { AuthContext } from "./context/authContext";
+import QnA from "./components/QnA";
+import Stories from "./components/stories/Stories";
 
 function App() {
   const {currentUser} = useContext(AuthContext);
