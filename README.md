@@ -8,8 +8,6 @@ Clone repo về thư mục khác, chuyển sang nhánh `KhoaPham`
 
 - Sửa file `./src/config/config.json` (mục developement)
 
-- Tạo các table cần thiết trong database: `npx sequelize-cli db:migrate`
-
 ## Chạy project: `npm start`
 
 ## Các route của API
