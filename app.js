@@ -5,7 +5,7 @@ import commentRoutes from "./routes/comment.routes.js";
 import { sequelize } from "./models/comment.model.js";
 
 const app = express();
-const PORT = 3000;
+const PORT = 3002;
 
 app.use(json());
 app.use("/api/comments", commentRoutes);

@@ -23,6 +23,10 @@ const Comment = sequelize.define("comments", {
     postId: {
         type: DataTypes.INTEGER,
         allowNull: false
+    }, 
+    commentId: {
+        type: DataTypes.INTEGER,
+        allowNull: true
     }
 }, {
     timestamps: true
