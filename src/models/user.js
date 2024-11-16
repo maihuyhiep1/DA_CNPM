@@ -63,7 +63,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'User',
-    timestamps: false, // Prevents createdAt and updatedAt columns
+    timestamps: true, // Prevents createdAt and updatedAt columns
   });
 
   return User;

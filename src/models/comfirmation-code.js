@@ -34,7 +34,7 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     tableName: 'confirmation_codes',
     modelName: 'ConfirmationCode',
-    timestamps: false,
+    timestamps: true,
   });
 
   return ConfirmationCode;

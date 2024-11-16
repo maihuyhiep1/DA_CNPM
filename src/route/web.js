@@ -18,19 +18,20 @@ let initWebRoutes = (app) => {
   //   }
   // });
 
-  // router.get("/profile", (req, res) => {
-  //   if (req.isAuthenticated()) {
-  //     res.json(req.user); // Send the user object (stored in session) to the frontend
-  //   } else {
-  //     res.status(401).json({ message: "User not authenticated" });
-  //   }
-  // });
+  router.get("/profile", (req, res) => {
+    if (req.isAuthenticated()) {
+      res.json(req.user); // Send the user object (stored in session) to the frontend
+    } else {
+      res.status(401).json({ message: "User not authenticated" });
+    }
+  });
 
   // Routes for google authentication
   router.get('/login/success',googleAuthController.loginSuccess)
   router.get('/login/failed', googleAuthController.loginFailed)
   router.get('/auth/google/callback', passport.authenticate('google', { 
-    failureRedirect: '/login/failed' 
+    failureRedirect: '/login/failed',
+    successRedirect: '/'
   }), googleAuthController.callbackUser);
   router.get('/google/auth', passport.authenticate("google", { scope: ["profile", "email"] }));
   router.get('/logout', googleAuthController.userLogout);
