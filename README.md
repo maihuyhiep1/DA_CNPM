@@ -59,7 +59,5 @@ Chuyển tới trang đăng nhập bằng google
 # GET `/logout` đăng xuất. (chỉ hoạt động với acc đăng nhập bằng google)
 
 sau khi logout thì redirect về `/` (có thể tùy chỉnh trong ở hàm userLogout trong file googleAuthController)
-# GET `/login/success` 
-check xem người dùng đã đăng nhập thành công chưa
-
-nếu đăng nhập rồi trả về errcode0, chưa thì errcode2
+# GET `/login-success` 
+Lấy dữ liệu user sau khi đăng nhập

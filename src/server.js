@@ -6,7 +6,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const passport = require('passport');
-const psssportSetup = require('./passport.js');
+require('./passport.js');
 const session = require('express-session');
 const cors = require('cors');
 const app = express();
@@ -14,7 +14,7 @@ const app = express();
 
 
 const corsOptions = {
-  origin: 'http://localhost:3001', // Change to the frontend's URL (e.g., http://localhost:3001 for frontend on port 3001)
+  origin: process.env.CLIENT_URL, // Change to the frontend's URL (e.g., http://localhost:3001 for frontend on port 3001)
   methods: ['GET', 'POST', 'PUT', 'DELETE'],  // Methods you want to allow
   allowedHeaders: ['Content-Type', 'Authorization'], // Headers you want to allow
   credentials: true,  // Allow cookies (for sessions)

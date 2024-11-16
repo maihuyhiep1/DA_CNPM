@@ -1,34 +1,22 @@
-const passport = require("passport");
-
+require("passport");
 let callbackUser = (req, res) => {
-   // Successful authentication
-    const { id, name, avatar, role } = req.user;
-    res.status(200).json({
-      errCode: 0,
-      message: 'Ok',
-      user: { id, name, avatar, role },
-    });
+  // res.redirect(`${process.env.CLIENT_URL}/login-success/${req.user?.id}`);
+  res.redirect(process.env.CLIENT_URL)
 }
 
-const loginSuccess = (req, res) => {
-  if (req.user) {
-    res.status(200).json({
-      errCode: 0,
-      message: "Successfully logged in.",
-    });
-  } else {
-    res.status(403).json({
-      errCode: 2,
-      message: "Not authorized.",
-    });
-  }
-};
-
-const loginFailed = (req, res) => {
-  res.status(401).json({
-    errCode: 1,
-    message: "Login failure",
-  });
+const loginSuccess = async (req, res) => {
+    if (req.isAuthenticated()) {
+      res.status(200).json({
+        errCode: 0,
+        message: "Ok",
+        user: req.user, // The user data is available in the session
+      });
+    } else {
+      res.status(401).json({
+        errCode:1,
+        message: "User is not logged in",
+      });
+    }
 };
 
 const userLogout = (req, res) => {
@@ -39,13 +27,12 @@ const userLogout = (req, res) => {
         message: "Logout failed.",
       });
     }
-    res.redirect("/"); // Redirect to home page after logout
+    res.redirect(`${process.env.CLIENT_URL}/login`); // Redirect to home page after logout
   });
 };
 
 module.exports = {
   loginSuccess: loginSuccess,
-  loginFailed: loginFailed,
   userLogout: userLogout,
   callbackUser: callbackUser,
 };

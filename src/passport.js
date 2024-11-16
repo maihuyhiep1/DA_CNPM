@@ -63,9 +63,14 @@ passport.use(
 );
 
 passport.serializeUser((user, done) => {
-  // done(null, { id: user.id, role: user.role, avatar: user.avatar});
   console.log("Serializing user:", user); 
   done(null, user.id);
+  // done(null, { 
+  //   id: user.id, 
+  //   avatar: user.avatar, 
+  //   role: user.role, 
+  //   name: user.name
+  // });
 });
 
 passport.deserializeUser(async (id, done) => {
@@ -73,9 +78,14 @@ passport.deserializeUser(async (id, done) => {
   try {
     const user = await db.User.findOne({
       where: {id: id},
-      attributes: ['id', 'name', 'role', 'avatar'],
+      attributes: [ 'id', 'name', 'role', 'avatar', 'authProvider', 'post_count', 'like_count', 'follower_count', 'description', 'createdAt', 'updatedAt'],
+      
       // raw:true // Only retrieve the fields you need
     });
+    if (!user) {
+      console.log("User not found!");
+      return done(null, false);  // User not found, handle appropriately
+    }
     console.log("Deserialized user:", user);  // Check the full user object
     done(null, user);
   } catch (error) {
