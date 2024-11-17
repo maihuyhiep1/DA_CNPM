@@ -18,9 +18,31 @@ import { useContext } from "react";
 import { AuthContext } from "./context/authContext";
 import QnA from "./components/QnA";
 import Stories from "./components/stories/Stories";
+import { useEffect } from "react";
+import ForgetPassword from "./pages/forgetPassword/ForgetPassword"
+import RePassword from "./pages/rePassword/RePassword";
 
 function App() {
   const {currentUser} = useContext(AuthContext);
+
+  useEffect(() => {
+    // This will run when the component mounts and after every redirect
+    const fetchUserData = async () => {
+      try {
+        // Check if user is authenticated by calling the backend
+        const res = await axios.get('http://localhost:8386//login-success ', { withCredentials: true });
+        setCurrentUser(res.data);  // Update context with user data
+        if (!currentUser) {
+          // If no user data is found, redirect to login page
+          navigate('/login');
+        }
+      } catch (err) {
+        console.error('Error fetching user data', err);
+        setCurrentUser(null);  // If error, reset context
+      }
+    };
+  }
+  )
 
   const Layout = () => {
     return (
@@ -76,6 +98,14 @@ function App() {
     {
       path: "/verify",
       element: <Verify />,
+    },
+    {
+      path: "/forget-password",
+      element: <ForgetPassword />,
+    },
+    {
+      path: "/re-password",
+      element: <RePassword />,
     },
   ]);
 

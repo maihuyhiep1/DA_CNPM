@@ -5,29 +5,32 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 const Verify = () => {
-  const formData = JSON.parse(localStorage.getItem('formData')); 
+  const formData = JSON.parse(localStorage.getItem('formData')) || null; 
   const [value, setValue] = useState({...formData});
   const navigate = useNavigate()
 
-  const handleSubmit = async (e) =>{
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
-    await axios.post('http://localhost:8386/api/signin-verify', value, {withCredentials: true})
-    .then(res => {
-      console.log(res)
-      if (res.data.errCode === 0) {
-        navigate('/login')
+    try {
+      const response = await axios.post('http://localhost:8386/api/signin-verify', value, { withCredentials: true });
+  
+      if (response.data.errCode === 0) {
+        console.log('OTP verified successfully');
+        navigate('/login');  // Redirect on successful OTP verification
+      } else {
+        console.error('Incorrect OTP:', response.data.message);
+        alert('Mã OTP sai. Vui lòng điền lại !!!');  // Inform user of incorrect OTP
       }
-      else {
-        alert('Mã OTP sai. Vui lòng điền lại !!!')
-      }
-    })
-    .catch(err => console.log(err))
-  }
+    } catch (error) {
+      console.error('An error occurred during OTP verification:', error);
+      alert('Đã xảy ra lỗi, vui lòng thử lại sau.');  // General error message
+    }
+  };  
 
   return (
-    <div className={styles.form} onSubmit={handleSubmit}>
-      <form action="/submit-login" method="POST">
+    <div className={styles.form} >
+      <form action="/submit-login" method="POST" onSubmit={handleSubmit}>
         <div className={styles.title}>
           <div className={styles.titleText}>Xác thực gmail</div>
         </div>

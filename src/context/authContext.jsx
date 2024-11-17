@@ -1,5 +1,5 @@
 import axios from "axios";
-import { createContext,useEffect,useState } from "react";
+import { createContext, useEffect, useState } from "react";
 
 export const AuthContext = createContext();
 
@@ -10,10 +10,11 @@ export const AuthContextProvider = ({ children }) => {
 
     const login = async (inputs) => {
         try {
-            const res = axios.post('http://localhost:8386/api/login', inputs, {withCredentials: true});
-            setCurrentUser((await res).data)
-        } catch {
-            alert('Mật khẩu hoặc tên tài khoản sai !!!')
+            const res = await axios.post('http://localhost:8386/api/login', inputs, { withCredentials: true });
+            setCurrentUser(res.data.user);
+        } catch (err) {
+            console.error(err); // Log the error for debugging
+            alert(err.response?.data?.message || 'Mật khẩu hoặc tên tài khoản sai !!!');
         }
     };
 
@@ -22,8 +23,8 @@ export const AuthContextProvider = ({ children }) => {
     }, [currentUser]);
 
     return (
-        <AuthContext.Provider value={{currentUser, login}}>
+        <AuthContext.Provider value={{ currentUser, login }}>
             {children}
         </AuthContext.Provider>
     );
-}
+};

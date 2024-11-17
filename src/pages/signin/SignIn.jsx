@@ -31,6 +31,7 @@ const SignIn = () => {
               alert('Email này đã được sử dụng')
             } else if (res.data.errCode === 0) {
               navigate("/verify");
+              alert(`Mã OTP đã được gửi về email ${updatedValue.email}`)
             }
           })
       } catch(err) {setErr(err)}

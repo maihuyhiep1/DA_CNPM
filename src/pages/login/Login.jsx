@@ -24,6 +24,10 @@ const Login = () => {
   const handleGGSubmit = () => {
     window.location.href = 'http://localhost:8386/google/auth';
   };
+
+  const handleForgetPassword = () => {
+    
+  }
   
   return (
     <div className={styles.form}>
@@ -76,7 +80,7 @@ const Login = () => {
           <Link to="/sign-in" className={styles.link}>
             Đăng ký
           </Link>
-          <div className={styles.forgetPassword}>
+          <div className={styles.forgetPassword} onClick={() => handleForgetPassword()}>
             <div className={styles.link}>Quên mật khẩu</div>
           </div>
         </div>
