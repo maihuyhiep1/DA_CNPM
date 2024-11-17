@@ -28,8 +28,7 @@ const SignIn = () => {
             console.log(res);
             localStorage.setItem("formData", JSON.stringify(updatedValue));
             if (res.data.errCode === 1) {
-              // alert('Email này đã được sử dụng')
-              navigate("/verify");
+              alert('Email này đã được sử dụng')
             } else if (res.data.errCode === 0) {
               navigate("/verify");
             }
@@ -38,12 +37,16 @@ const SignIn = () => {
     }
   };
 
+  const handleClose = (e) =>{
+    navigate("/login")
+  }
+
   return (
     <div className={styles.form}>
-      <form action="/submit-login" method="POST">
+      <form>
         <div className={styles.title}>
           <div className={styles.titleText}>Đăng ký tài khoản</div>
-          <div className={styles.closeButton}>
+          <div className={styles.closeButton} onClick={handleClose}>
             <img
               className={styles.closeImage}
               src="img_signin/image.png"
@@ -126,7 +129,7 @@ const SignIn = () => {
           />
         </div>
 
-        <button type="submit" className={styles.signInButton} onClick={handleSubmit}>
+        <button className={styles.signInButton} onClick={handleSubmit}>
           <div className={styles.textInSignInButton}>Đăng ký</div>
         </button>
 

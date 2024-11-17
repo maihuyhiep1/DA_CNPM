@@ -59,6 +59,19 @@ body {background-color:  #f0f0f0;}
   text-align: center;
   letter-spacing: 0;
   white-space: nowrap;
+  text-decoration: none; /* Remove underline */
+  transition: color 0.3s;
+}
+/* Hover effect */
+.link:hover {
+  color: #0c4a6e; /* Change color on hover */
+  text-decoration: underline;
+}
+
+/* Click effect */
+.link:active {
+  color: #064f70; /* Darker color on click */
+  text-decoration: underline;
 }
 
  .googleButton { /* google_button */
@@ -71,6 +84,19 @@ body {background-color:  #f0f0f0;}
   border-radius: 8px;
   border: 1px solid;
   border-color: #c3c4c9;
+  transition: background-color 0.3s, box-shadow 0.3s;
+}
+/* Hover effect */
+.googleButton:hover {
+  background-color: #e0e0e5;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-color: #b0b0b5;
+}
+
+/* Active (click) effect */
+.googleButton:active {
+  background-color: #d0d0d5;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) inset;
 }
 
  .googlePng { /* google_png */
@@ -114,6 +140,18 @@ body {background-color:  #f0f0f0;}
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0px 2px 0px #0000000b;
+  transition: background-color 0.3s, box-shadow 0.3s;
+}
+/* Hover effect */
+.form .loginButton:hover {
+  background-color: #0456c8; /* Slightly darker blue */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Active (click) effect */
+.form .loginButton:active {
+  background-color: #0345a3; /* Even darker blue */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) inset;
 }
 
 .textInLoginButton { /* text_in_login_button */
@@ -200,27 +238,6 @@ body {background-color:  #f0f0f0;}
   white-space: nowrap;
 }
 
-.closeButton { /* close_button */
-  position: absolute;
-  width: 40px;
-  height: 40px;
-  top: 16px;
-  left: 414px;
-  background-color: #fcfdfd;
-  border-radius: 24px;
-  border: 1px solid;
-  border-color: #edeef2;
-}
-
-.closeButton .closeImage { /* close_button .close_image */
-  position: absolute;
-  width: 28px;
-  height: 28px;
-  top: 9px;
-  left: 6px;
-  object-fit: cover;
-}
-
 .loginButton { /* login_button */
   background-color: transparent; /* Giữ nguyên màu nền của div */
   border: none; /* Loại bỏ đường viền mặc định của button */
@@ -253,10 +270,18 @@ body {background-color:  #f0f0f0;}
   font-size: 16px;
   background-color: #f9f9fb;
   outline:  none; /* Loại bỏ viền khi focus */
+  transition: border-color 0.3s, box-shadow 0.3s, background-color 0.3s;
 }
-
-.passwordInput:focus { /* password_input */
-  border-color: none; /* Thay đổi màu viền khi input được focus, có thể thay đổi */
+/* Hover effect */
+.passwordInput:hover {
+  background-color: #f0f0f5; /* Slightly darker background for hover */
+  border-color: #dcdce1; /* Subtle border color change */
+}
+/* Focus effect */
+.passwordInput:focus {
+  border-color: #0768ea; /* Highlight border on focus */
+  box-shadow: 0 0 5px rgba(7, 104, 234, 0.5); /* Subtle glow effect */
+  background-color: #ffffff; /* Change background to white */
 }
 .usernameInput { /* username_input */
   width: 100%; /* Hoặc kích thước mong muốn */
@@ -266,8 +291,16 @@ body {background-color:  #f0f0f0;}
   font-size: 16px;
   background-color: #f9f9fb;
   outline:  none; /* Loại bỏ viền khi focus */
+  transition: border-color 0.3s, box-shadow 0.3s, background-color 0.3s;
 }
-
-.usernameInput:focus { /* username_input */
-  border-color: none; /* Thay đổi màu viền khi input được focus, có thể thay đổi */
+/* Hover effect */
+.usernameInput:hover {
+  background-color: #f0f0f5; /* Slightly darker background for hover */
+  border-color: #dcdce1; /* Subtle border color change */
+}
+/* Focus effect */
+.usernameInput:focus {
+  border-color: #0768ea; /* Highlight border on focus */
+  box-shadow: 0 0 5px rgba(7, 104, 234, 0.5); /* Subtle glow effect */
+  background-color: #ffffff; /* Change background to white */
 }

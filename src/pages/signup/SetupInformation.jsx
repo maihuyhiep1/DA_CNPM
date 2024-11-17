@@ -14,13 +14,6 @@ const SetupInformation = () => {
       <form action="/submit-login" method="POST" onSubmit={handleSubmit}>
         <div className={styles.title}>
           <div className={styles.titleText}>Đăng ký thông tin</div>
-          <div className={styles.closeButton}>
-            <img
-              className={styles.closeImage}
-              src="img_setup_information/image.png"
-              alt="Close"
-            />
-          </div>
         </div>
 
         <div className={styles.nickname}>

@@ -22,6 +22,18 @@ body {background-color:  #f0f0f0;}
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0px 2px 0px #0000000b;
+  transition: background-color 0.3s, box-shadow 0.3s;
+}
+/* Hover effect */
+.form .verifyButton:hover {
+  background-color: #0456c8; /* Slightly darker blue */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Active (click) effect */
+.form .verifyButton:active {
+  background-color: #0345a3; /* Even darker blue */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) inset;
 }
 
 .textInVerifyButton {
@@ -98,27 +110,6 @@ body {background-color:  #f0f0f0;}
   white-space: nowrap;
 }
 
-.closeButton {
-  position: absolute;
-  width: 40px;
-  height: 40px;
-  top: 16px;
-  left: 414px;
-  background-color: #fcfdfd;
-  border-radius: 24px;
-  border: 1px solid;
-  border-color: #edeef2;
-}
-
-.closeButton .closeImage {
-  position: absolute;
-  width: 28px;
-  height: 28px;
-  top: 9px;
-  left: 6px;
-  object-fit: cover;
-}
-
 .verifyButton {
   background-color: transparent; /* Giữ nguyên màu nền của div */
   border: none; /* Loại bỏ đường viền mặc định của button */
@@ -144,4 +135,16 @@ body {background-color:  #f0f0f0;}
   font-size: 16px;
   background-color: #f9f9fb;
   outline:  none; /* Loại bỏ viền khi focus */
+  transition: border-color 0.3s, box-shadow 0.3s, background-color 0.3s;
+}
+/* Hover effect */
+.otpInput:hover {
+  background-color: #f0f0f5; /* Slightly darker background for hover */
+  border-color: #dcdce1; /* Subtle border color change */
+}
+/* Focus effect */
+.otpInput:focus {
+  border-color: #0768ea; /* Highlight border on focus */
+  box-shadow: 0 0 5px rgba(7, 104, 234, 0.5); /* Subtle glow effect */
+  background-color: #ffffff; /* Change background to white */
 }

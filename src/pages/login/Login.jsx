@@ -30,13 +30,6 @@ const Login = () => {
       <form action="/submit-login" method="POST">
         <div className={styles.title}>
           <div className={styles.titleText}>Đăng nhập tài khoản</div>
-          <div className={styles.closeButton}>
-            <img
-              className={styles.closeImage}
-              src="img_login/image.png"
-              alt="Close"
-            />
-          </div>
         </div>
 
         <div className={styles.logo}>

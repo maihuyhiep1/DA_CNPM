@@ -56,6 +56,8 @@ const CreatePost = () => {
   const [titleWordCount, setTitleWordCount] = useState(0);
   const [contentWordCount, setContentWordCount] = useState(0);
   const [image, setImage] = useState(null);
+  const [content, setContent] = useState("");
+  const [title, setTitle] = useState("");
 
   const editorContainerRef = useRef(null);
   const editorRef = useRef(null);
@@ -247,6 +249,7 @@ const CreatePost = () => {
 
     if (e.target.name === "title") {
       setTitleWordCount(words.length);
+      setTitle(text);
     } else if (e.target.name === "content") {
       setContentWordCount(words.length);
     }
@@ -266,6 +269,34 @@ const CreatePost = () => {
       };
       reader.readAsDataURL(file);
     }
+  };
+  
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("content", content);  // Nội dung CKEditor
+    formData.append("image", image);  // Nếu có ảnh
+
+    try {
+      console.log("SUBMIT")
+      const response = await fetch("http://localhost:3000/api/posts", {
+        method: "POST",
+        body: formData,  // Gửi dữ liệu dưới dạng FormData
+      });
+      console.log("SUBMIT")
+
+      const data = await response.json();
+      console.log(data);  // Xử lý phản hồi từ server
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    }
+  };
+
+
+  const handleEditorChange = (event, editor) => {
+    const data = editor.getData();
+    setContent(data);  // Cập nhật state content với nội dung từ CKEditor
   };
 
   const handleDrop = (e) => {
@@ -350,7 +381,8 @@ const CreatePost = () => {
             <div className="editor-container__editor">
               <div ref={editorRef}>
                 {isLayoutReady && (
-                  <CKEditor editor={ClassicEditor} config={editorConfig} />
+                  <CKEditor editor={ClassicEditor} config={editorConfig}
+                    onChange={handleEditorChange} />
                 )}
               </div>
             </div>
@@ -371,10 +403,22 @@ const CreatePost = () => {
             QnA
           </label>
         </div>
-        <button type="submit" className={styles.submitButton}>
+        <button onClick={handleSubmit} type="submit" className={styles.submitButton}>
           <span>Đăng</span>
         </button>
       </form>
+
+      <div>
+        <h2>Preview</h2>
+        <h3>Ảnh bìa</h3>
+        <p>{image}</p>
+        <h3>Tiêu đề: </h3>
+        <p>{title}</p>
+        <div>
+          <h4>Nội dung:</h4>
+          <p>{content}</p>
+        </div>
+      </div>
     </div>
   );
 };

@@ -30,9 +30,6 @@ const Verify = () => {
       <form action="/submit-login" method="POST">
         <div className={styles.title}>
           <div className={styles.titleText}>Xác thực gmail</div>
-          <div className={styles.closeButton}>
-            <img className={styles.closeImage} src="img_verify/image.png" alt="Close" />
-          </div>
         </div>
 
         <div className={styles.otp}>
