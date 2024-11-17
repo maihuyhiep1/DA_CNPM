@@ -1,6 +1,7 @@
 require("passport");
 let callbackUser = (req, res) => {
   // res.redirect(`${process.env.CLIENT_URL}/login-success/${req.user?.id}`);
+
   res.redirect(process.env.CLIENT_URL)
 }
 
