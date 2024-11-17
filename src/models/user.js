@@ -26,7 +26,6 @@ module.exports = (sequelize, DataTypes) => {
     email: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique:false
     },
     hashed_pw: {
       type: DataTypes.STRING,

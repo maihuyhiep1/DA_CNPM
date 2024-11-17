@@ -98,6 +98,57 @@ let sendOtpEmail = async (email, otp) => {
     await transporter.sendMail(mailOptions);
     return otp;
 }
+
+let forgetPassword_sendCode = (userEmail) => {
+  return new Promise( async (resolve, reject) => {
+    try {
+      let user = await db.User.findOne({
+        where: {email: userEmail}
+      })
+      if (!user) {
+        resolve({
+          errCode:1,
+          message: 'Email not found.'
+        })
+      }
+      let otp = await sendOtpEmail(email, generateOTP());
+      const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
+      await db.ConfirmationCode.create({
+        email: email,
+        code: otp,
+        expiresAt: expiresAt
+      })
+      resolve({
+        errCode: 0,
+        message: 'Ok. Authentication code has been sent'
+      })
+    } catch (e) {
+      reject(e);
+    }
+  })
+}
+let forgetPassword_verify = (email, code) => {
+  return new Promise( async (resolve, reject) => {
+    try {
+      
+      let check = await checkAuthCode(email, code);
+      if(check) {
+        resolve({
+          errCode: 0,
+          message: 'Ok'
+        })
+      } else {
+        resolve({
+          errCode: 1,
+          message: 'Invalid authentication code.'
+        })
+      }
+    } catch (e) {
+      reject(e);
+    }
+  })
+}
+
 let handleUserSignin_sentAuthCode = (email) => {
   return new Promise( async (resolve, reject) => {
     try {
@@ -356,4 +407,6 @@ module.exports = {
   handleUserLogin: handleUserLogin,
   handleUserSignin_sentAuthCode: handleUserSignin_sentAuthCode,
   handleUserSignin_verifyAuthCode: handleUserSignin_verifyAuthCode,
+  forgetPassword_sendCode: forgetPassword_sendCode,
+  forgotPassword_verify:forgetPassword_verify
 }

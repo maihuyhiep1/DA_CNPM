@@ -7,6 +7,11 @@ const passport = require("passport");
 let initWebRoutes = (app) => {
 require('dotenv').config()
 
+
+  // Forget password
+  // router.post('/api/forgot-password/send', userController.forgotPassword_send);
+  // router.post('/api/forgot-password/verify',userController.forgotPassword_verify);
+
   // Routes for google authentication
   router.get('/login-success',googleAuthController.loginSuccess)
   router.get('/auth/google/callback', passport.authenticate('google', { 

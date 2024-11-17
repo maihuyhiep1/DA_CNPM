@@ -68,9 +68,38 @@ let handleUserSignin_verifyAuthCode = async (req, res) => {
     
 }
 
+let forgotPassword_send = async (req, res) => {
+  if(!req.body.email) {
+    res.status(401).json({
+      errCode: 3,
+      message: 'Missing input'
+    })
+  }
+  let response = userService.forgetPassword_sendCode(email);
+  res.status(200).json({
+    errCode: response.errCode,
+    message: response.message
+  })
+}
+
+let forgotPassword_verify = async (req, res) => {
+  if (!req.body.email || !req.body.code) {
+    res.status(401).json({
+      errCode: 2,
+      message: 'Missing input'
+    })
+  }
+  let response = await userService.forgotPassword_verify(email, code);
+  res.status(200).json({
+    errCode: response.errCode,
+    message: response.message
+  })
+}
 
 module.exports = {
   handleLogin: handleLogin,
   handleUserSignin_sentAuthCode: handleUserSignin_sentAuthCode,
   handleUserSignin_verifyAuthCode: handleUserSignin_verifyAuthCode,
+  forgotPassword_send: forgotPassword_send,
+  forgotPassword_verify: forgotPassword_verify,
 }
