@@ -61,3 +61,29 @@ Chuyển tới trang đăng nhập bằng google
 sau khi logout thì redirect về `/` (có thể tùy chỉnh trong ở hàm userLogout trong file googleAuthController)
 # GET `/login-success` 
 Lấy dữ liệu user sau khi đăng nhập
+
+
+# POST `/api/forgot-password/send` 
+Nhận vào `username`
+
+Trả về `errCode`:
+- `0` nếu thành công
+- `1` user not found
+- `2` email not found
+- `3` missing input
+
+Trả về email dưới dạng abc*****@gmail.com
+
+thành công thì gửi otp tới email
+
+# POST `/api/forgot-password/verify` 
+
+nhận vào `username`, `email`, `code`, `password` (`password` là mật khẩu mới)
+
+Trả về `errCode`:
+- `0` nếu thành công
+- `1` otp sai
+- `2` user not found
+- `3` missing input
+
+Thành công thì đổi mật khẩu user thành mật khẩu mới

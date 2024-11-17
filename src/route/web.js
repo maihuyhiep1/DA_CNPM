@@ -9,8 +9,8 @@ require('dotenv').config()
 
 
   // Forget password
-  // router.post('/api/forgot-password/send', userController.forgotPassword_send);
-  // router.post('/api/forgot-password/verify',userController.forgotPassword_verify);
+  router.post('/api/forgot-password/send', userController.forgotPassword_send);
+  router.post('/api/forgot-password/verify',userController.forgotPassword_verify);
 
   // Routes for google authentication
   router.get('/login-success',googleAuthController.loginSuccess)

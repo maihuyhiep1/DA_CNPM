@@ -99,35 +99,43 @@ let sendOtpEmail = async (email, otp) => {
     return otp;
 }
 
-let forgetPassword_sendCode = (userEmail) => {
+let forgotPassword_sendCode = (username) => {
   return new Promise( async (resolve, reject) => {
     try {
       let user = await db.User.findOne({
-        where: {email: userEmail}
+        where: {username: username}
       })
       if (!user) {
         resolve({
           errCode:1,
+          message: 'User not found.'
+        })
+      }
+      if (!user.email) {
+        resolve({
+          errCode: 2,
           message: 'Email not found.'
         })
       }
-      let otp = await sendOtpEmail(email, generateOTP());
+      let otp = await sendOtpEmail(user.email, generateOTP());
       const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
       await db.ConfirmationCode.create({
-        email: email,
+        email: user.email,
         code: otp,
         expiresAt: expiresAt
       })
+      const maskedEmail = user.email.replace(/^(.{2})(.*)(@gmail\.com)$/, '$1*****$3');
       resolve({
         errCode: 0,
-        message: 'Ok. Authentication code has been sent'
+        message: 'Ok. Authentication code has been sent',
+        email: maskedEmail
       })
     } catch (e) {
       reject(e);
     }
   })
 }
-let forgetPassword_verify = (email, code) => {
+let forgotPassword_verify = (email, code) => {
   return new Promise( async (resolve, reject) => {
     try {
       
@@ -208,7 +216,22 @@ let handleUserSignin_verifyAuthCode = (userData, authCode) => {
   })
 
 }
-
+let getIDByUsername = username => {
+  return new Promise( async (resolve, reject) => {
+    try {
+      let user = await db.User.findOne({
+        where: {username: username},
+        attributes: ['id']
+      })
+      if (user) {
+        resolve(user.id);
+      }
+      resolve(undefined);
+    } catch (e) {
+      reject(e)
+    }
+  })
+}
 /**
  * This function hash a string.
  * 
@@ -295,9 +318,12 @@ let updateUserInfo = (id, updateData) => {
         resolve(); 
       }     
       let user = await db.User.findByPk(id);
+      if (updateData.hasOwnProperty('password')) {
+        updateData.hashed_pw = await hashUserPassword(updateData.password);
+      }
       if (user) {
         for (const key in updateData) {
-          user[key] = updateData[key];
+            user[key] = updateData[key];
         }
         await user.save();
         resolve();
@@ -407,6 +433,7 @@ module.exports = {
   handleUserLogin: handleUserLogin,
   handleUserSignin_sentAuthCode: handleUserSignin_sentAuthCode,
   handleUserSignin_verifyAuthCode: handleUserSignin_verifyAuthCode,
-  forgetPassword_sendCode: forgetPassword_sendCode,
-  forgotPassword_verify:forgetPassword_verify
+  forgotPassword_sendCode: forgotPassword_sendCode,
+  forgotPassword_verify:forgotPassword_verify,
+  getIDByUsername: getIDByUsername
 }

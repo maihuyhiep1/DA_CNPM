@@ -69,27 +69,39 @@ let handleUserSignin_verifyAuthCode = async (req, res) => {
 }
 
 let forgotPassword_send = async (req, res) => {
-  if(!req.body.email) {
+  if(!req.body.username) {
     res.status(401).json({
       errCode: 3,
       message: 'Missing input'
     })
   }
-  let response = userService.forgetPassword_sendCode(email);
+  let response = await userService.forgotPassword_sendCode(req.body.username);
   res.status(200).json({
     errCode: response.errCode,
-    message: response.message
+    message: response.message,
+    email: response.email || null
   })
 }
 
 let forgotPassword_verify = async (req, res) => {
-  if (!req.body.email || !req.body.code) {
+  if (!req.body.email || !req.body.code || !req.body.password || !req.body.username) {
     res.status(401).json({
-      errCode: 2,
+      errCode: 3,
       message: 'Missing input'
     })
   }
-  let response = await userService.forgotPassword_verify(email, code);
+  let response = await userService.forgotPassword_verify(req.body.email, req.body.code);
+  if (response.errCode === 0) {
+    //change user password
+    let userID = await userService.getIDByUsername(req.body.username)
+    if(!userID) {
+      res.status(400).json({
+        errCode:2,
+        message: 'User not found'
+      })
+    }
+    await userService.updateUserInfo(userID ,{password: req.body.password})
+  }
   res.status(200).json({
     errCode: response.errCode,
     message: response.message
