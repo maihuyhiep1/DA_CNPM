@@ -19,6 +19,10 @@ const corsOptions = {
   allowedHeaders: ['Content-Type', 'Authorization'], // Headers you want to allow
   credentials: true,  // Allow cookies (for sessions)
 };
+app.use(cors(corsOptions));
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(session({
   secret: process.env.SESSION_SECRET_KEY,
@@ -26,14 +30,12 @@ app.use(session({
   saveUninitialized: true,
   cookie: { secure: false } // Set to `true` for HTTPS
 }));
+
 app.use(passport.initialize());
 app.use(passport.session());
 
 // Enable CORS
-app.use(cors(corsOptions));
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
 
 connectDB();
 

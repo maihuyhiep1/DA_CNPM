@@ -70,7 +70,7 @@ let handleUserSignin_verifyAuthCode = async (req, res) => {
 
 let forgotPassword_send = async (req, res) => {
   if(!req.body.username) {
-    res.status(401).json({
+    res.status(400).json({
       errCode: 3,
       message: 'Missing input'
     })
@@ -85,7 +85,7 @@ let forgotPassword_send = async (req, res) => {
 
 let forgotPassword_verify = async (req, res) => {
   if (!req.body.code || !req.body.password || !req.body.username) {
-    res.status(401).json({
+    res.status(400).json({
       errCode: 3,
       message: 'Missing input'
     })
