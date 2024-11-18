@@ -1,4 +1,5 @@
 const Post = require('../models/post');
+const PostImage = require('../models/postImage');
 
 // Lấy tất cả bài đăng
 exports.getAllPosts = async (req, res) => {
@@ -28,20 +29,31 @@ exports.getPostById = async (req, res) => {
 exports.createPost = async (req, res) => {
     try {
         const { title, avatar, is_qna, content } = req.body;
-        const author_id = req.user_id; // Lấy ID người dùng từ middleware
+        const author_id = req.user_id || 1; // Lấy ID người dùng từ middleware
 
-        let finalContent = content; // Nội dung bài viết (bao gồm HTML)
+        if (!content || !Array.isArray(content)) {
+            return res.status(400).json({ message: 'Nội dung bài đăng phải là một mảng (văn bản và ảnh).' });
+        }
 
-        // Nếu có ảnh được tải lên, thay thế "upload-path" trong nội dung
-        if (req.file) {
-            const imageUrl = `http://localhost:3000/uploads/${req.file.filename}`;
-            finalContent = content.replace('<img src="upload-path">', `<img src="${imageUrl}">`);
+        // Xử lý nội dung và ảnh
+        const processedContent = [];
+        for (let i = 0; i < content.length; i++) {
+            const item = content[i];
 
-            // Lưu ảnh vào bảng `post_images`
-            await PostImage.create({
-                post_id: null, // Tạm thời chưa có ID bài viết
-                image_url: imageUrl,
-            });
+            if (item.type === 'text') {
+                // Nếu là văn bản, giữ nguyên
+                processedContent.push(`<p>${item.value}</p>`);
+            } else if (item.type === 'image' && req.files && req.files[i]) {
+                // Nếu là ảnh, xử lý file tải lên
+                const imageUrl = `http://localhost:3000/uploads/${req.files[i].filename}`;
+                processedContent.push(`<img src="${imageUrl}" alt="Hình ảnh" />`);
+
+                // Lưu ảnh vào bảng PostImage
+                await PostImage.create({
+                    post_id: null, // Tạm thời chưa có ID bài viết
+                    image_url: imageUrl,
+                });
+            }
         }
 
         // Lưu bài viết vào cơ sở dữ liệu
@@ -50,22 +62,23 @@ exports.createPost = async (req, res) => {
             author_id,
             avatar,
             is_qna,
-            content: finalContent,
+            content: processedContent.join(''), // Ghép nội dung HTML
         });
 
-        // Cập nhật post_id trong bảng `post_images` (nếu có ảnh)
-        if (req.file) {
+        // Cập nhật post_id cho các ảnh đã lưu
+        if (req.files) {
             await PostImage.update(
-                { post_id: newPost.id },
-                { where: { image_url: `http://localhost:3000/uploads/${req.file.filename}` } }
+                { post_id: newPost.post_id },
+                { where: { post_id: null } }
             );
         }
 
-        res.status(201).json({ message: 'Tạo bài viết thành công', postId: newPost.id });
+        res.status(201).json({ message: 'Tạo bài viết thành công', postId: newPost.post_id });
     } catch (err) {
         res.status(500).json({ message: 'Lỗi khi tạo bài đăng', error: err.message });
     }
 };
+
 
 // Cập nhật bài đăng
 exports.updatePost = async (req, res) => {
@@ -86,10 +99,12 @@ exports.updatePost = async (req, res) => {
         // Nếu có file ảnh mới, thay thế đường dẫn trong content
         if (req.file) {
             const imageUrl = `http://localhost:3000/uploads/${req.file.filename}`;
+            // Kiểm tra nếu có nội dung và thay thế đường dẫn ảnh cũ
             if (updatedFields.content) {
-                updatedFields.content = updatedFields.content.replace('<img src="upload-path">', `<img src="${imageUrl}">`);
+                // Thay thế tất cả các ảnh trong nội dung
+                updatedFields.content = updatedFields.content.replace(/<img src=".*?">/g, `<img src="${imageUrl}">`);
             } else {
-                updatedFields.content = `<img src="${imageUrl}" />`;
+                updatedFields.content = `<img src="${imageUrl}" />`; // Nếu không có nội dung, chỉ thay ảnh
             }
         }
 
@@ -114,7 +129,6 @@ exports.updatePost = async (req, res) => {
         res.status(500).json({ message: 'Lỗi khi cập nhật bài đăng', error: err.message });
     }
 };
-
 
 // Xóa bài đăng
 exports.deletePost = async (req, res) => {
