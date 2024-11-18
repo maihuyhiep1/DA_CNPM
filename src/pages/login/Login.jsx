@@ -6,19 +6,26 @@ import axios from "axios";
 
 const Login = () => {
   const { login } = useContext(AuthContext);
-  const [err, setErr] = useState(null);
   const [value, setValue] = useState({});
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
-    if (!value.username || !value.password) return;
     e.preventDefault();
+    
+    if (!value.username || !value.password) {
+      setErr('Username and password are required.');
+      return;
+    }
+  
     try {
-      await login(value);
-      console.log(value);
-      navigate("/");
+      const isLoggedIn = await login(value); 
+      if (isLoggedIn) {
+        navigate('/'); // Redirect on successful login
+      } else {
+        console.log('Login failed. Please check your credentials.');
+      }
     } catch (err) {
-      setErr(err);
+      console.log("Error during login submission:", err);
     }
   };
 
@@ -37,7 +44,7 @@ const Login = () => {
   
   return (
     <div className={styles.form}>
-      <form action="/submit-login" method="POST">
+      <form>
         <div className={styles.title}>
           <div className={styles.titleText}>Đăng nhập tài khoản</div>
         </div>
