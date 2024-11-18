@@ -12,6 +12,10 @@ const SignIn = () => {
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
+    if (!value.username || !value.name || !value.email || !password || !password2) {
+      return;
+    }
+    
     e.preventDefault();
     if (password !== password2) {
       alert("Mật khẩu không đúng. Vui lòng nhập lại mật khẩu");

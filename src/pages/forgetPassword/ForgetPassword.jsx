@@ -18,7 +18,7 @@ const ForgetPassword = () => {
         alert(`Mã OTP đã được gửi về email: ${response.data.email}`);
 
         // Store username and email in localStorage
-        localStorage.setItem('forgotPasswordData', JSON.stringify({ username: value.username, email: response.data.email }));
+        localStorage.setItem('forgotPasswordData', JSON.stringify({ username: value.username }));
         navigate('/re-password'); // Redirect to Verify page
       } else {
         console.error('Sai tên đăng nhập', response.data.message);

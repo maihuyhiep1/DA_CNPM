@@ -14,11 +14,8 @@ import Footer from "./components/Footer";
 import Home from "./pages/home/Home";
 import CreatePost from './components/createPost'
 import AvtAndInformation from "./pages/profile/avtAndInformation";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { AuthContext } from "./context/authContext";
-import QnA from "./components/QnA";
-import Stories from "./components/stories/Stories";
-import { useEffect } from "react";
 import ForgetPassword from "./pages/forgetPassword/ForgetPassword"
 import RePassword from "./pages/rePassword/RePassword";
 
@@ -55,7 +52,7 @@ function App() {
   };
 
   const ProtectedRoute = ({ children }) => {
-    if (!currentUser) {
+    if (currentUser) {
       return <Navigate to="/login" />;
     }
     return children;
@@ -64,9 +61,7 @@ function App() {
   const router = createBrowserRouter([
     {
       element: (
-        <ProtectedRoute>
-          <Layout />
-        </ProtectedRoute>
+        <Layout />
       ),
       children: [
         {

@@ -11,6 +11,7 @@ const Login = () => {
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
+    if (!value.username || !value.password) return;
     e.preventDefault();
     try {
       await login(value);
@@ -21,12 +22,17 @@ const Login = () => {
     }
   };
 
-  const handleGGSubmit = () => {
-    window.location.href = 'http://localhost:8386/google/auth';
+  const handleGGSubmit = async(e) => {
+    e.preventDefault();
+    const response = await axios.get("http://localhost:8386/google/auth", {
+      withCredentials: true, // Nếu backend gửi cookie
+    });
+    console.log("Token:", response.data.token); 
+    console.log(response);
   };
 
   const handleForgetPassword = () => {
-    
+    navigate('/forget-password')
   }
   
   return (
