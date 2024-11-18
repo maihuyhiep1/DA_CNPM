@@ -78,7 +78,7 @@ thành công thì gửi otp tới email
 
 # POST `/api/forgot-password/verify` 
 
-nhận vào `username`, `email`, `code`, `password` (`password` là mật khẩu mới)
+nhận vào `username`, `code`, `password` (`password` là mật khẩu mới)
 
 Trả về `errCode`:
 - `0` nếu thành công

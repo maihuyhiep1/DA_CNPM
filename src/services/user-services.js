@@ -117,6 +117,11 @@ let forgotPassword_sendCode = (username) => {
           message: 'Email not found.'
         })
       }
+      await db.ConfirmationCode.update(
+        { status: 'used' }, // New status
+        { where: { email: user.email, status: 'active' } } // Conditions for the update
+      );
+
       let otp = await sendOtpEmail(user.email, generateOTP());
       const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
       await db.ConfirmationCode.create({
@@ -216,15 +221,14 @@ let handleUserSignin_verifyAuthCode = (userData, authCode) => {
   })
 
 }
-let getIDByUsername = username => {
+let getUserByUsername = username => {
   return new Promise( async (resolve, reject) => {
     try {
       let user = await db.User.findOne({
-        where: {username: username},
-        attributes: ['id']
+        where: {username: username}
       })
       if (user) {
-        resolve(user.id);
+        resolve(user);
       }
       resolve(undefined);
     } catch (e) {
@@ -250,30 +254,29 @@ let hashUserPassword = (password) => {
 }
 
 let checkAuthCode = (email, userAuthCode) => {
-  return new Promise( async (resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     try {
       let authCodeInDb = await db.ConfirmationCode.findOne({
         where: {
           email: email,
-          status: 'active'
+          status: "active",
         },
-      })
-      if(authCodeInDb) {
-        if(authCodeInDb.code === userAuthCode ) {
-          authCodeInDb.status = 'used';
-          await authCodeInDb.save();
+      });
+      if (authCodeInDb) {
+        if (authCodeInDb.code === userAuthCode) {
           if (authCodeInDb.expiresAt > new Date()) {
-            resolve(true);
+            authCodeInDb.status = "used"; // Update the status only when both checks pass
+            await authCodeInDb.save();
+            return resolve(true); // Return success only when code matches and is valid
           }
-          resolve(false);
         }
       }
       resolve(false);
-    } catch(e) {
+    } catch (e) {
       reject(e);
     }
-  })
-}
+  });
+};
 
 
 
@@ -435,5 +438,5 @@ module.exports = {
   handleUserSignin_verifyAuthCode: handleUserSignin_verifyAuthCode,
   forgotPassword_sendCode: forgotPassword_sendCode,
   forgotPassword_verify:forgotPassword_verify,
-  getIDByUsername: getIDByUsername
+  getUserByUsername: getUserByUsername
 }

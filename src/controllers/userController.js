@@ -84,23 +84,23 @@ let forgotPassword_send = async (req, res) => {
 }
 
 let forgotPassword_verify = async (req, res) => {
-  if (!req.body.email || !req.body.code || !req.body.password || !req.body.username) {
+  if (!req.body.code || !req.body.password || !req.body.username) {
     res.status(401).json({
       errCode: 3,
       message: 'Missing input'
     })
   }
-  let response = await userService.forgotPassword_verify(req.body.email, req.body.code);
+  let user = await userService.getUserByUsername(req.body.username)
+  if(!user) {
+    res.status(400).json({
+      errCode:2,
+      message: 'User not found'
+    })
+  }
+  let response = await userService.forgotPassword_verify(user.email, req.body.code);
   if (response.errCode === 0) {
     //change user password
-    let userID = await userService.getIDByUsername(req.body.username)
-    if(!userID) {
-      res.status(400).json({
-        errCode:2,
-        message: 'User not found'
-      })
-    }
-    await userService.updateUserInfo(userID ,{password: req.body.password})
+    await userService.updateUserInfo(user.id ,{password: req.body.password})
   }
   res.status(200).json({
     errCode: response.errCode,
