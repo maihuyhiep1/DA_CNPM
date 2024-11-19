@@ -2,6 +2,7 @@
 DROP DATABASE IF EXISTS social_network;
 CREATE DATABASE social_network;
 USE social_network;
+set global sql_mode='';
 
 -- Tạo bảng users
 CREATE TABLE users (
