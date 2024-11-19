@@ -1,14 +1,14 @@
-.container-stories {
-    gap: 10px;
-    height: 250px;
-    margin: 1rem 10rem  ;
-    background-color: bisque;
-    
+.stories {
+    display: flex;
+    margin-bottom: 30px;
 
-    .stories {
-        justify-content: center;
-        align-items: center;
-        display: flex;
-        gap: 10px;
+    .storyCard {
+        position: relative;
+
+        .storyProfie {
+            display: flex;
+            position: absolute;
+            height: 32px;
+        }
     }
 }

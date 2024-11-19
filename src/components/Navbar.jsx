@@ -68,11 +68,13 @@ const Navbar = () => {
         <div className={styles.postButton} onClick={() => {navigate('/create-post')}}>
           <div className={styles.textInPostButton}>Viết Bài Chia Sẻ</div>
         </div>
-        <img
-          className={styles.notice}
-          src="img_navbar/notice.png"
-          alt="Notifications"
-        />
+        <Menu>
+          <img
+            className={styles.notice}
+            src="img_navbar/notice.png"
+            alt="Notifications"
+          />
+        </Menu>
         <Menu items={MENU_ITEM}>
           <div className={styles.avtButton}>
             <img

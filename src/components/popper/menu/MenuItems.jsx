@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import styles from "./menu.module.css"
 
 const MenuItems = ({ data }) => {
   const navigate = useNavigate();
