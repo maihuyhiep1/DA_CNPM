@@ -14,7 +14,7 @@ const Post = sequelize.define('Post', {
     },
     author_id: {
         type: DataTypes.UUID,
-        allowNull: false,
+        allowNull: true,
     },
     date: {
         type: DataTypes.DATE,
@@ -22,7 +22,7 @@ const Post = sequelize.define('Post', {
     },
     avatar: {
         type: DataTypes.STRING,
-        allowNull: true,
+        allowNull: false,
     },
     is_qna: {
         type: DataTypes.BOOLEAN,
@@ -42,7 +42,8 @@ const Post = sequelize.define('Post', {
     }
 }, {
     tableName: 'posts',
-    timestamps: false,
+    timestamps: true,
+    updatedAt: false,
 });
 
 module.exports = Post; // Đảm bảo export đúng mô hình Post

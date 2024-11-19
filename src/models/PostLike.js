@@ -35,16 +35,3 @@ PostLike.belongsTo(Post, {
 });
 
 module.exports = PostLike;
-
-PostLike.belongsTo(User, {
-    foreignKey: 'user_id',
-    as: 'user',
-    onDelete: 'CASCADE',
-  });
-  
-  // Quan hệ với Post
-  PostLike.belongsTo(Post, {
-    foreignKey: 'post_id',
-    as: 'post',
-    onDelete: 'CASCADE',
-  });
