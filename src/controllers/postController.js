@@ -69,24 +69,38 @@ exports.createPost = async (req, res) => {
         const { title, is_qna, content } = req.body;
         const author_id = req.user_id;
 
-
         let avatarUrl = null;
         if (req.file) {
             avatarUrl = `http://localhost:3000/uploads/${req.file.filename}`;
         }
 
+        // Xử lý nội dung và giữ đúng thứ tự
         const processedContent = [];
         let imageIndex = 0;
 
         for (const item of content) {
             if (item.type === 'text') {
-                processedContent.push(`<p>${item.value}</p>`);
+                processedContent.push(item); // Giữ nguyên văn bản
             } else if (item.type === 'image' && req.files && req.files[imageIndex]) {
                 const imageUrl = `http://localhost:3000/uploads/${req.files[imageIndex].filename}`;
-                processedContent.push(`<img src="${imageUrl}" alt="Hình ảnh" />`);
+                processedContent.push({ type: 'image', value: imageUrl });
                 await PostImage.create({ post_id: null, image_url: imageUrl });
                 imageIndex++;
             }
+        }
+
+        // Nếu là QnA, giới hạn 500 chữ
+        if (is_qna) {
+            const totalText = processedContent
+                .filter((item) => item.type === 'text')
+                .map((item) => item.value)
+                .join(' ')
+                .slice(0, 500);
+            processedContent.forEach((item) => {
+                if (item.type === 'text') {
+                    item.value = totalText; // Cắt gọn nội dung
+                }
+            });
         }
 
         const newPost = await Post.create({
@@ -94,7 +108,7 @@ exports.createPost = async (req, res) => {
             author_id,
             avatar: avatarUrl,
             is_qna,
-            content: processedContent.join(''),
+            content: JSON.stringify(processedContent),
         });
 
         if (req.files) {
@@ -108,11 +122,12 @@ exports.createPost = async (req, res) => {
 };
 
 
+
 // Cập nhật bài đăng
 exports.updatePost = async (req, res) => {
     try {
         const { postId } = req.params;
-        const allowedFields = ['title', 'content', 'is_qna'];
+        const allowedFields = ['title', 'content']; // Không cho thay đổi `is_qna`
         const updatedFields = {};
 
         for (const key of Object.keys(req.body)) {
@@ -121,21 +136,27 @@ exports.updatePost = async (req, res) => {
             }
         }
 
-        // Xử lý avatar mới
         if (req.file) {
             const avatarUrl = `http://localhost:3000/uploads/${req.file.filename}`;
             updatedFields.avatar = avatarUrl;
         }
 
-        let imageIndex = 0;
-        if (req.files) {
-            updatedFields.content = updatedFields.content || '';
-            for (const file of req.files) {
-                const imageUrl = `http://localhost:3000/uploads/${file.filename}`;
-                updatedFields.content += `<img src="${imageUrl}" alt="Hình ảnh" />`;
-                await PostImage.create({ post_id: postId, image_url: imageUrl });
-                imageIndex++;
+        if (req.body.content) {
+            const updatedContent = [];
+            let imageIndex = 0;
+
+            for (const item of req.body.content) {
+                if (item.type === 'text') {
+                    updatedContent.push(item);
+                } else if (item.type === 'image' && req.files && req.files[imageIndex]) {
+                    const imageUrl = `http://localhost:3000/uploads/${req.files[imageIndex].filename}`;
+                    updatedContent.push({ type: 'image', value: imageUrl });
+                    await PostImage.create({ post_id: postId, image_url: imageUrl });
+                    imageIndex++;
+                }
             }
+
+            updatedFields.content = JSON.stringify(updatedContent);
         }
 
         const result = await Post.update(updatedFields, { where: { post_id: postId } });
