@@ -48,7 +48,6 @@ Lấy danh sách tất cả bài viết từ hệ thống.
     "post_id": 1,
     "title": "Bài viết 1",
     "avatar": "http://localhost:3000/uploads/avatar1.jpg",
-    "snippet": "Đoạn trích ngắn của bài viết"
   }
 ]
 ```
