@@ -48,7 +48,6 @@ Lấy danh sách tất cả bài viết từ hệ thống.
     "post_id": 1,
     "title": "Bài viết 1",
     "avatar": "http://localhost:3000/uploads/avatar1.jpg",
-    "snippet": "Đoạn trích ngắn của bài viết"
   }
 ]
 ```
@@ -154,7 +153,7 @@ Cập nhật bài viết theo ID. Có thể cập nhật tiêu đề, nội dung
 ```json
 {
   "title": "Cập nhật tiêu đề",
-  "content": [{ "type": "text", "value": "Nội dung mới" }]
+  "content":"Nội dung mới" 
 }
 ```
 
