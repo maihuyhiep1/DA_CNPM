@@ -1,56 +1,56 @@
-import React from "react";
 import styles from "./style_createPost.module.css";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 
-import { CKEditor } from "@ckeditor/ckeditor5-react";
-import {
-  ClassicEditor,
-  AccessibilityHelp,
-  Autoformat,
-  AutoImage,
-  Autosave,
-  Base64UploadAdapter,
-  BlockQuote,
-  BlockToolbar,
-  Bold,
-  Essentials,
-  FindAndReplace,
-  Heading,
-  ImageBlock,
-  ImageCaption,
-  ImageInline,
-  ImageInsert,
-  ImageInsertViaUrl,
-  ImageResize,
-  ImageStyle,
-  ImageTextAlternative,
-  ImageToolbar,
-  ImageUpload,
-  Indent,
-  IndentBlock,
-  Italic,
-  Link,
-  LinkImage,
-  List,
-  ListProperties,
-  MediaEmbed,
-  Paragraph,
-  PasteFromOffice,
-  SelectAll,
-  Table,
-  TableCaption,
-  TableCellProperties,
-  TableColumnResize,
-  TableProperties,
-  TableToolbar,
-  TextTransformation,
-  TodoList,
-  Underline,
-  Undo,
-} from "ckeditor5";
-import "ckeditor5/ckeditor5.css";
+import Editor from "./CKEditor/CKEditor5";
 
-import "./CKEditor5.css";
+// import { CKEditor } from "@ckeditor/ckeditor5-react";
+// import {
+//   ClassicEditor,
+//   AccessibilityHelp,
+//   Autoformat,
+//   AutoImage,
+//   Autosave,
+//   Base64UploadAdapter,
+//   BlockQuote,
+//   BlockToolbar,
+//   Bold,
+//   Essentials,
+//   FindAndReplace,
+//   Heading,
+//   ImageBlock,
+//   ImageCaption,
+//   ImageInline,
+//   ImageInsert,
+//   ImageInsertViaUrl,
+//   ImageResize,
+//   ImageStyle,
+//   ImageTextAlternative,
+//   ImageToolbar,
+//   ImageUpload,
+//   Indent,
+//   IndentBlock,
+//   Italic,
+//   Link,
+//   LinkImage,
+//   List,
+//   ListProperties,
+//   MediaEmbed,
+//   Paragraph,
+//   PasteFromOffice,
+//   SelectAll,
+//   Table,
+//   TableCaption,
+//   TableCellProperties,
+//   TableColumnResize,
+//   TableProperties,
+//   TableToolbar,
+//   TextTransformation,
+//   TodoList,
+//   Underline,
+//   Undo,
+// } from "ckeditor5";
+// import "ckeditor5/ckeditor5.css";
+// import "../components/CKEditor/CKEditor5.css";
 
 const CreatePost = () => {
   const [titleWordCount, setTitleWordCount] = useState(0);
@@ -59,186 +59,189 @@ const CreatePost = () => {
   const [content, setContent] = useState("");
   const [title, setTitle] = useState("");
 
-  const editorContainerRef = useRef(null);
-  const editorRef = useRef(null);
-  const [isLayoutReady, setIsLayoutReady] = useState(false);
+  const [text, setText] = useState(""); //Input của CKEditor
 
-  useEffect(() => {
-    setIsLayoutReady(true);
+  // const editorContainerRef = useRef(null);
+  // const editorRef = useRef(null);
+  // const [isLayoutReady, setIsLayoutReady] = useState(false);
 
-    return () => setIsLayoutReady(false);
-  }, []);
+  // useEffect(() => {
+  //   setIsLayoutReady(true);
 
-  const editorConfig = {
-    toolbar: {
-      items: [
-        "undo",
-        "redo",
-        "|",
-        "findAndReplace",
-        "|",
-        "heading",
-        "|",
-        "bold",
-        "italic",
-        "underline",
-        "|",
-        "link",
-        "insertImage",
-        "insertTable",
-        "blockQuote",
-        "|",
-        "bulletedList",
-        "numberedList",
-        "outdent",
-        "indent",
-      ],
-      shouldNotGroupWhenFull: false,
-    },
-    plugins: [
-      AccessibilityHelp,
-      Autoformat,
-      AutoImage,
-      Autosave,
-      Base64UploadAdapter,
-      BlockQuote,
-      BlockToolbar,
-      Bold,
-      Essentials,
-      FindAndReplace,
-      Heading,
-      ImageBlock,
-      ImageCaption,
-      ImageInline,
-      ImageInsert,
-      ImageInsertViaUrl,
-      ImageResize,
-      ImageStyle,
-      ImageTextAlternative,
-      ImageToolbar,
-      ImageUpload,
-      Indent,
-      IndentBlock,
-      Italic,
-      Link,
-      LinkImage,
-      List,
-      ListProperties,
-      Paragraph,
-      PasteFromOffice,
-      SelectAll,
-      Table,
-      TableCaption,
-      TableCellProperties,
-      TableColumnResize,
-      TableProperties,
-      TableToolbar,
-      TextTransformation,
-      Underline,
-      Undo,
-    ],
-    blockToolbar: [
-      "bold",
-      "italic",
-      "|",
-      "link",
-      "insertImage",
-      "insertTable",
-      "|",
-      "bulletedList",
-      "numberedList",
-      "outdent",
-      "indent",
-    ],
-    heading: {
-      options: [
-        {
-          model: "paragraph",
-          title: "Paragraph",
-          class: "ck-heading_paragraph",
-        },
-        {
-          model: "heading1",
-          view: "h1",
-          title: "Heading 1",
-          class: "ck-heading_heading1",
-        },
-        {
-          model: "heading2",
-          view: "h2",
-          title: "Heading 2",
-          class: "ck-heading_heading2",
-        },
-        {
-          model: "heading3",
-          view: "h3",
-          title: "Heading 3",
-          class: "ck-heading_heading3",
-        },
-        {
-          model: "heading4",
-          view: "h4",
-          title: "Heading 4",
-          class: "ck-heading_heading4",
-        },
-        {
-          model: "heading5",
-          view: "h5",
-          title: "Heading 5",
-          class: "ck-heading_heading5",
-        },
-        {
-          model: "heading6",
-          view: "h6",
-          title: "Heading 6",
-          class: "ck-heading_heading6",
-        },
-      ],
-    },
-    image: {
-      toolbar: [
-        "toggleImageCaption",
-        "imageTextAlternative",
-        "|",
-        "imageStyle:inline",
-        "imageStyle:wrapText",
-        "imageStyle:breakText",
-        "|",
-        "resizeImage",
-      ],
-    },
-    initialData: "",
-    link: {
-      addTargetToExternalLinks: true,
-      defaultProtocol: "https://",
-      decorators: {
-        toggleDownloadable: {
-          mode: "manual",
-          label: "Downloadable",
-          attributes: {
-            download: "file",
-          },
-        },
-      },
-    },
-    list: {
-      properties: {
-        styles: true,
-        startIndex: true,
-        reversed: true,
-      },
-    },
-    placeholder: "Nhập đoạn giới thiệu tổng quan của bài để anh em hiểu được nội dung bài viết...",
-    table: {
-      contentToolbar: [
-        "tableColumn",
-        "tableRow",
-        "mergeTableCells",
-        "tableProperties",
-        "tableCellProperties",
-      ],
-    },
-  };
+  //   return () => setIsLayoutReady(false);
+  // }, []);
+
+  // const editorConfig = {
+  //   toolbar: {
+  //     items: [
+  //       "undo",
+  //       "redo",
+  //       "|",
+  //       "findAndReplace",
+  //       "|",
+  //       "heading",
+  //       "|",
+  //       "bold",
+  //       "italic",
+  //       "underline",
+  //       "|",
+  //       "link",
+  //       "insertImage",
+  //       "insertTable",
+  //       "blockQuote",
+  //       "|",
+  //       "bulletedList",
+  //       "numberedList",
+  //       "outdent",
+  //       "indent",
+  //     ],
+  //     shouldNotGroupWhenFull: false,
+  //   },
+  //   plugins: [
+  //     AccessibilityHelp,
+  //     Autoformat,
+  //     AutoImage,
+  //     Autosave,
+  //     Base64UploadAdapter,
+  //     BlockQuote,
+  //     BlockToolbar,
+  //     Bold,
+  //     Essentials,
+  //     FindAndReplace,
+  //     Heading,
+  //     ImageBlock,
+  //     ImageCaption,
+  //     ImageInline,
+  //     ImageInsert,
+  //     ImageInsertViaUrl,
+  //     ImageResize,
+  //     ImageStyle,
+  //     ImageTextAlternative,
+  //     ImageToolbar,
+  //     ImageUpload,
+  //     Indent,
+  //     IndentBlock,
+  //     Italic,
+  //     Link,
+  //     LinkImage,
+  //     List,
+  //     ListProperties,
+  //     Paragraph,
+  //     PasteFromOffice,
+  //     SelectAll,
+  //     Table,
+  //     TableCaption,
+  //     TableCellProperties,
+  //     TableColumnResize,
+  //     TableProperties,
+  //     TableToolbar,
+  //     TextTransformation,
+  //     Underline,
+  //     Undo,
+  //   ],
+  //   blockToolbar: [
+  //     "bold",
+  //     "italic",
+  //     "|",
+  //     "link",
+  //     "insertImage",
+  //     "insertTable",
+  //     "|",
+  //     "bulletedList",
+  //     "numberedList",
+  //     "outdent",
+  //     "indent",
+  //   ],
+  //   heading: {
+  //     options: [
+  //       {
+  //         model: "paragraph",
+  //         title: "Paragraph",
+  //         class: "ck-heading_paragraph",
+  //       },
+  //       {
+  //         model: "heading1",
+  //         view: "h1",
+  //         title: "Heading 1",
+  //         class: "ck-heading_heading1",
+  //       },
+  //       {
+  //         model: "heading2",
+  //         view: "h2",
+  //         title: "Heading 2",
+  //         class: "ck-heading_heading2",
+  //       },
+  //       {
+  //         model: "heading3",
+  //         view: "h3",
+  //         title: "Heading 3",
+  //         class: "ck-heading_heading3",
+  //       },
+  //       {
+  //         model: "heading4",
+  //         view: "h4",
+  //         title: "Heading 4",
+  //         class: "ck-heading_heading4",
+  //       },
+  //       {
+  //         model: "heading5",
+  //         view: "h5",
+  //         title: "Heading 5",
+  //         class: "ck-heading_heading5",
+  //       },
+  //       {
+  //         model: "heading6",
+  //         view: "h6",
+  //         title: "Heading 6",
+  //         class: "ck-heading_heading6",
+  //       },
+  //     ],
+  //   },
+  //   image: {
+  //     toolbar: [
+  //       "toggleImageCaption",
+  //       "imageTextAlternative",
+  //       "|",
+  //       "imageStyle:inline",
+  //       "imageStyle:wrapText",
+  //       "imageStyle:breakText",
+  //       "|",
+  //       "resizeImage",
+  //     ],
+  //   },
+  //   initialData: "",
+  //   link: {
+  //     addTargetToExternalLinks: true,
+  //     defaultProtocol: "https://",
+  //     decorators: {
+  //       toggleDownloadable: {
+  //         mode: "manual",
+  //         label: "Downloadable",
+  //         attributes: {
+  //           download: "file",
+  //         },
+  //       },
+  //     },
+  //   },
+  //   list: {
+  //     properties: {
+  //       styles: true,
+  //       startIndex: true,
+  //       reversed: true,
+  //     },
+  //   },
+  //   placeholder:
+  //     "Nhập đoạn giới thiệu tổng quan của bài để anh em hiểu được nội dung bài viết...",
+  //   table: {
+  //     contentToolbar: [
+  //       "tableColumn",
+  //       "tableRow",
+  //       "mergeTableCells",
+  //       "tableProperties",
+  //       "tableCellProperties",
+  //     ],
+  //   },
+  // };
 
   const handleWordCount = (e) => {
     const text = e.target.value;
@@ -270,33 +273,32 @@ const CreatePost = () => {
       reader.readAsDataURL(file);
     }
   };
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
     formData.append("title", title);
-    formData.append("content", content);  // Nội dung CKEditor
-    formData.append("image", image);  // Nếu có ảnh
+    formData.append("content", content); // Nội dung CKEditor
+    formData.append("image", image); // Nếu có ảnh
 
     try {
-      console.log("SUBMIT")
+      console.log("SUBMIT");
       const response = await fetch("http://localhost:3000/api/posts", {
         method: "POST",
-        body: formData,  // Gửi dữ liệu dưới dạng FormData
+        body: formData, // Gửi dữ liệu dưới dạng FormData
       });
-      console.log("SUBMIT")
+      console.log("SUBMIT");
 
       const data = await response.json();
-      console.log(data);  // Xử lý phản hồi từ server
+      console.log(data); // Xử lý phản hồi từ server
     } catch (error) {
       console.error("Error submitting form:", error);
     }
   };
 
-
   const handleEditorChange = (event, editor) => {
     const data = editor.getData();
-    setContent(data);  // Cập nhật state content với nội dung từ CKEditor
+    setContent(data); // Cập nhật state content với nội dung từ CKEditor
   };
 
   const handleDrop = (e) => {
@@ -315,6 +317,35 @@ const CreatePost = () => {
     e.preventDefault();
   };
 
+  // const CKEditorContent = useMemo(() => {
+  //   function convertBase64ImagesToBlobs(htmlString) {
+  //     const parser = new DOMParser();
+  //     const doc = parser.parseFromString(htmlString, "text/html");
+  //     const images = doc.querySelectorAll("img");
+  //     images.forEach((img) => {
+  //       const src = img.src;
+  //       if (src.startsWith("data:image")) {
+  //         const [header, base64Data] = src.split(",");
+  //         const mimeType = header.match(/data:(image\/\w+);base64/)[1];
+
+  //         const byteCharacters = atob(base64Data);
+  //         const byteNumbers = new Array(byteCharacters.length);
+  //         for (let i = 0; i < byteCharacters.length; i++) {
+  //           byteNumbers[i] = byteCharacters.charCodeAt(i);
+  //         }
+
+  //         const byteArray = new Uint8Array(byteNumbers);
+  //         const blob = new Blob([byteArray], { type: mimeType });
+  //         const blobUrl = URL.createObjectURL(blob);
+  //         img.src = blobUrl;
+  //       }
+  //     });
+  //     return new XMLSerializer().serializeToString(doc);
+  //   }
+
+  //   return convertBase64ImagesToBlobs(content.CKEditorContent);
+  // }, []);
+
   return (
     <div className={styles.background}>
       <div className={styles.guideLink}>
@@ -322,7 +353,7 @@ const CreatePost = () => {
         <div className={styles.guideImage}></div>
       </div>
 
-      <form action="/submit-post" method="POST" className={styles.postForm}>
+      <form className={styles.postForm}>
         <textarea
           className={styles.titleTextArea}
           name="title"
@@ -364,16 +395,16 @@ const CreatePost = () => {
           )}
         </div>
 
-        <textarea
+        {/* <textarea
           className={styles.textArea}
           name="content"
           placeholder="Nhập đoạn giới thiệu tổng quan của bài để anh em hiểu được nội dung bài viết..."
           rows="5"
           onChange={handleWordCount}
           style={{ overflow: "hidden" }}
-        ></textarea>
+        ></textarea> */}
 
-        <div className="main-container">
+        {/* <div className="main-container">
           <div
             className="editor-container editor-container_classic-editor editor-container_include-block-toolbar"
             ref={editorContainerRef}
@@ -381,13 +412,17 @@ const CreatePost = () => {
             <div className="editor-container__editor">
               <div ref={editorRef}>
                 {isLayoutReady && (
-                  <CKEditor editor={ClassicEditor} config={editorConfig}
-                    onChange={handleEditorChange} />
+                  <CKEditor
+                    editor={ClassicEditor}
+                    config={editorConfig}
+                    onChange={handleEditorChange}
+                  />
                 )}
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
+        <Editor initData="Helllo" setData={setText} />
 
         <div className={styles.wordCount}>
           <span>Bài viết {totalWordCount} từ</span>
@@ -403,7 +438,11 @@ const CreatePost = () => {
             QnA
           </label>
         </div>
-        <button onClick={handleSubmit} type="submit" className={styles.submitButton}>
+        <button
+          onClick={handleSubmit}
+          type="submit"
+          className={styles.submitButton}
+        >
           <span>Đăng</span>
         </button>
       </form>
@@ -417,6 +456,7 @@ const CreatePost = () => {
         <div>
           <h4>Nội dung:</h4>
           <p>{content}</p>
+          <div dangerouslySetInnerHTML={{ __html: text }} />
         </div>
       </div>
     </div>

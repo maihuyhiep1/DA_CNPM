@@ -11,27 +11,42 @@ import { faUser } from "@fortawesome/free-regular-svg-icons";
 
 const MENU_ITEM = [
   {
-    icon: <FontAwesomeIcon icon={faUser} />, 
-    title: 'Trang cá nhân'
+    icon: <FontAwesomeIcon icon={faUser} />,
+    title: "Trang cá nhân",
   },
   {
-    icon: <FontAwesomeIcon icon={faGear} />, 
-    title: 'Cài đặt'
+    icon: <FontAwesomeIcon icon={faGear} />,
+    title: "Cài đặt",
   },
   {
-    icon: <FontAwesomeIcon icon={faRightFromBracket} />, 
-    title: 'Đăng xuất'
+    icon: <FontAwesomeIcon icon={faRightFromBracket} />,
+    title: "Đăng xuất",
   },
-]
+];
+
+const handleFocus = () => {
+  setIsFocused(true);
+};
+
+const handleBlur = () => {
+  // Delay hiding the tooltip slightly to avoid conflicts with Tippy interactions
+  setTimeout(() => setIsFocused(false), 100);
+};
 
 const Navbar = () => {
   const navigate = useNavigate();
   const currentUser = useContext(AuthContext);
   const [searchResult, setSearchResult] = useState([]);
+  const [isFocused, setIsFocused] = useState(false); // State to manage focus
 
   return (
     <header className={styles.navbar}>
-      <div className={styles.logoBrand} onClick={() =>{navigate('/')}}>
+      <div
+        className={styles.logoBrand}
+        onClick={() => {
+          navigate("/");
+        }}
+      >
         <img
           className={styles.logo}
           src="img_navbar/logo.png"
@@ -44,7 +59,7 @@ const Navbar = () => {
       <div className={styles.searchBox}>
         <Tippy
           interactive
-          // visible={searchResult.length > 0}
+          visible={isFocused}
           render={(attrs) => (
             <div className={styles.searchResult} tabIndex="-1" {...attrs}>
               <PopperWrapper>Kết quả</PopperWrapper>
@@ -58,6 +73,8 @@ const Navbar = () => {
                 className={styles.text}
                 placeholder="Tìm sản phẩm công nghệ, cộng đồng, bạn bè..."
                 aria-label="Search"
+                onFocus={handleFocus} // Show Tippy on focus
+                onBlur={handleBlur} // Hide Tippy on blur
               />
             </div>
           </div>
@@ -65,7 +82,12 @@ const Navbar = () => {
       </div>
 
       <div className={styles.function}>
-        <div className={styles.postButton} onClick={() => {navigate('/create-post')}}>
+        <div
+          className={styles.postButton}
+          onClick={() => {
+            navigate("/create-post");
+          }}
+        >
           <div className={styles.textInPostButton}>Viết Bài Chia Sẻ</div>
         </div>
         <Menu>
