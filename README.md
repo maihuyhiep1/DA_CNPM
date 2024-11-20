@@ -153,7 +153,7 @@ Cập nhật bài viết theo ID. Có thể cập nhật tiêu đề, nội dung
 ```json
 {
   "title": "Cập nhật tiêu đề",
-  "content": [{ "type": "text", "value": "Nội dung mới" }]
+  "content":"Nội dung mới" 
 }
 ```
 
