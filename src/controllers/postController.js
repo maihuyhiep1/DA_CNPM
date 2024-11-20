@@ -33,7 +33,7 @@ exports.getPopularPosts = async (req, res) => {
 exports.getAllPosts = async (req, res) => {
     try {
         const results = await Post.findAll({
-            attributes: ['post_id', 'title', 'avatar', 'snippet'], // Chỉ lấy các trường cần thiết từ bảng Post
+            attributes: ['post_id', 'title', 'avatar',], // Chỉ lấy các trường cần thiết từ bảng Post
             order: [['createdAt', 'DESC']] // Sắp xếp bài viết mới nhất
         });
 
@@ -49,7 +49,9 @@ exports.getPostById = async (req, res) => {
         const post_id = req.params.postId;
         const result = await Post.findByPk(post_id, {
             include: [
-                { model: PostImage, as: 'images', attributes: ['image_url'] }
+                { model: PostImage, as: 'images', attributes: ['image_url'] },
+                
+
             ]
         });
         if (!result) {
@@ -67,9 +69,6 @@ exports.createPost = async (req, res) => {
         const { title, is_qna, content } = req.body;
         const author_id = req.user_id;
 
-        if (!content || !Array.isArray(content)) {
-            return res.status(400).json({ message: 'Nội dung bài đăng phải là một mảng (văn bản và ảnh).' });
-        }
 
         let avatarUrl = null;
         if (req.file) {

@@ -22,7 +22,7 @@ const Post = sequelize.define('Post', {
     },
     avatar: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
     },
     is_qna: {
         type: DataTypes.BOOLEAN,

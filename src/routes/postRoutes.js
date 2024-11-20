@@ -34,7 +34,7 @@ router.put(
     postController.updatePost
 );
 
-router.delete('/posts/:postId',  checkDeletePermission, postController.deletePost); // Xóa bài viết
+router.delete('/posts/:postId', postController.deletePost); // Xóa bài viết
 router.post('/posts/:postId/like',  postController.likePost);  // Thích bài viết
 
 module.exports = router;
