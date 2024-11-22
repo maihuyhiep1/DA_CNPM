@@ -11,6 +11,7 @@ class Post extends Model {
 
     this.belongsTo(models.User, {
       foreignKey: 'author_id',
+      as: 'author', // Đặt alias cho User
       onDelete: 'CASCADE',
     });
   }
