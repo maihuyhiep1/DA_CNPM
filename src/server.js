@@ -1,10 +1,8 @@
 const express = require('express');
-const initWebRoutes = require('./route/web.js');
+const initWebRoutes = require('./route/index.js');
 const connectDB = require('./config/database.js');
 const bodyParser = require('body-parser');
-const dotenv = require('dotenv');
-dotenv.config();
-
+require('dotenv').config();
 const passport = require('passport');
 require('./passport.js');
 const session = require('express-session');
@@ -19,31 +17,28 @@ const corsOptions = {
   allowedHeaders: ['Content-Type', 'Authorization'], // Headers you want to allow
   credentials: true,  // Allow cookies (for sessions)
 };
-app.use(cors(corsOptions));
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-
+// Session configuration
 app.use(session({
   secret: process.env.SESSION_SECRET_KEY,
   resave: false,
   saveUninitialized: true,
   cookie: { secure: false } // Set to `true` for HTTPS
 }));
-
 app.use(passport.initialize());
 app.use(passport.session());
 
 // Enable CORS
+app.use(cors(corsOptions));
 
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
-connectDB();
-
-initWebRoutes(app);
+connectDB();  // Connect and Sync database - { alter: false, force: false, logging: false}
+initWebRoutes(app); // Use routes
 
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
-
