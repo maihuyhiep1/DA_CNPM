@@ -3,7 +3,7 @@ const postController = require('../controllers/postController');
 const router = express.Router();
 const authenticateToken = require('../middlewares/authenticateToken');
 const checkDeletePermission = require('../middlewares/checkDeletePermission');
-const upload = require('../middlewares/upload');
+const upload = require('../services/upload');
 
 // Route upload hình ảnh
 
@@ -15,7 +15,7 @@ router.get('/posts/popular', postController.getPopularPosts);
 // Các route yêu cầu xác thực token
 router.post(
     '/posts',
-   
+  
     upload.fields([
         { name: 'avatar', maxCount: 1 }, // Avatar chỉ 1 ảnh
         { name: 'images', maxCount: 10 } // Ảnh nội dung
@@ -26,7 +26,7 @@ router.post(
 // Route cập nhật bài viết (avatar và nội dung)
 router.put(
     '/posts/:postId',
- 
+
     upload.fields([
         { name: 'avatar', maxCount: 1 }, // Avatar chỉ 1 ảnh
         { name: 'images', maxCount: 10 } // Ảnh nội dung
