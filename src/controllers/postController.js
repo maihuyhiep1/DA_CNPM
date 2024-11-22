@@ -191,7 +191,7 @@ exports.deletePost = async (req, res) => {
 };
 
 
-const PostLike = require('../models/PostLike');
+const PostLike = require('../models/index').PostLike;
 // Like bài đăng (toggle)
 exports.likePost = async (req, res) => {
     try {
