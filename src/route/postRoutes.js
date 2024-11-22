@@ -1,8 +1,8 @@
 const express = require('express');
 const postController = require('../controllers/postController');
 const router = express.Router();
-const authenticateToken = require('../middlewares/authenticateToken');
-const checkDeletePermission = require('../middlewares/checkDeletePermission');
+// const authenticateToken = require('../middlewares/authenticateToken');
+// const checkDeletePermission = require('../middlewares/checkDeletePermission');
 const upload = require('../services/upload');
 
 // Route upload hình ảnh
