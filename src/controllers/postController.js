@@ -53,7 +53,7 @@ exports.getPostById = async (req, res) => {
         const postId = req.params.postId;
 
         const result = await Post.findByPk(postId, {
-            attributes: { exclude: ['hashed_pw'] }, // Loại trừ cột không cần thiết
+
             include: [
                
                 { model: User, as: 'author', attributes: ['id', 'name', 'avatar'] }, // Thông tin tác giả
@@ -237,23 +237,30 @@ exports.deletePost = async (req, res) => {
 };
 
 
-
-// Like bài đăng (toggle)
 // Like bài đăng (toggle)
 exports.likePost = async (req, res) => {
     try {
         const { postId } = req.params;
-        const userId = req.user.id; // Lấy user_id từ thông tin user
+        const userId = req.user?.id; // Lấy user_id từ thông tin user trong token
 
+        // Kiểm tra xem người dùng đã đăng nhập chưa
+        if (!userId) {
+            return res.status(401).json({ message: 'Bạn cần đăng nhập để thực hiện hành động này.' });
+        }
+
+        // Kiểm tra xem người dùng đã like bài viết chưa
         const existingLike = await PostLike.findOne({ where: { post_id: postId, user_id: userId } });
+
         if (!existingLike) {
+            // Nếu chưa like, tạo mới bản ghi và tăng like_count
             await PostLike.create({ post_id: postId, user_id: userId });
             await Post.increment('like_count', { where: { post_id: postId } });
-            return res.json({ message: 'Đã like bài viết thành công!' });
+            return res.status(200).json({ message: 'Đã like bài viết thành công!' });
         } else {
+            // Nếu đã like, xóa bản ghi và giảm like_count
             await PostLike.destroy({ where: { post_id: postId, user_id: userId } });
             await Post.decrement('like_count', { where: { post_id: postId } });
-            return res.json({ message: 'Đã bỏ like bài viết thành công!' });
+            return res.status(200).json({ message: 'Đã bỏ like bài viết thành công!' });
         }
     } catch (err) {
         res.status(500).json({ message: 'Lỗi khi xử lý lượt thích', error: err.message });
