@@ -8,16 +8,17 @@ module.exports = (sequelize, DataTypes) => {
         as: 'images',
         onDelete: 'CASCADE',
       });
+
       this.belongsTo(models.User, {
         foreignKey: 'author_id',
-        as: 'author',      
+        as: 'author', // Đặt alias cho User
         onDelete: 'CASCADE',
       });
     }
   }
 
   Post.init({
-    post_id: { 
+    post_id: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
@@ -26,7 +27,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    author_id: { 
+    author_id: {
       type: DataTypes.UUID,
       allowNull: true,
     },
