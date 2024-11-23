@@ -1,20 +1,8 @@
 const Comment = require('../models/index').Comment
+const Post = require('../models/index').Post;
 const commentController = {
     async create(req, res) {
         try {
-            // const response = await fetch(`http://localhost:3001/api/posts/${req.body.postId}`);
-            // if (!response.ok && false) {
-            //     if (response.status === 404) {
-            //         console.log("Comment không tồn tại!");
-            //     } else {
-            //         console.log(`Lỗi: ${response.status} - ${response.statusText}`);
-            //     }
-            //     res.status(response.status).json({ success: false, message: "Lỗi khi thêm comment!", data: null });
-            // }
-            // await Post.increment(
-            //     { commentCount: 1 }, 
-            //     { where: { id: req.body.postId } } 
-            // );
             if (req.body.commentId != null) {
                 const replyComment = await Comment.findOne({
                     where: { id: req.body.commentId }
@@ -24,6 +12,7 @@ const commentController = {
                 }
             }
             const comment = await Comment.create(req.body);
+            await Post.increment('cmt_count', { where: { post_id: req.body.postId } });
             res.status(201).json({ success: true, message: "Tạo comment thành công!", data: comment });
         } catch (error) {
             res.status(500).json({ success: false, message: error.message, data: null });
@@ -51,10 +40,11 @@ const commentController = {
             const comment = await Comment.findOne({
                 where: { id: req.params.id }
             });
-            const deleted = await Comment.destroy({
+            await Comment.destroy({
                 where: { id: req.params.id }
             });
-            if (deleted) {
+            if (comment != undefined) {
+                await Post.decrement('cmt_count', { where: { post_id: comment.postId } });
                 res.status(202).json({ success: true, message: "Xoá comment thành công!", data: { comment: comment } });
             } else {
                 res.status(404).json({ success: false, message: "Comment không tồn tại!", data: null });
@@ -75,15 +65,6 @@ const commentController = {
 
     async findAllofPostId(req, res) {
         try {
-            // const response = await fetch(`http://localhost:3001/api/posts/${req.params.id}`);
-            // if (!response.ok) {
-            //     if (response.status === 404) {
-            //         console.log("Post không tồn tại!");
-            //     } else {
-            //         console.log(`Lỗi: ${response.status} - ${response.statusText}`);
-            //     }
-            //     res.status(response.status).json({ success: false, message: "Lỗi khi thêm comment!", data: null });
-            // }
             const comments = await Comment.findAll({
                 where: { postId: req.params.id }
             });
@@ -98,7 +79,10 @@ const commentController = {
             };
             
             const nestedCommentList = transformComments(comments);
-            res.status(200).json({ success: true, message: `Lấy tất cả comment của post ${req.params.id} thành công!`, data: nestedCommentList });
+            const post = await Post.findOne({
+                where: { post_id: req.params.id }
+            });
+            res.status(200).json({ success: true, message: `Lấy tất cả comment của post ${post.title} thành công!`, data: nestedCommentList });
         } catch (error) {
             res.status(500).json({ success: false, message: error.message, data: null });
         }
