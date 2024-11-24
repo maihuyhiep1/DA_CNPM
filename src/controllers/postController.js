@@ -90,12 +90,19 @@ exports.createPost = async (req, res) => {
             }
         }
 
+        // Xử lý avatar
+        let avatar = null;
+        if (req.files && req.files.avatar && req.files.avatar[0]) {
+            avatar = req.files.avatar[0].path; // Đường dẫn ảnh được tải lên
+        }
+
         // Tạo bài viết
         const newPost = await Post.create({
             title,
             author_id,
             is_qna,
             content, // Lưu toàn bộ HTML (bao gồm cả thẻ <img>)
+            avatar,  // Lưu đường dẫn ảnh đại diện (nếu có)
         });
 
         // Trích xuất URL ảnh từ nội dung bài viết
@@ -120,67 +127,52 @@ exports.createPost = async (req, res) => {
 };
 
 
+
 // Cập nhật bài đăng
 exports.updatePost = async (req, res) => {
     try {
-        const { postId } = req.params;
-        const userId = req.user.id; // Lấy userId từ session
-        const { title, content } = req.body;
+        const postId = req.params.postId;
+        const { title, is_qna, content } = req.body;
 
-        // Tìm bài viết
+        // Lấy bài viết cần cập nhật
         const post = await Post.findByPk(postId);
         if (!post) {
-            return res.status(404).json({ message: 'Không tìm thấy bài đăng.' });
+            return res.status(404).json({ message: 'Không tìm thấy bài viết.' });
         }
 
-        // Kiểm tra quyền chỉnh sửa
-        if (post.author_id !== userId) {
-            return res.status(403).json({ message: 'Bạn không có quyền chỉnh sửa bài đăng này.' });
+        // Kiểm tra quyền (nếu cần)
+        if (post.author_id !== req.user.id) {
+            return res.status(403).json({ message: 'Bạn không có quyền cập nhật bài viết này.' });
         }
 
-        // Nếu có nội dung mới, kiểm tra và cập nhật bảng PostImage
-        if (content && content !== post.content) {
-            const oldImages = post.content.match(/<img[^>]+src="([^">]+)"/g)?.map((img) => {
-                return img.match(/src="([^">]+)"/)[1];
-            });
-
-            const newImages = content.match(/<img[^>]+src="([^">]+)"/g)?.map((img) => {
-                return img.match(/src="([^">]+)"/)[1];
-            });
-
-            // Xóa ảnh cũ không còn được sử dụng
-            if (oldImages) {
-                for (const image of oldImages) {
-                    if (!newImages || !newImages.includes(image)) {
-                        // Xóa ảnh khỏi server
-                        const filePath = path.join(__dirname, '../uploads', path.basename(image));
-                        fs.unlink(filePath, (err) => {
-                            if (err) console.error('Không thể xóa ảnh:', err.message);
-                        });
-
-                        // Xóa ảnh khỏi PostImage
-                        await PostImage.destroy({ where: { post_id: postId, image_url: image } });
-                    }
-                }
-            }
-
-            // Thêm ảnh mới vào PostImage
-            if (newImages) {
-                const newImageRecords = newImages
-                    .filter((url) => !oldImages || !oldImages.includes(url))
-                    .map((url) => ({
-                        post_id: postId,
-                        image_url: url,
-                    }));
-                await PostImage.bulkCreate(newImageRecords);
-            }
+        // Xử lý avatar mới (nếu có)
+        let avatar = post.avatar; // Giữ nguyên avatar cũ
+        if (req.files && req.files.avatar && req.files.avatar[0]) {
+            avatar = req.files.avatar[0].path; // Cập nhật avatar mới
         }
 
         // Cập nhật bài viết
-        await post.update({
-            title: title || post.title,
-            content: content || post.content,
+        post.title = title || post.title;
+        post.is_qna = is_qna ?? post.is_qna;
+        post.content = content || post.content;
+        post.avatar = avatar;
+
+        await post.save();
+
+        // Trích xuất URL ảnh từ nội dung bài viết mới
+        const imageUrls = content.match(/<img[^>]+src="([^">]+)"/g)?.map((img) => {
+            return img.match(/src="([^">]+)"/)[1];
         });
+
+        // Xóa ảnh cũ trong PostImage (nếu cần) và thêm ảnh mới
+        if (imageUrls && imageUrls.length > 0) {
+            await PostImage.destroy({ where: { post_id: postId } });
+            const postImages = imageUrls.map((url) => ({
+                post_id: postId,
+                image_url: url,
+            }));
+            await PostImage.bulkCreate(postImages);
+        }
 
         res.status(200).json({ message: 'Cập nhật bài viết thành công.' });
     } catch (err) {
@@ -188,6 +180,7 @@ exports.updatePost = async (req, res) => {
         res.status(500).json({ message: 'Lỗi khi cập nhật bài đăng.', error: err.message });
     }
 };
+
 
 
 
