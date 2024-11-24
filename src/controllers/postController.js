@@ -1,5 +1,6 @@
 const Post = require('../models/index').Post;
 const PostImage = require('../models/index').PostImage;
+const {  User } = require('../models');
 const { Op } = require('sequelize'); // Dùng để tạo các điều kiện lọc
 
 exports.getPopularPosts = async (req, res) => {
@@ -33,8 +34,11 @@ exports.getPopularPosts = async (req, res) => {
 exports.getAllPosts = async (req, res) => {
     try {
         const results = await Post.findAll({
-            attributes: ['post_id', 'title', 'avatar',], // Chỉ lấy các trường cần thiết từ bảng Post
-            order: [['createdAt', 'DESC']] // Sắp xếp bài viết mới nhất
+            attributes: ['post_id', 'title', 'avatar', 'createdAt'], // Giới hạn cột trả về
+            include: [
+                { model: User, as: 'author', attributes: ['id', 'name', 'avatar'] }, // Thêm tác giả bài viết
+            ],
+            order: [['createdAt', 'DESC']], // Sắp xếp bài viết mới nhất
         });
 
         res.status(200).json(results);
@@ -46,23 +50,27 @@ exports.getAllPosts = async (req, res) => {
 // Lấy bài đăng theo ID
 exports.getPostById = async (req, res) => {
     try {
-        const post_id = req.params.postId;
-        const result = await Post.findByPk(post_id, {
-            include: [
-                { model: PostImage, as: 'images', attributes: ['image_url'] },
-                
+        const postId = req.params.postId;
 
-            ]
+        const result = await Post.findByPk(postId, {
+
+            include: [
+               
+                { model: User, as: 'author', attributes: ['id', 'name', 'avatar'] }, // Thông tin tác giả
+            ],
         });
+
         if (!result) {
-            return res.status(404).json({ message: 'Không tìm thấy bài đăng' });
+            return res.status(404).json({ message: 'Không tìm thấy bài đăng.' });
         }
+
         res.status(200).json(result);
     } catch (err) {
-        res.status(500).json({ message: 'Lỗi khi lấy bài đăng', error: err.message });
+        res.status(500).json({ message: 'Lỗi khi lấy bài đăng.', error: err.message });
     }
 };
 
+// Tạo bài đăng mới
 // Tạo bài đăng mới
 exports.createPost = async (req, res) => {
     try {
@@ -71,7 +79,7 @@ exports.createPost = async (req, res) => {
 
         let avatarUrl = null;
         if (req.file) {
-            avatarUrl = `http://localhost:3000/uploads/${req.file.filename}`;
+            avatarUrl = `http://localhost:${port}/uploads/${req.file.filename}`;
         }
 
         // Xử lý nội dung và giữ đúng thứ tự
@@ -82,7 +90,7 @@ exports.createPost = async (req, res) => {
             if (item.type === 'text') {
                 processedContent.push(item); // Giữ nguyên văn bản
             } else if (item.type === 'image' && req.files && req.files[imageIndex]) {
-                const imageUrl = `http://localhost:3000/uploads/${req.files[imageIndex].filename}`;
+                const imageUrl = `http://localhost:${port}/uploads/${req.files[imageIndex].filename}`;
                 processedContent.push({ type: 'image', value: imageUrl });
                 await PostImage.create({ post_id: null, image_url: imageUrl });
                 imageIndex++;
@@ -123,34 +131,56 @@ exports.createPost = async (req, res) => {
 
 
 
+
 // Cập nhật bài đăng
+
+
 exports.updatePost = async (req, res) => {
     try {
         const { postId } = req.params;
-        const allowedFields = ['title', 'content']; // Không cho thay đổi `is_qna`
+        const userId = req.user.id; // Lấy userId từ session
+        const allowedFields = ['title', 'content']; // Các trường cho phép cập nhật
         const updatedFields = {};
 
+        // Tìm bài viết
+        const post = await Post.findByPk(postId, {
+            include: [PostImage], // Bao gồm hình ảnh liên kết (nếu cần)
+        });
+        if (!post) {
+            return res.status(404).json({ message: 'Không tìm thấy bài đăng.' });
+        }
+
+        // Kiểm tra quyền cập nhật (chỉ tác giả bài viết mới được sửa)
+        if (post.author_id !== userId) {
+            return res.status(403).json({ message: 'Bạn không có quyền chỉnh sửa bài đăng này.' });
+        }
+
+        // Lọc các trường cho phép từ req.body
         for (const key of Object.keys(req.body)) {
             if (allowedFields.includes(key)) {
                 updatedFields[key] = req.body[key];
             }
         }
 
+        // Xử lý ảnh đại diện (avatar)
         if (req.file) {
-            const avatarUrl = `http://localhost:3000/uploads/${req.file.filename}`;
+            const avatarUrl = `http://localhost:${port}/uploads/${req.file.filename}`;
             updatedFields.avatar = avatarUrl;
         }
 
+        // Xử lý nội dung (nếu có hình ảnh)
         if (req.body.content) {
             const updatedContent = [];
             let imageIndex = 0;
 
-            for (const item of req.body.content) {
+            for (const item of JSON.parse(req.body.content)) {
                 if (item.type === 'text') {
                     updatedContent.push(item);
                 } else if (item.type === 'image' && req.files && req.files[imageIndex]) {
-                    const imageUrl = `http://localhost:3000/uploads/${req.files[imageIndex].filename}`;
+                    const imageUrl = `http://localhost:${port}/uploads/${req.files[imageIndex].filename}`;
                     updatedContent.push({ type: 'image', value: imageUrl });
+
+                    // Lưu hình ảnh vào bảng PostImage
                     await PostImage.create({ post_id: postId, image_url: imageUrl });
                     imageIndex++;
                 }
@@ -159,54 +189,78 @@ exports.updatePost = async (req, res) => {
             updatedFields.content = JSON.stringify(updatedContent);
         }
 
+        // Thực hiện cập nhật bài viết
         const result = await Post.update(updatedFields, { where: { post_id: postId } });
         if (result[0] === 0) {
-            return res.status(404).json({ message: 'Không tìm thấy bài đăng để cập nhật' });
+            return res.status(404).json({ message: 'Không tìm thấy bài đăng để cập nhật.' });
         }
 
-        res.status(200).json({ message: 'Cập nhật bài viết thành công' });
+        res.status(200).json({ message: 'Cập nhật bài viết thành công.' });
     } catch (err) {
-        res.status(500).json({ message: 'Lỗi khi cập nhật bài đăng', error: err.message });
+        console.error(err); // Log lỗi để kiểm tra
+        res.status(500).json({ message: 'Lỗi khi cập nhật bài đăng.', error: err.message });
     }
 };
 
 
 
 // Xóa bài đăng
+
+
 exports.deletePost = async (req, res) => {
-    try {
-        const post_id = req.params.postId;
+  try {
+    const { postId } = req.params;
+    const userId = req.user.id;
+    const userRole = req.user.role;
 
-        await PostImage.destroy({ where: { post_id } });
-        const result = await Post.destroy({ where: { post_id } });
-
-        if (result === 0) {
-            return res.status(404).json({ message: 'Không tìm thấy bài đăng để xóa' });
-        }
-
-        res.status(200).json({ message: 'Xóa bài đăng thành công' });
-    } catch (err) {
-        res.status(500).json({ message: 'Lỗi khi xóa bài đăng', error: err.message });
+    // Tìm bài viết
+    const post = await Post.findByPk(postId);
+    if (!post) {
+      return res.status(404).json({ message: 'Không tìm thấy bài viết.' });
     }
+
+    // Kiểm tra quyền
+    if (post.author_id !== userId && !['admin', 'moderator'].includes(userRole)) {
+      return res.status(403).json({ message: 'Bạn không có quyền xóa bài viết này.' });
+    }
+
+    // Xóa hình ảnh liên quan
+    await PostImage.destroy({ where: { post_id: postId } });
+
+    // Xóa bài viết
+    await Post.destroy({ where: { post_id: postId } });
+
+    res.status(200).json({ message: 'Xóa bài viết thành công.' });
+  } catch (error) {
+    res.status(500).json({ message: 'Lỗi khi xóa bài viết.', error: error.message });
+  }
 };
 
 
-const PostLike = require('../models/index').PostLike;
 // Like bài đăng (toggle)
 exports.likePost = async (req, res) => {
     try {
         const { postId } = req.params;
-        const userId = req.user.user_id;
+        const userId = req.user?.id; // Lấy user_id từ thông tin user trong token
 
+        // Kiểm tra xem người dùng đã đăng nhập chưa
+        if (!userId) {
+            return res.status(401).json({ message: 'Bạn cần đăng nhập để thực hiện hành động này.' });
+        }
+
+        // Kiểm tra xem người dùng đã like bài viết chưa
         const existingLike = await PostLike.findOne({ where: { post_id: postId, user_id: userId } });
+
         if (!existingLike) {
+            // Nếu chưa like, tạo mới bản ghi và tăng like_count
             await PostLike.create({ post_id: postId, user_id: userId });
             await Post.increment('like_count', { where: { post_id: postId } });
-            return res.json({ message: 'Đã like bài viết thành công!' });
+            return res.status(200).json({ message: 'Đã like bài viết thành công!' });
         } else {
+            // Nếu đã like, xóa bản ghi và giảm like_count
             await PostLike.destroy({ where: { post_id: postId, user_id: userId } });
             await Post.decrement('like_count', { where: { post_id: postId } });
-            return res.json({ message: 'Đã bỏ like bài viết thành công!' });
+            return res.status(200).json({ message: 'Đã bỏ like bài viết thành công!' });
         }
     } catch (err) {
         res.status(500).json({ message: 'Lỗi khi xử lý lượt thích', error: err.message });
