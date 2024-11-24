@@ -106,7 +106,7 @@ const commentController = {
             }
     
             // Kiểm tra quyền: chỉ người tạo hoặc admin mới được xóa
-            if (comment.userId !== userId || !['admin', 'moderator'].includes(req.user.role) ) {
+            if (comment.userId !== userId && !['admin', 'moderator'].includes(req.user.role) ) {
                 return res.status(403).json({ success: false, message: "Bạn không có quyền xóa comment này." });
             }
     
