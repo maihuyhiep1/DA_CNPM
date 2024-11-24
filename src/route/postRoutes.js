@@ -4,7 +4,32 @@ const router = express.Router();
 const upload = require('../middlewares/upload');
 const isAuthenticated = require('../middlewares/auth');
 
-// Route upload hình ảnh
+// Route upload ảnh từ CKEditor
+router.post(
+    '/upload-image',
+    isAuthenticated, // Xác thực nếu cần (hoặc bỏ nếu muốn cho phép tất cả)
+    upload.single('upload'), // CKEditor gửi file dưới key "upload"
+    (req, res) => {
+        try {
+            const file = req.file;
+            if (!file) {
+                return res.status(400).json({ error: 'Không có tệp nào được tải lên.' });
+            }
+
+            // Tạo URL cho ảnh
+            const imageUrl = `http://localhost:${process.env.PORT || 3000}/uploads/${file.filename}`;
+
+            // CKEditor yêu cầu trả về định dạng này
+            res.status(201).json({
+                uploaded: true,
+                url: imageUrl,
+            });
+        } catch (err) {
+            console.error(err);
+            res.status(500).json({ uploaded: false, error: err.message });
+        }
+    }
+);
 
 // Route xem bài viết
 router.get('/posts', postController.getAllPosts);               // Lấy danh sách bài viết
