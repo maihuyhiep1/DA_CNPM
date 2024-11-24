@@ -1,58 +1,135 @@
 const Comment = require('../models/index').Comment
 const Post = require('../models/index').Post;
+const {  User } = require('../models');
 const commentController = {
     async create(req, res) {
         try {
-            if (req.body.commentId != null) {
-                const replyComment = await Comment.findOne({
-                    where: { id: req.body.commentId }
-                });
-                if(replyComment == null) {
-                    res.status(404).json({ success: false, message: "Comment được trả lời không tồn tại!", data: null });
+            const userId = req.user.id; // Lấy ID người dùng từ session
+            const postId = req.params.postId; // Lấy ID bài viết từ URL
+            const { content, commentId } = req.body; // Nội dung và ID comment cha (nếu có)
+    
+            // Kiểm tra nội dung comment không được để trống
+            if (!content || content.trim() === '') {
+                return res.status(400).json({ success: false, message: "Nội dung không được để trống." });
+            }
+    
+            // Kiểm tra bài viết có tồn tại không
+            const post = await Post.findByPk(postId);
+            if (!post) {
+                return res.status(404).json({ success: false, message: "Bài viết không tồn tại." });
+            }
+    
+            // Nếu có commentId, kiểm tra comment cha có tồn tại
+            if (commentId) {
+                const parentComment = await Comment.findByPk(commentId);
+                if (!parentComment) {
+                    return res.status(404).json({ success: false, message: "Comment được trả lời không tồn tại." });
                 }
             }
-            const comment = await Comment.create(req.body);
-            await Post.increment('cmt_count', { where: { post_id: req.body.postId } });
-            res.status(201).json({ success: true, message: "Tạo comment thành công!", data: comment });
+    
+            // Tạo comment
+            const newComment = await Comment.create({
+                content,
+                userId, // ID người dùng
+                postId, // ID bài viết
+                commentId: commentId || null, // ID comment cha (nếu có)
+            });
+    
+            // Tăng số lượng comment cho bài viết
+            await Post.increment('cmt_count', { where: { post_id: postId } });
+    
+            res.status(201).json({
+                success: true,
+                message: "Tạo bình luận thành công!",
+                data: newComment,
+            });
         } catch (error) {
-            res.status(500).json({ success: false, message: error.message, data: null });
+            console.error(error);
+            res.status(500).json({
+                success: false,
+                message: "Lỗi khi tạo bình luận.",
+                error: error.message,
+            });
         }
     },
+    
 
     async update(req, res) {
         try {
-            const [updated] = await Comment.update(req.body, {
-                where: { id: req.params.id }
-            });
-            if (updated) {
-                const updatedComment = await Comment.findByPk(req.params.id);
-                res.status(200).json({ success: true, message: "Cập nhật comment thành công!", data: updatedComment });
-            } else {
-                res.status(404).json({ success: false, message: "Comment không tồn tại!", data: null });
+            const userId = req.user.id; // ID người dùng từ session
+            const commentId = req.params.id; // ID comment cần cập nhật
+            const { content } = req.body;
+    
+            // Kiểm tra nội dung không được để trống
+            if (!content || content.trim() === '') {
+                return res.status(400).json({ success: false, message: "Nội dung không được để trống." });
             }
+    
+            // Tìm comment cần cập nhật
+            const comment = await Comment.findByPk(commentId);
+            if (!comment) {
+                return res.status(404).json({ success: false, message: "Comment không tồn tại." });
+            }
+    
+            // Kiểm tra quyền: chỉ người tạo hoặc admin mới được cập nhật
+            if (comment.userId !== userId) {
+                return res.status(403).json({ success: false, message: "Bạn không có quyền cập nhật comment này." });
+            }
+    
+            // Cập nhật comment
+            await comment.update({ content });
+    
+            res.status(200).json({
+                success: true,
+                message: "Cập nhật bình luận thành công!",
+                data: comment,
+            });
         } catch (error) {
-            res.status(500).json({ success: false, message: error.message, data: null });
+            console.error(error);
+            res.status(500).json({
+                success: false,
+                message: "Lỗi khi cập nhật bình luận.",
+                error: error.message,
+            });
         }
-    },
+    },    
 
     async delete(req, res) {
         try {
-            const comment = await Comment.findOne({
-                where: { id: req.params.id }
-            });
-            await Comment.destroy({
-                where: { id: req.params.id }
-            });
-            if (comment != undefined) {
-                await Post.decrement('cmt_count', { where: { post_id: comment.postId } });
-                res.status(202).json({ success: true, message: "Xoá comment thành công!", data: { comment: comment } });
-            } else {
-                res.status(404).json({ success: false, message: "Comment không tồn tại!", data: null });
+            const userId = req.user.id; // ID người dùng từ session
+            const commentId = req.params.id; // ID comment cần xóa
+    
+            // Tìm comment cần xóa
+            const comment = await Comment.findByPk(commentId);
+            if (!comment) {
+                return res.status(404).json({ success: false, message: "Comment không tồn tại." });
             }
+    
+            // Kiểm tra quyền: chỉ người tạo hoặc admin mới được xóa
+            if (comment.userId !== userId) {
+                return res.status(403).json({ success: false, message: "Bạn không có quyền xóa comment này." });
+            }
+    
+            // Xóa comment
+            await comment.destroy();
+    
+            // Giảm số lượng comment trong bài viết
+            await Post.decrement('cmt_count', { where: { post_id: comment.postId } });
+    
+            res.status(202).json({
+                success: true,
+                message: "Xóa bình luận thành công!",
+            });
         } catch (error) {
-            res.status(500).json({ success: false, message: error.message, data: null });
+            console.error(error);
+            res.status(500).json({
+                success: false,
+                message: "Lỗi khi xóa bình luận.",
+                error: error.message,
+            });
         }
     },
+    
 
     async findAll(req, res) {
         try {
