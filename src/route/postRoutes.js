@@ -17,7 +17,7 @@ router.post(
             }
 
             // Tạo URL cho ảnh
-            const imageUrl = `http://localhost:${process.env.PORT || 3000}/uploads/${file.filename}`;
+            const imageUrl = `http://localhost:${process.env.PORT || 3000}/upload/${file.filename}`;
 
             // CKEditor yêu cầu trả về định dạng này
             res.status(201).json({
