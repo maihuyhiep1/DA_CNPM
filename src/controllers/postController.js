@@ -71,6 +71,32 @@ exports.getPostById = async (req, res) => {
     }
 };
 
+exports.getPostsByUser = async (req, res) => {
+    try {
+        const userId = req.params.userId; // Lấy userId từ route params
+
+        const posts = await Post.findAll({
+            where: { author_id: userId }, // Lọc theo ID tác giả
+            include: [
+                {
+                    model: User,
+                    as: 'author',
+                    attributes: ['id', 'name', 'avatar'], // Bao gồm thông tin tác giả
+                },
+            ],
+            order: [['createdAt', 'DESC']], // Sắp xếp bài viết theo thời gian tạo mới nhất
+        });
+
+        if (!posts || posts.length === 0) {
+            return res.status(404).json({ message: 'Người dùng này chưa có bài viết nào.' });
+        }
+
+        res.status(200).json(posts);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Lỗi khi lấy danh sách bài viết.', error: err.message });
+    }
+};
 
 // Tạo bài đăng mới
 exports.createPost = async (req, res) => {
