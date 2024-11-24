@@ -16,9 +16,9 @@ let connectDB = async() => {
     await sequelize.authenticate();
     console.log('Connected to database.');
     await db.sequelize.sync({
-      // alter: true,
-      // force:true,
-      logging: false
+      // alter: true, // Alter the tables by adding new columns
+      // force:true, // Drop all tables and create new ones
+      logging: false // Disable logging
     })
       .then(()=>{ console.log('Database synchronized.')})
       .catch(err => console.error('Error:', err));
