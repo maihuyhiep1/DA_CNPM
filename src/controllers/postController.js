@@ -1,4 +1,5 @@
 const Post = require('../models/index').Post;
+const PostLike = require('../models/index').PostLike;
 const PostImage = require('../models/index').PostImage;
 const {  User } = require('../models');
 const { Op } = require('sequelize'); // Dùng để tạo các điều kiện lọc
