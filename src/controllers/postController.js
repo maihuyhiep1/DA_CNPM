@@ -66,8 +66,8 @@ exports.getPostById = async (req, res) => {
 // Tạo bài đăng mới
 exports.createPost = async (req, res) => {
     try {
+        const author_id = req.user.id; // Lấy user ID từ session
         const { title, is_qna, content } = req.body;
-        const author_id = req.user_id;
 
         let avatarUrl = null;
         if (req.file) {

@@ -6,7 +6,7 @@ const postRoutes = require('./postRoutes');
 
 let initWebRoutes = (app) => {
 
-  router.use(userRoutes); // User routes
+  router.use('/api', userRoutes); // User routes
   router.use(googleAuthRoutes); // Google authentication routes
   router.use('/api/comments', commentRoutes); // Comment routes
   router.use('/api', postRoutes); // Post routes
