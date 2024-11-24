@@ -158,7 +158,7 @@ exports.updatePost = async (req, res) => {
             return res.status(404).json({ message: 'Không tìm thấy bài đăng.' });
         }
 
-        // Kiểm tra quyền cập nhật (chỉ tác giả bài viết mới được sửa)
+        // Kiểm tra quyền cập nhật
         if (post.author_id !== userId) {
             return res.status(403).json({ message: 'Bạn không có quyền chỉnh sửa bài đăng này.' });
         }
@@ -172,23 +172,42 @@ exports.updatePost = async (req, res) => {
 
         // Xử lý ảnh đại diện (avatar)
         if (req.file) {
+            if (post.avatar) {
+                // Xóa avatar cũ
+                const oldAvatarPath = path.join(__dirname, '../uploads', path.basename(post.avatar));
+                fs.unlink(oldAvatarPath, (err) => {
+                    if (err) console.error('Không thể xóa avatar cũ:', err.message);
+                });
+            }
             const avatarUrl = `http://localhost:${port}/uploads/${req.file.filename}`;
             updatedFields.avatar = avatarUrl;
         }
 
-        // Xử lý nội dung (nếu có hình ảnh)
+        // Xử lý nội dung
         if (req.body.content) {
+            let parsedContent = [];
+            try {
+                parsedContent = JSON.parse(req.body.content);
+            } catch (error) {
+                return res.status(400).json({ message: 'Nội dung bài viết không hợp lệ.' });
+            }
+
             const updatedContent = [];
             let imageIndex = 0;
 
-            for (const item of JSON.parse(req.body.content)) {
+            if (parsedContent.length > 0) {
+                // Xóa hình ảnh cũ trong cơ sở dữ liệu
+                await PostImage.destroy({ where: { post_id: postId } });
+            }
+
+            for (const item of parsedContent) {
                 if (item.type === 'text') {
                     updatedContent.push(item);
                 } else if (item.type === 'image' && req.files && req.files[imageIndex]) {
                     const imageUrl = `http://localhost:${port}/uploads/${req.files[imageIndex].filename}`;
                     updatedContent.push({ type: 'image', value: imageUrl });
 
-                    // Lưu hình ảnh vào bảng PostImage
+                    // Lưu hình ảnh vào PostImage
                     await PostImage.create({ post_id: postId, image_url: imageUrl });
                     imageIndex++;
                 }
@@ -209,6 +228,7 @@ exports.updatePost = async (req, res) => {
         res.status(500).json({ message: 'Lỗi khi cập nhật bài đăng.', error: err.message });
     }
 };
+
 
 
 
