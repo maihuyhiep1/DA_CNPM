@@ -86,7 +86,10 @@ exports.createPost = async (req, res) => {
         const processedContent = [];
         let imageIndex = 0;
 
-        for (const item of content) {
+        // Đảm bảo `content` được parse đúng định dạng nếu cần
+        const parsedContent = typeof content === 'string' ? JSON.parse(content) : content;
+
+        for (const item of parsedContent) {
             if (item.type === 'text') {
                 processedContent.push(item); // Giữ nguyên văn bản
             } else if (item.type === 'image' && req.files && req.files[imageIndex]) {
@@ -104,6 +107,8 @@ exports.createPost = async (req, res) => {
                 .map((item) => item.value)
                 .join(' ')
                 .slice(0, 500);
+
+            // Chỉ giữ lại nội dung văn bản đã được giới hạn
             processedContent.forEach((item) => {
                 if (item.type === 'text') {
                     item.value = totalText; // Cắt gọn nội dung
@@ -111,12 +116,13 @@ exports.createPost = async (req, res) => {
             });
         }
 
+        // Lưu bài viết vào cơ sở dữ liệu
         const newPost = await Post.create({
             title,
             author_id,
             avatar: avatarUrl,
             is_qna,
-            content: JSON.stringify(processedContent),
+            content: JSON.stringify(processedContent), // Lưu chuỗi JSON
         });
 
         if (req.files) {
@@ -128,6 +134,7 @@ exports.createPost = async (req, res) => {
         res.status(500).json({ message: 'Lỗi khi tạo bài đăng', error: err.message });
     }
 };
+
 
 
 
