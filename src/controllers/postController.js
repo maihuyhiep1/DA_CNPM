@@ -3,6 +3,8 @@ const PostLike = require('../models/index').PostLike;
 const PostImage = require('../models/index').PostImage;
 const {  User } = require('../models');
 const { Op } = require('sequelize'); // Dùng để tạo các điều kiện lọc
+const { formatDistanceToNow } = require('date-fns');
+const { vi } = require('date-fns/locale'); // Định dạng tiếng Việt nếu cần
 
 exports.getPopularPosts = async (req, res) => {
     try {
@@ -59,7 +61,13 @@ exports.getAllPosts = async (req, res) => {
             order: [['createdAt', 'DESC']], // Sắp xếp bài viết mới nhất
         });
 
-        res.status(200).json(results);
+        // Định dạng lại thời gian tạo bài viết
+        const formattedResults = results.map(post => ({
+            ...post.toJSON(),
+            createdAt: formatDistanceToNow(new Date(post.createdAt), { addSuffix: true, locale: vi }),
+        }));
+
+        res.status(200).json(formattedResults);
     } catch (err) {
         res.status(500).json({ message: 'Lỗi khi lấy danh sách bài đăng', error: err.message });
     }
@@ -71,9 +79,7 @@ exports.getPostById = async (req, res) => {
         const postId = req.params.postId;
 
         const result = await Post.findByPk(postId, {
-
             include: [
-               
                 { model: User, as: 'author', attributes: ['id', 'name', 'avatar'] }, // Thông tin tác giả
             ],
         });
@@ -82,7 +88,13 @@ exports.getPostById = async (req, res) => {
             return res.status(404).json({ message: 'Không tìm thấy bài đăng.' });
         }
 
-        res.status(200).json(result);
+        // Định dạng lại thời gian tạo bài viết
+        const formattedResult = {
+            ...result.toJSON(),
+            createdAt: formatDistanceToNow(new Date(result.createdAt), { addSuffix: true, locale: vi }),
+        };
+
+        res.status(200).json(formattedResult);
     } catch (err) {
         res.status(500).json({ message: 'Lỗi khi lấy bài đăng.', error: err.message });
     }
@@ -108,7 +120,13 @@ exports.getPostsByUser = async (req, res) => {
             return res.status(404).json({ message: 'Người dùng này chưa có bài viết nào.' });
         }
 
-        res.status(200).json(posts);
+        // Định dạng lại thời gian tạo bài viết
+        const formattedPosts = posts.map(post => ({
+            ...post.toJSON(),
+            createdAt: formatDistanceToNow(new Date(post.createdAt), { addSuffix: true, locale: vi }),
+        }));
+
+        res.status(200).json(formattedPosts);
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Lỗi khi lấy danh sách bài viết.', error: err.message });
