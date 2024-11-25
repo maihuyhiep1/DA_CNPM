@@ -55,6 +55,7 @@ const CreatePost = () => {
       const response = await fetch("http://localhost:8386/api/posts", {
         method: "POST",
         body: formData, // Gửi dữ liệu dưới dạng FormData
+        credentials: "include",
       });
       console.log("SUBMIT");
 

@@ -31,11 +31,16 @@ const Login = () => {
 
   const handleGGSubmit = async (e) => {
     e.preventDefault();
-    const response = await axios.get("http://localhost:8386/google/auth", {
-      withCredentials: true, // Nếu backend gửi cookie
-    });
-    console.log("Token:", response.data.token);
-    console.log(response);
+    try {
+      const isLoggedIn = await login();
+      if (isLoggedIn) {
+        navigate("/"); // Redirect on successful login
+      } else {
+        console.log("Login failed. Please check your credentials.");
+      }
+    } catch (err) {
+      console.log("Error during login submission:", err);
+    }
   };
 
   const handleForgetPassword = () => {
