@@ -74,19 +74,17 @@ passport.serializeUser((user, done) => {
 });
 
 passport.deserializeUser(async (id, done) => {
-   console.log("Deserializing user with ID:", id);  // Check the ID being passed for deserialization
+  //  console.log("Deserializing user with ID:", id);  // Check the ID being passed for deserialization
   try {
     const user = await db.User.findOne({
       where: {id: id},
       attributes: [ 'id', 'name', 'role', 'avatar', 'authProvider', 'post_count', 'like_count', 'follower_count', 'description', 'createdAt', 'updatedAt'],
-      
-      // raw:true // Only retrieve the fields you need
     });
     if (!user) {
       console.log("User not found!");
       return done(null, false);  // User not found, handle appropriately
     }
-    console.log("Deserialized user:", user);  // Check the full user object
+    // console.log("Deserialized user:", user);  // Check the full user object
     done(null, user);
   } catch (error) {
     done(error, null);

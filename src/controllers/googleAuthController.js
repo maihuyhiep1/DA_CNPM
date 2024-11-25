@@ -7,10 +7,14 @@ let callbackUser = (req, res) => {
 
 const loginSuccess = async (req, res) => {
     if (req.isAuthenticated()) {
+      const user = req.user;
+      const formattedDate = new Date(user.createdAt).toLocaleDateString('en-GB');
+      user.setDataValue('createdAt', formattedDate);
+      user.setDataValue('updatedAt', formattedDate);
       res.status(200).json({
         errCode: 0,
         message: "Ok",
-        user: req.user, // The user data is available in the session
+        user: req.user
       });
     } else {
       res.status(401).json({
