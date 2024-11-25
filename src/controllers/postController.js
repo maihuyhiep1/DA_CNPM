@@ -6,28 +6,45 @@ const { Op } = require('sequelize'); // Dùng để tạo các điều kiện l�
 
 exports.getPopularPosts = async (req, res) => {
     try {
-        // Lấy khoảng thời gian (tuần hoặc tháng)
+        // Lấy khoảng thời gian
         const now = new Date();
         const lastWeek = new Date();
         lastWeek.setDate(now.getDate() - 7); // 7 ngày trước
         const lastMonth = new Date();
         lastMonth.setMonth(now.getMonth() - 1); // 1 tháng trước
 
-        // Chọn lọc theo tuần hoặc tháng (tùy thuộc vào yêu cầu)
+        // Lọc theo tuần hoặc tháng
         const filterByTime = req.query.time === 'month' ? lastMonth : lastWeek;
 
         // Lấy bài viết
         const results = await Post.findAll({
             where: {
-                updatedAt: { [Op.gte]: filterByTime } // Bài viết được cập nhật trong khoảng thời gian
+                createdAt: { [Op.gte]: filterByTime }, // Lọc bài viết theo ngày tạo
             },
-            attributes: ['post_id', 'title', 'avatar', 'snippet', 'like_count'], // Chỉ lấy các trường cần thiết
-            order: [['like_count', 'DESC']], // Sắp xếp theo lượt thích giảm dần
+            attributes: ['post_id', 'title', 'avatar', 'like_count'], // Các trường cần thiết
+            order: [
+                ['like_count', 'DESC'], // Sắp xếp theo lượt thích
+                ['createdAt', 'DESC'], // Nếu bằng nhau, sắp xếp theo ngày tạo
+            ],
         });
 
-        res.status(200).json(results);
+        // Nếu không có bài viết
+        if (results.length === 0) {
+            return res.status(200).json({
+                message: 'Không có bài viết phổ biến trong khoảng thời gian này.',
+                data: [],
+            });
+        }
+
+        res.status(200).json({
+            message: 'Lấy bài viết phổ biến thành công!',
+            data: results,
+        });
     } catch (err) {
-        res.status(500).json({ message: 'Lỗi khi lấy bài viết phổ biến', error: err.message });
+        res.status(500).json({
+            message: 'Lỗi khi lấy bài viết phổ biến.',
+            error: err.message,
+        });
     }
 };
 
