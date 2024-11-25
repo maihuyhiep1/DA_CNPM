@@ -11,37 +11,37 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!value.username || !value.password) {
-      setErr('Username and password are required.');
+      alert("Username and password are required.");
       return;
     }
-  
+
     try {
-      const isLoggedIn = await login(value); 
+      const isLoggedIn = await login(value);
       if (isLoggedIn) {
-        navigate('/'); // Redirect on successful login
+        navigate("/"); // Redirect on successful login
       } else {
-        console.log('Login failed. Please check your credentials.');
+        console.log("Login failed. Please check your credentials.");
       }
     } catch (err) {
       console.log("Error during login submission:", err);
     }
   };
 
-  const handleGGSubmit = async(e) => {
+  const handleGGSubmit = async (e) => {
     e.preventDefault();
     const response = await axios.get("http://localhost:8386/google/auth", {
       withCredentials: true, // Nếu backend gửi cookie
     });
-    console.log("Token:", response.data.token); 
+    console.log("Token:", response.data.token);
     console.log(response);
   };
 
   const handleForgetPassword = () => {
-    navigate('/forget-password')
-  }
-  
+    navigate("/forget-password");
+  };
+
   return (
     <div className={styles.form}>
       <form>
@@ -93,7 +93,10 @@ const Login = () => {
           <Link to="/sign-in" className={styles.link}>
             Đăng ký
           </Link>
-          <div className={styles.forgetPassword} onClick={() => handleForgetPassword()}>
+          <div
+            className={styles.forgetPassword}
+            onClick={() => handleForgetPassword()}
+          >
             <div className={styles.link}>Quên mật khẩu</div>
           </div>
         </div>

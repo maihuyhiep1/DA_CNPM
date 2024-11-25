@@ -1,46 +1,27 @@
-import "./App.css";
 import {
   createBrowserRouter,
   Navigate,
   Outlet,
   RouterProvider,
 } from "react-router-dom";
+import { useContext, useEffect } from "react";
+
+import { AuthContext } from "./context/authContext";
+
 import Login from "./pages/login/Login";
 import SignIn from "./pages/signin/SignIn";
 import SetupInformation from "./pages/signup/SetupInformation";
 import Verify from "./pages/verify/Verify";
-import Navbar from "./components/Navbar";
-import Footer from "./components/Footer";
 import Home from "./pages/home/Home";
-import CreatePost from './components/createPost'
 import AvtAndInformation from "./pages/profile/avtAndInformation";
-import { useContext, useEffect } from "react";
-import { AuthContext } from "./context/authContext";
-import ForgetPassword from "./pages/forgetPassword/ForgetPassword"
+import ForgetPassword from "./pages/forgetPassword/ForgetPassword";
 import RePassword from "./pages/rePassword/RePassword";
+import CreatePost from "./pages/createPost/createPost";
+
+import Navbar from "./components/navbar/Navbar";
+import Footer from "./components/footer/Footer";
 
 function App() {
-  const {currentUser} = useContext(AuthContext);
-
-  useEffect(() => {
-    // This will run when the component mounts and after every redirect
-    const fetchUserData = async () => {
-      try {
-        // Check if user is authenticated by calling the backend
-        const res = await axios.get('http://localhost:8386//login-success ', { withCredentials: true });
-        setCurrentUser(res.data);  // Update context with user data
-        if (!currentUser) {
-          // If no user data is found, redirect to login page
-          navigate('/login');
-        }
-      } catch (err) {
-        console.error('Error fetching user data', err);
-        setCurrentUser(null);  // If error, reset context
-      }
-    };
-  }
-  )
-
   const Layout = () => {
     return (
       <div>
@@ -51,18 +32,9 @@ function App() {
     );
   };
 
-  const ProtectedRoute = ({ children }) => {
-    if (currentUser) {
-      return <Navigate to="/login" />;
-    }
-    return children;
-  };
-
   const router = createBrowserRouter([
     {
-      element: (
-        <Layout />
-      ),
+      element: <Layout />,
       children: [
         {
           path: "/",

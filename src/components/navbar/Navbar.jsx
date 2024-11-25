@@ -1,10 +1,10 @@
 import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./style_navbar.module.css";
-import { AuthContext } from "../context/authContext";
+import { AuthContext } from "../../context/authContext";
 import Tippy from "@tippyjs/react/headless";
-import PopperWrapper from "./popper/PopperWrapper";
-import Menu from "./popper/menu/Menu";
+import PopperWrapper from "../popper/PopperWrapper";
+import Menu from "../popper/menu/Menu";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGear, faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 import { faUser } from "@fortawesome/free-regular-svg-icons";
@@ -29,15 +29,40 @@ const handleFocus = () => {
 };
 
 const handleBlur = () => {
-  // Delay hiding the tooltip slightly to avoid conflicts with Tippy interactions
   setTimeout(() => setIsFocused(false), 100);
 };
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const currentUser = useContext(AuthContext);
+  const { currentUser } = useContext(AuthContext);
+
   const [searchResult, setSearchResult] = useState([]);
   const [isFocused, setIsFocused] = useState(false); // State to manage focus
+
+  if (!currentUser) {
+    return (
+      <header className={styles.navbar}>
+        <div
+          className={styles.logoBrand}
+          onClick={() => {
+            navigate("/");
+          }}
+        >
+          <img
+            className={styles.logo}
+            src="img_navbar/logo.png"
+            alt="Tinhte Logo"
+          />
+          <div className={styles.brand}>Tinhte</div>
+          <div className={styles.brandTitle}>MẠNG XÃ HỘI</div>
+        </div>
+
+        <div className={styles.loginPrompt}>
+          <button onClick={() => navigate("/login")}>Login</button>
+        </div>
+      </header>
+    );
+  }
 
   return (
     <header className={styles.navbar}>
@@ -73,8 +98,8 @@ const Navbar = () => {
                 className={styles.text}
                 placeholder="Tìm sản phẩm công nghệ, cộng đồng, bạn bè..."
                 aria-label="Search"
-                onFocus={handleFocus} // Show Tippy on focus
-                onBlur={handleBlur} // Hide Tippy on blur
+                onFocus={handleFocus}
+                onBlur={handleBlur}
               />
             </div>
           </div>
@@ -106,12 +131,9 @@ const Navbar = () => {
             />
             <img
               className={styles.avtPng}
-              src="img_navbar/avt.png"
+              src={currentUser.avatar}
               alt="Avatar"
             />
-            <div className={styles.username}>
-              {currentUser ? currentUser.name || "Khách" : "Khách"}
-            </div>
           </div>
         </Menu>
       </div>

@@ -1,11 +1,21 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 import "./Home.scss";
 import Sidebar from "../../components/sidebar/Sidebar";
 import Feed from "../../components/feed/Feed";
 import Rightbar from "../../components/rightbar/Rightbar";
-import QnA from "../../components/QnA";
+import { AuthContext } from "../../context/authContext";
 
 const Home = () => {
+  const { currentUser } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!currentUser) {
+      navigate("/login");
+    }
+  }, [currentUser, navigate]);
+
   return (
     <div className="homeContainer">
       <Sidebar />

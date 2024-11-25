@@ -10,8 +10,37 @@ import {
   ThumbUpAltOutlined,
   ThumbUp,
 } from "@mui/icons-material";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 const Post = ({ post }) => {
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const response = await axios.get("http://localhost:8386/api/posts");
+        setPosts(response.data); // Set posts data from API response
+      } catch (err) {
+        setError(err.message); // Handle any errors
+      } finally {
+        setLoading(false); // Set loading to false once data is fetched
+      }
+    };
+
+    fetchPosts();
+  }, []);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
   return (
     <div className="post">
       <div className="postWrapper">
@@ -29,12 +58,12 @@ const Post = ({ post }) => {
           </div>
           <div className="postTopRight">
             <IconButton>
-              <MoreVert classname="postVertButton" />
+              <MoreVert className="postVertButton" />
             </IconButton>
           </div>
         </div>
         <div className="postCenter">
-          <span className="postText">{post.body}</span>
+          <span className="postText">{post.title}</span>
           <img src={post.photo} alt="" className="postImg" />
         </div>
         <div className="postBottom">
