@@ -2,11 +2,13 @@
   display: flex; /* Flex để avatar và textarea nằm cạnh nhau */
   align-items: flex-start; /* Căn trên cùng */
   flex-wrap: wrap; /* Cho phép con xuống hàng */
-  
+
   width: 100%;
-  max-width: 460px;
+  max-width: 410px;
   background-color: #f9f9f9;
   gap: 10px; /* Khoảng cách giữa avatar và textarea */
+  left: 50px;
+  position: relative;
 }
 
 .avatar {
@@ -81,6 +83,7 @@ line-height: 22px; /* 137.5% */
   font-size: 14px; /* Kích thước chữ */
 }
 .like{
+
   flex-basis: 100%; /* Chiếm toàn bộ chiều ngang */
   align-self: flex-start; /* Hoặc center/end tùy ý */
   position: relative;

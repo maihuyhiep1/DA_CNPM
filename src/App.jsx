@@ -5,6 +5,7 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import { useContext, useEffect } from "react";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 import { AuthContext } from "./context/authContext";
 
@@ -18,16 +19,20 @@ import ForgetPassword from "./pages/forgetPassword/ForgetPassword";
 import RePassword from "./pages/rePassword/RePassword";
 import CreatePost from "./pages/createPost/createPost";
 
+import WriteComment from "./components/writeComment/writeComment";
 import Navbar from "./components/navbar/Navbar";
 import Footer from "./components/footer/Footer";
+import RepplyComment from "./components/writeComment/repplyComment";
+import StoryCard from "./components/storyCard/StoryCard";
+import QnAContent from "./components/QnA_Content/QnAContent"
+import QnABar from "./components/QnABar/QnABar"
+import NewNavbar from "./components/navbar/NewNavBar";
 
 function App() {
   const Layout = () => {
     return (
       <div>
-        <Navbar />
-        <Outlet />
-        <Footer />
+        <NewNavbar/>
       </div>
     );
   };

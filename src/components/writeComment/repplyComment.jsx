@@ -1,8 +1,8 @@
 import React, { useRef, useEffect, useState } from 'react';
-import styles from './style_writeComment.module.css'; // Đảm bảo file CSS đúng
+import styles from './style_replyComment.module.css'; // Đảm bảo file CSS đúng
 import avtImage from '/img_profile/avt.png';
 
-const WriteComment = ({ placeholder = "Nhập nội dung...", onSubmit, avatarUrl }) => {
+const ReplyComment = ({ placeholder = "Nhập nội dung...", onSubmit, avatarUrl }) => {
   const inputRef = useRef(null);
   const [value, setValue] = useState('');
 
@@ -44,9 +44,8 @@ const WriteComment = ({ placeholder = "Nhập nội dung...", onSubmit, avatarUr
         </div>
         </button>
       </div>
-      <div className={styles.like}>Phản hồi</div>
     </form>
   );
 };
 
-export default WriteComment;
+export default ReplyComment;

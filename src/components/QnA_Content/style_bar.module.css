@@ -1,0 +1,21 @@
+.bar{
+    display: flex;
+    border: #E5E6EC solid 1px;
+    height: 5%;
+}
+.container{
+    display: flex;
+    width: 33.333%;
+    align-items: center;
+    justify-content: center;
+    gap: 4%;   
+}
+.label{
+    color: #2D3748;
+text-align: center;
+font-family: Lato;
+font-size: 16px;
+font-style: normal;
+font-weight: 400;
+line-height: 24px; /* 150% */
+}

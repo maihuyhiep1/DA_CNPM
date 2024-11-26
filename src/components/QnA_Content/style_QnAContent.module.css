@@ -1,0 +1,17 @@
+.QnAContent
+{
+    display: flex;
+}
+.img{
+width: 69%;
+height: 100vh;
+border: solid 1px;
+}
+
+.content{
+    width: 31%;
+    height: 100vh;
+}
+.comment{
+    padding-top: 3% ;
+}

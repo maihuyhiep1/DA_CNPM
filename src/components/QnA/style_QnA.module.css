@@ -3,7 +3,6 @@
   background-size: cover; /* Ensures the image covers the entire background */
   background-position: center; /* Centers the image */
   background-repeat: no-repeat; /* Avoids tiling */
-
   border-radius: 8px;
   height: 180px;
   overflow: hidden;
