@@ -32,55 +32,52 @@ const CreatePost = () => {
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    if (file) {
-      const imageUrl = URL.createObjectURL(file); // Tạo URL từ file
-      setImage(imageUrl); // Cập nhật state bằng URL
+    if (file && file.type.startsWith("image/")) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        setImage(reader.result);
+      };
+      reader.readAsDataURL(file);
     }
   };
+
   const handleDrop = (e) => {
     e.preventDefault();
     const file = e.dataTransfer.files[0];
     if (file && file.type.startsWith("image/")) {
-      const imageUrl = URL.createObjectURL(file); // Tạo URL từ file
-      setImage(imageUrl); // Lưu file trực tiếp
+      const reader = new FileReader();
+      reader.onload = () => {
+        setImage(reader.result);
+      };
+      reader.readAsDataURL(file);
     }
   };
+
   const handleDragOver = (e) => {
     e.preventDefault();
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const formData = new FormData();
     formData.append("title", title);
-    formData.append("content", content);
-
-    if (image) {
-      formData.append("image", image); // Sử dụng file từ state `image`
-    }
+    formData.append("content", content); // Nội dung CKEditor
+    formData.append("image", image); // Nếu có ảnh
 
     try {
-      console.log(...formData.entries());
+      console.log("formData:", ...formData.entries());
+      console.log("SUBMIT");
       const response = await fetch("http://localhost:8386/api/posts", {
         method: "POST",
         body: formData,
         credentials: "include", // Đảm bảo gửi cookie nếu cần
       });
+      console.log("SUBMIT");
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-
-      const result = await response.json();
-      console.log("Response:", result);
-      alert("Bài viết đã được đăng thành công!");
-
-      // Lưu URL ảnh đã tải lên vào state
-      setImage(result.imageUrl); // URL server trả về
+      const data = await response.json();
+      console.log(data); // Xử lý phản hồi từ server
     } catch (error) {
       console.error("Error submitting form:", error);
-      alert("Có lỗi xảy ra: " + error.message);
     }
   };
 
