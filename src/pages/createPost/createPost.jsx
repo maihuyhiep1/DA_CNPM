@@ -1,16 +1,13 @@
 import styles from "./style_createPost.module.css";
-import { useState, useEffect, useRef, useMemo } from "react";
-
+import { useState, useEffect } from "react";
 import Editor from "../../components/CKEditor/CKEditor5";
 
 const CreatePost = () => {
   const [titleWordCount, setTitleWordCount] = useState(0);
   const [contentWordCount, setContentWordCount] = useState(0);
   const [image, setImage] = useState(null);
-  const [content, setContent] = useState("");
-  const [title, setTitle] = useState("");
-
-  const [text, setText] = useState(""); //Input của CKEditor
+  const [content, setContent] = useState(""); // Nội dung từ CKEditor
+  const [title, setTitle] = useState(""); // Tiêu đề bài viết
 
   const handleWordCount = (e) => {
     const text = e.target.value;
@@ -29,92 +26,64 @@ const CreatePost = () => {
     e.target.style.height = "auto"; // Reset height
     e.target.style.height = `${e.target.scrollHeight}px`; // Set to scroll height
   };
-  //Tổng số từ trong cả title và content
+
+  // Tổng số từ trong cả title và content
   const totalWordCount = titleWordCount + contentWordCount;
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    if (file && file.type.startsWith("image/")) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        setImage(reader.result);
-      };
-      reader.readAsDataURL(file);
+    if (file) {
+        const imageUrl = URL.createObjectURL(file); // Tạo URL từ file
+        setImage(imageUrl); // Cập nhật state bằng URL
     }
-  };
+};
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+  
     const formData = new FormData();
     formData.append("title", title);
-    formData.append("content", content); // Nội dung CKEditor
-    formData.append("image", image); // Nếu có ảnh
-
+    formData.append("content", content);
+  
+    if (image) {
+      formData.append("image", image); // Sử dụng file từ state `image`
+    }
+  
     try {
-      console.log("SUBMIT");
       const response = await fetch("http://localhost:8386/api/posts", {
         method: "POST",
-        body: formData, // Gửi dữ liệu dưới dạng FormData
-        credentials: "include",
+        body: formData,
+        credentials: "include", // Đảm bảo gửi cookie nếu cần
       });
-      console.log("SUBMIT");
-
-      const data = await response.json();
-      console.log(data); // Xử lý phản hồi từ server
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+  
+      const result = await response.json();
+      console.log("Response:", result);
+      alert("Bài viết đã được đăng thành công!");
+  
+      // Lưu URL ảnh đã tải lên vào state
+      setImage(result.imageUrl); // URL server trả về
     } catch (error) {
       console.error("Error submitting form:", error);
+      alert("Có lỗi xảy ra: " + error.message);
     }
   };
-
-  const handleEditorChange = (event, editor) => {
-    const data = editor.getData();
-    setContent(data); // Cập nhật state content với nội dung từ CKEditor
-  };
+  
 
   const handleDrop = (e) => {
     e.preventDefault();
     const file = e.dataTransfer.files[0];
     if (file && file.type.startsWith("image/")) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        setImage(reader.result);
-      };
-      reader.readAsDataURL(file);
+      setImage(file); // Lưu file trực tiếp
     }
   };
 
   const handleDragOver = (e) => {
     e.preventDefault();
   };
-
-  // const CKEditorContent = useMemo(() => {
-  //   function convertBase64ImagesToBlobs(htmlString) {
-  //     const parser = new DOMParser();
-  //     const doc = parser.parseFromString(htmlString, "text/html");
-  //     const images = doc.querySelectorAll("img");
-  //     images.forEach((img) => {
-  //       const src = img.src;
-  //       if (src.startsWith("data:image")) {
-  //         const [header, base64Data] = src.split(",");
-  //         const mimeType = header.match(/data:(image\/\w+);base64/)[1];
-
-  //         const byteCharacters = atob(base64Data);
-  //         const byteNumbers = new Array(byteCharacters.length);
-  //         for (let i = 0; i < byteCharacters.length; i++) {
-  //           byteNumbers[i] = byteCharacters.charCodeAt(i);
-  //         }
-
-  //         const byteArray = new Uint8Array(byteNumbers);
-  //         const blob = new Blob([byteArray], { type: mimeType });
-  //         const blobUrl = URL.createObjectURL(blob);
-  //         img.src = blobUrl;
-  //       }
-  //     });
-  //     return new XMLSerializer().serializeToString(doc);
-  //   }
-
-  //   return convertBase64ImagesToBlobs(content.CKEditorContent);
-  // }, []);
 
   return (
     <div className={styles.background}>
@@ -130,6 +99,7 @@ const CreatePost = () => {
           placeholder="Nhập tiêu đề bài viết..."
           rows="2"
           onChange={handleWordCount}
+          value={title} // Đảm bảo giá trị title được liên kết với state
           style={{ overflow: "hidden" }}
         ></textarea>
 
@@ -165,34 +135,8 @@ const CreatePost = () => {
           )}
         </div>
 
-        {/* <textarea
-          className={styles.textArea}
-          name="content"
-          placeholder="Nhập đoạn giới thiệu tổng quan của bài để anh em hiểu được nội dung bài viết..."
-          rows="5"
-          onChange={handleWordCount}
-          style={{ overflow: "hidden" }}
-        ></textarea> */}
-
-        {/* <div className="main-container">
-          <div
-            className="editor-container editor-container_classic-editor editor-container_include-block-toolbar"
-            ref={editorContainerRef}
-          >
-            <div className="editor-container__editor">
-              <div ref={editorRef}>
-                {isLayoutReady && (
-                  <CKEditor
-                    editor={ClassicEditor}
-                    config={editorConfig}
-                    onChange={handleEditorChange}
-                  />
-                )}
-              </div>
-            </div>
-          </div>
-        </div> */}
-        <Editor initData="Helllo" setData={setText} />
+        {/* Sử dụng CKEditor để nhập nội dung bài viết */}
+        <Editor initData="Helllo" setData={setContent} />
 
         <div className={styles.wordCount}>
           <span>Bài viết {totalWordCount} từ</span>
@@ -226,7 +170,8 @@ const CreatePost = () => {
         <div>
           <h4>Nội dung:</h4>
           <p>{content}</p>
-          <div dangerouslySetInnerHTML={{ __html: text }} />
+          {/* Hiển thị HTML nội dung của CKEditor */}
+          <div dangerouslySetInnerHTML={{ __html: content }} />
         </div>
       </div>
     </div>
