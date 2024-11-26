@@ -6,31 +6,32 @@ const { Op } = require('sequelize'); // Dùng để tạo các điều kiện l�
 const { formatDistanceToNow } = require('date-fns');
 const { vi } = require('date-fns/locale'); // Định dạng tiếng Việt nếu cần
 
+const formatAvatarUrl = (avatarPath, req) => {
+    if (!avatarPath) return null;
+    return `${req.protocol}://${req.get("host")}/${avatarPath.replace(/\\/g, "/")}`;
+};
+
 exports.getPopularPosts = async (req, res) => {
     try {
-        // Lấy khoảng thời gian
         const now = new Date();
         const lastWeek = new Date();
-        lastWeek.setDate(now.getDate() - 7); // 7 ngày trước
+        lastWeek.setDate(now.getDate() - 7);
         const lastMonth = new Date();
-        lastMonth.setMonth(now.getMonth() - 1); // 1 tháng trước
+        lastMonth.setMonth(now.getMonth() - 1);
 
-        // Lọc theo tuần hoặc tháng
         const filterByTime = req.query.time === 'month' ? lastMonth : lastWeek;
 
-        // Lấy bài viết
         const results = await Post.findAll({
             where: {
-                createdAt: { [Op.gte]: filterByTime }, // Lọc bài viết theo ngày tạo
+                createdAt: { [Op.gte]: filterByTime },
             },
-            attributes: ['post_id', 'title', 'avatar', 'like_count'], // Các trường cần thiết
+            attributes: ['post_id', 'title', 'avatar', 'like_count'],
             order: [
-                ['like_count', 'DESC'], // Sắp xếp theo lượt thích
-                ['createdAt', 'DESC'], // Nếu bằng nhau, sắp xếp theo ngày tạo
+                ['like_count', 'DESC'],
+                ['createdAt', 'DESC'],
             ],
         });
 
-        // Nếu không có bài viết
         if (results.length === 0) {
             return res.status(200).json({
                 message: 'Không có bài viết phổ biến trong khoảng thời gian này.',
@@ -38,9 +39,14 @@ exports.getPopularPosts = async (req, res) => {
             });
         }
 
+        const formattedResults = results.map(post => ({
+            ...post.toJSON(),
+            avatar: formatAvatarUrl(post.avatar, req),
+        }));
+
         res.status(200).json({
             message: 'Lấy bài viết phổ biến thành công!',
-            data: results,
+            data: formattedResults,
         });
     } catch (err) {
         res.status(500).json({
@@ -54,16 +60,16 @@ exports.getPopularPosts = async (req, res) => {
 exports.getAllPosts = async (req, res) => {
     try {
         const results = await Post.findAll({
-            attributes: ['post_id', 'title', 'avatar', 'createdAt'], // Giới hạn cột trả về
+            attributes: ['post_id', 'title', 'avatar', 'createdAt','like_count'],
             include: [
-                { model: User, as: 'author', attributes: ['id', 'name', 'avatar'] }, // Thêm tác giả bài viết
+                { model: User, as: 'author', attributes: ['id', 'name', 'avatar'] },
             ],
-            order: [['createdAt', 'DESC']], // Sắp xếp bài viết mới nhất
+            order: [['createdAt', 'DESC']],
         });
 
-        // Định dạng lại thời gian tạo bài viết
         const formattedResults = results.map(post => ({
             ...post.toJSON(),
+            avatar: formatAvatarUrl(post.avatar, req),
             createdAt: formatDistanceToNow(new Date(post.createdAt), { addSuffix: true, locale: vi }),
         }));
 
@@ -80,7 +86,7 @@ exports.getPostById = async (req, res) => {
 
         const result = await Post.findByPk(postId, {
             include: [
-                { model: User, as: 'author', attributes: ['id', 'name', 'avatar'] }, // Thông tin tác giả
+                { model: User, as: 'author', attributes: ['id', 'name', 'avatar','like_count'] }, // Thông tin tác giả
             ],
         });
 
@@ -110,7 +116,7 @@ exports.getPostsByUser = async (req, res) => {
                 {
                     model: User,
                     as: 'author',
-                    attributes: ['id', 'name', 'avatar'], // Bao gồm thông tin tác giả
+                    attributes: ['id', 'name', 'avatar','like_count'], // Bao gồm thông tin tác giả
                 },
             ],
             order: [['createdAt', 'DESC']], // Sắp xếp bài viết theo thời gian tạo mới nhất
@@ -216,7 +222,6 @@ exports.updatePost = async (req, res) => {
 
         // Cập nhật bài viết
         post.title = title || post.title;
-        post.is_qna = is_qna ?? post.is_qna;
         post.content = content || post.content;
         post.avatar = avatar;
 

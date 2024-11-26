@@ -1,6 +1,7 @@
 const express = require('express');
-const initWebRoutes = require('./route/index.js');
-const connectDB = require('./config/database.js');
+const path = require('path');
+const initWebRoutes = require('./route/index.js');  // Để sử dụng các routes
+const connectDB = require('./config/database.js');  // Kết nối database
 const bodyParser = require('body-parser');
 require('dotenv').config();
 const passport = require('passport');
@@ -9,21 +10,20 @@ const session = require('express-session');
 const cors = require('cors');
 const app = express();
 
-
-
+// Cấu hình CORS
 const corsOptions = {
-  origin: process.env.CLIENT_URL, // Change to the frontend's URL (e.g., http://localhost:3001 for frontend on port 3001)
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],  // Methods you want to allow
-  allowedHeaders: ['Content-Type', 'Authorization'], // Headers you want to allow
-  credentials: true,  // Allow cookies (for sessions)
+  origin: process.env.CLIENT_URL, // Đổi với URL frontend (ví dụ: http://localhost:3001)
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,  // Cho phép cookie (session)
 };
 
-// Session configuration
+// Cấu hình Session
 app.use(session({
   secret: process.env.SESSION_SECRET_KEY,
   resave: false,
   saveUninitialized: true,
-  cookie: { secure: false } // Set to `true` for HTTPS
+  cookie: { secure: false } // Nếu dùng HTTPS, cần đặt true
 }));
 app.use(passport.initialize());
 app.use(passport.session());
@@ -31,13 +31,23 @@ app.use(passport.session());
 // Enable CORS
 app.use(cors(corsOptions));
 
+// Xử lý body (JSON và x-www-form-urlencoded)
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-connectDB();  // Connect and Sync database - { alter: false, force: false, logging: false}
-initWebRoutes(app); // Use routes
+// Kiểm tra và in đường dẫn đến thư mục uploads
+console.log('Uploads folder path:', path.join(__dirname, 'uploads'));
 
+// Đảm bảo rằng ảnh và các tệp tĩnh trong thư mục 'uploads' có thể được truy cập
+app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
 
+// Kết nối và đồng bộ cơ sở dữ liệu
+connectDB();  
+
+// Khởi tạo các route
+initWebRoutes(app);
+
+// Chạy server
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
