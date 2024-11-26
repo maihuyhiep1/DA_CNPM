@@ -24,15 +24,15 @@ import Navbar from "./components/navbar/Navbar";
 import Footer from "./components/footer/Footer";
 import RepplyComment from "./components/writeComment/repplyComment";
 import StoryCard from "./components/storyCard/StoryCard";
-import QnAContent from "./components/QnA_Content/QnAContent"
-import QnABar from "./components/QnABar/QnABar"
+import QnAContent from "./components/QnA_Content/QnAContent";
+import QnABar from "./components/QnABar/QnABar";
 import NewNavbar from "./components/navbar/NewNavBar";
 
 function App() {
   const Layout = () => {
     return (
       <div>
-        <NewNavbar/>
+        <QnAContent />
       </div>
     );
   };
@@ -85,23 +85,3 @@ function App() {
 }
 
 export default App;
-
-// writeComment run test
-// const App = () => {
-//   const handleSubmit = (comment) => {
-//     console.log('Dữ liệu gửi:', comment);
-//     alert(`Bình luận của bạn: ${comment}`);
-//   };
-
-//   return (
-//     <div>
-//       <h1>Viết bình luận</h1>
-//       <WriteComment
-//         placeholder="Nhập bình luận của bạn..."
-//         onSubmit={handleSubmit}
-//         avatarUrl="img_profile/avt.png" // Đường dẫn ảnh avatar
-//       />
-//     </div>
-//   );
-// };
-// export default App;

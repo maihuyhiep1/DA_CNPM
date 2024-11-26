@@ -13,7 +13,6 @@
   },
   "dependencies": {
     "@atlaskit/avatar": "^21.17.3",
-    "@atlaskit/dropdown-menu": "^12.23.0",
     "@atlaskit/icon": "^22.26.0",
     "@ckeditor/ckeditor5-build-classic": "^43.3.1",
     "@ckeditor/ckeditor5-image": "^43.3.1",
@@ -32,7 +31,7 @@
     "axios": "^1.7.7",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.3",
-    "bootstrap": "^5.3.3",
+    "bootstrap": "^3.4.1",
     "ckeditor5": "^43.3.1",
     "ckeditor5-premium-features": "^43.3.1",
     "cors": "^2.8.5",
