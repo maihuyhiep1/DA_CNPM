@@ -155,7 +155,9 @@ exports.createPost = async (req, res) => {
         let avatar = null;
         if (req.files && req.files.avatar && req.files.avatar[0]) {
             avatar = req.files.avatar[0].path; // Đường dẫn ảnh được tải lên
-        }
+          } else {
+            return res.status(400).json({ message: "Avatar là bắt buộc." });
+          }
 
         // Tạo bài viết
         const newPost = await Post.create({
