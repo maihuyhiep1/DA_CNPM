@@ -1,8 +1,8 @@
 import React, { useRef, useEffect, useState } from 'react';
-import styles from './style_writeComment.module.css'; // Đảm bảo file CSS đúng
+import styles from './style_repplycommentContent._.module.css'; // Đảm bảo file CSS đúng
 import avtImage from '/img_profile/avt.png';
 
-const WriteComment = ({ placeholder = "Nhập nội dung...", onSubmit, avatarUrl }) => {
+const RepplyCommentContent = ({ placeholder = "Nhập nội dung...", onSubmit, avatarUrl }) => {
   const inputRef = useRef(null);
   const [value, setValue] = useState('');
 
@@ -28,29 +28,16 @@ const WriteComment = ({ placeholder = "Nhập nội dung...", onSubmit, avatarUr
 
   return (
     <div className={styles.bigContainer}>
-       <form onSubmit={handleSubmit} className={styles.container}>
+       <div onSubmit={handleSubmit} className={styles.container}>
     <img src={avtImage} alt="Avatar" className={styles.avatar} />
     <div className={styles.textAreaWrapper}>
-      <textarea
-        ref={inputRef}
-        className={styles.autoExpandInput}
-        placeholder={placeholder}
-        value={value}
-        onChange={(e) => setValue(e.target.value)} // Cập nhật giá trị
-        onInput={autoResize}
-      />
-      <button type="submit" className={styles.submitButton}>
-      <div className={styles.sendLabel}>
-      Gửi
-      </div>
-      </button>
+      sadsssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssskjadhjkshadjkhasjkdasdasdasdasdasdasdasashasjkhdjkashkdhaskjhdkjashdjkhaskjdhaskjdhkasjhsadsssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssskjadhjkshadjkhasjkdasdasdasdasdasdasdasashasjkhdjkashkdhaskjhdkjashdjkhaskjdhaskjdhkasjhsadsssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssskjadhjkshadjkhasjkdasdasdasdasdasdasdasashasjkhdjkashkdhaskjhdkjashdjkhaskjdhaskjdhkasjh
     </div>
-  </form>
-  <div className={styles.like}>Phản hồi</div>      
+  </div>
   </div>
    
     
   );
 };
 
-export default WriteComment;
+export default RepplyCommentContent;

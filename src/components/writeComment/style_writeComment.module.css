@@ -78,3 +78,7 @@ line-height: 22px; /* 137.5% */
   color: #999; /* Màu placeholder */
   font-size: 14px; /* Kích thước chữ */
 }
+.like{
+  margin-left: 50px;
+  padding: 5px;
+}

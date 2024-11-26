@@ -5,6 +5,8 @@ import ReplyComment from "../writeComment/repplyComment";
 import QnAAuthor from "./QnAAuthor";
 import Content from "./Content";
 import Bar from "./Bar"
+import CommentContent from "../commentContent/commentContent";
+import RepplyCommentContent from "../commentContent/repplycommentContent";
 const QnAContent = () => {
   return (
     <div className={styles.QnAContent}>
@@ -15,8 +17,10 @@ const QnAContent = () => {
             <Bar/>
           <div className={styles.comment}>
           <WriteComment/>
+          <CommentContent/> 
+          <RepplyCommentContent/>         
           </div>
-          <ReplyComment/>
+
         </div>
     </div>
   );

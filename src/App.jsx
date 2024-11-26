@@ -27,6 +27,8 @@ import StoryCard from "./components/storyCard/StoryCard";
 import QnAContent from "./components/QnA_Content/QnAContent";
 import QnABar from "./components/QnABar/QnABar";
 import NewNavbar from "./components/navbar/NewNavBar";
+import CommentContent from "./components/commentContent/commentContent";
+import RepplyCommentContent from "./components/commentContent/repplycommentContent";
 
 function App() {
   const Layout = () => {
