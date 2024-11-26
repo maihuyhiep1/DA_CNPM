@@ -118,4 +118,32 @@
       background-color: rgba(0, 0, 0, 0.3);
     }
   }
+
+  .commentBox {
+    display: flex;
+
+    .commentInput {
+      display: flex;
+      flex: 1;
+      width: 75%;
+      background: transparent;
+      color: black;
+      border: 1px solid #011631;
+      padding: 10px 5px 0px 5px;
+      margin: 0px 0px 20px 20px;
+      outline: none;
+    }
+
+    .commentPost {
+      display: flex;
+      padding: 10px 25px;
+      background-color: #011631;
+      color: white;
+      font-size: 14px;
+      font-weight: 500;
+      margin: 0px 20px 20px 0px;
+      border: none;
+      cursor: pointer;
+    }
+  }
 }
