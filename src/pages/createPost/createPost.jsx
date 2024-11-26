@@ -32,56 +32,67 @@ const CreatePost = () => {
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    if (file) {
-      const imageUrl = URL.createObjectURL(file); // Tạo URL từ file
-      setImage(imageUrl); // Cập nhật state bằng URL
-    }
-  };
-  const handleDrop = (e) => {
-    e.preventDefault();
-    const file = e.dataTransfer.files[0];
     if (file && file.type.startsWith("image/")) {
-      const imageUrl = URL.createObjectURL(file); // Tạo URL từ file
-      setImage(imageUrl); // Lưu file trực tiếp
+      setImage(file); // Lưu đúng file gốc
     }
-  };
-  const handleDragOver = (e) => {
-    e.preventDefault();
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
+    if (!title.trim()) {
+      alert("Vui lòng nhập tiêu đề.");
+      return;
+    }
+  
+    if (!content.trim()) {
+      alert("Vui lòng nhập nội dung bài viết.");
+      return;
+    }
+  
+    // Tạo FormData
     const formData = new FormData();
     formData.append("title", title);
-    formData.append("content", content);
-
-    if (image) {
-      formData.append("image", image); // Sử dụng file từ state `image`
+    formData.append("content", content); // Nội dung từ CKEditor
+    if (image && image instanceof File) {
+      formData.append("avatar", image); // Key phải khớp với định nghĩa multer trên server
     }
-
+  
     try {
-      console.log(...formData.entries());
       const response = await fetch("http://localhost:8386/api/posts", {
         method: "POST",
         body: formData,
-        credentials: "include", // Đảm bảo gửi cookie nếu cần
+        credentials: "include",
       });
-
+  
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
-
+  
       const result = await response.json();
-      console.log("Response:", result);
       alert("Bài viết đã được đăng thành công!");
-
-      // Lưu URL ảnh đã tải lên vào state
-      setImage(result.imageUrl); // URL server trả về
+      setTitle("");
+      setContent("");
+      setImage(null);
     } catch (error) {
       console.error("Error submitting form:", error);
-      alert("Có lỗi xảy ra: " + error.message);
+      alert("Có lỗi xảy ra khi đăng bài viết.");
     }
+  };
+  
+  
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    const file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith("image/")) {
+      setImage(file);
+    } else {
+      alert("Chỉ chấp nhận file hình ảnh!");
+    }
+  };
+  const handleDragOver = (e) => {
+    e.preventDefault();
   };
 
   return (
@@ -116,22 +127,22 @@ const CreatePost = () => {
             style={{ display: "none" }}
           />
           {image ? (
-            <img
-              src={image}
-              alt="Uploaded preview"
-              className={styles.previewImage}
-            />
-          ) : (
-            <>
-              <img
-                className={styles.uploadIcon}
-                src="img_createPost/addImageIcon.png"
-                alt="Add"
-              />
-              <div className={styles.uploadText}>Thêm ảnh đại diện</div>
-              <div className={styles.dragDropText}>Hoặc kéo và thả</div>
-            </>
-          )}
+  <img
+    src={URL.createObjectURL(image)} // Hiển thị preview từ File
+    alt="Uploaded preview"
+    className={styles.previewImage}
+  />
+) : (
+  <>
+    <img
+      className={styles.uploadIcon}
+      src="img_createPost/addImageIcon.png"
+      alt="Add"
+    />
+    <div className={styles.uploadText}>Thêm ảnh đại diện</div>
+    <div className={styles.dragDropText}>Hoặc kéo và thả</div>
+  </>
+)}
         </div>
 
         {/* Sử dụng CKEditor để nhập nội dung bài viết */}
@@ -163,7 +174,16 @@ const CreatePost = () => {
       <div>
         <h2>Preview</h2>
         <h3>Ảnh bìa</h3>
-        <p>{image}</p>
+{image ? (
+  <img
+    src={URL.createObjectURL(image)} // Preview từ file
+    alt="Uploaded preview"
+    className={styles.previewImage}
+    style={{ maxWidth: "200px", maxHeight: "200px" }}
+  />
+) : (
+  <p>Chưa chọn ảnh</p>
+)}
         <h3>Tiêu đề: </h3>
         <p>{title}</p>
         <div>
