@@ -32,16 +32,31 @@ const Login = () => {
   const handleGGSubmit = async (e) => {
     e.preventDefault();
     try {
-      const isLoggedIn = await login();
-      if (isLoggedIn) {
-        navigate("/"); // Redirect on successful login
-      } else {
-        console.log("Login failed. Please check your credentials.");
-      }
+      // Start the Google login process
+      window.location.href = "http://localhost:8386/google/auth";
+  
+      // Poll the backend after a short delay to check if the user is logged in
+      const interval = setInterval(async () => {
+        try {
+          const userRes = await axios.get(
+            "http://localhost:8386/login-success",
+            { withCredentials: true }
+          );
+          if (userRes.data && userRes.data.user) {
+            console.log("User successfully logged in via Google", userRes);
+            setCurrentUser(userRes.data.user);
+            clearInterval(interval); // Stop polling
+            navigate("/"); // Redirect to home page
+          }
+        } catch (err) {
+          console.log("Error fetching user data after Google login:", err);
+        }
+      }, 1000); // Poll every second
     } catch (err) {
-      console.log("Error during login submission:", err);
+      console.log("Error initiating Google login:", err);
     }
   };
+  
 
   const handleForgetPassword = () => {
     navigate("/forget-password");

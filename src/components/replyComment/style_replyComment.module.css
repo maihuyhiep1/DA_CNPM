@@ -1,23 +1,21 @@
 .container {
-  display: flex;
-  /* Flex để avatar và textarea nằm cạnh nhau */
-  align-items: flex-start;
-  /* Căn trên cùng */
-  flex-wrap: wrap;
-  /* Cho phép con xuống hàng */
+  display: flex; /* Flex để avatar và textarea nằm cạnh nhau */
+  align-items: flex-start; /* Căn trên cùng */
+  flex-wrap: wrap; /* Cho phép con xuống hàng */
 
   width: 100%;
-  gap: 10px;
-  /* Khoảng cách giữa avatar và textarea */
+  max-width: 410px;
+  background-color: #f9f9f9;
+  gap: 10px; /* Khoảng cách giữa avatar và textarea */
+  left: 50px;
+  position: relative;
 }
 
 .avatar {
   width: 40px;
   height: 40px;
-  border-radius: 50%;
-  /* Tạo hình tròn */
-  object-fit: cover;
-  /* Đảm bảo ảnh giữ đúng tỷ lệ */
+  border-radius: 50%; /* Tạo hình tròn */
+  object-fit: cover; /* Đảm bảo ảnh giữ đúng tỷ lệ */
 }
 
 .textAreaWrapper {
@@ -26,12 +24,10 @@
   padding: 10px;
   flex: 1;
   position: relative;
-  background-color: #f9f9f9;
 }
 
 .autoExpandInput {
-  width: 100%;
-  /* Chiếm toàn bộ chiều rộng trong textAreaWrapper */
+  width: 100%; /* Chiếm toàn bộ chiều rộng trong textAreaWrapper */
   border: none;
   font-size: 16px;
   resize: none;
@@ -42,17 +38,15 @@
   padding: 5px;
   background-color: transparent;
   color: #2D3748;
-  font-family: "Roboto-Bold", Helvetica;
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 22px;
-  /* 137.5% */
+font-family:"Roboto-Bold", Helvetica;
+font-size: 16px;
+font-style: normal;
+font-weight: 400;
+line-height: 22px; /* 137.5% */
 }
 
 .autoExpandInput:focus {
-  outline: none;
-  /* Loại bỏ viền focus mặc định */
+  outline: none; /* Loại bỏ viền focus mặc định */
 }
 
 .submitButton {
@@ -65,8 +59,7 @@
   position: relative;
   width: 74px;
 }
-
-.sendLabel {
+.sendLabel{
   color: #474747;
   font-family: "Lato-Bold", Helvetica;
   font-size: 16px;
@@ -83,23 +76,16 @@
 }
 
 .submitButton:hover {
-  background-color: #0056b3;
-  /* Màu khi hover */
+  background-color: #0056b3; /* Màu khi hover */
 }
-
 .autoExpandInput::placeholder {
-  color: #999;
-  /* Màu placeholder */
-  font-size: 14px;
-  /* Kích thước chữ */
+  color: #999; /* Màu placeholder */
+  font-size: 14px; /* Kích thước chữ */
 }
+.like{
 
-.commentRes {
-  font-family: "Lato-Bold", Helvetica;
-  flex-basis: 100%;
-  /* Chiếm toàn bộ chiều ngang */
-  align-self: flex-start;
-  /* Hoặc center/end tùy ý */
+  flex-basis: 100%; /* Chiếm toàn bộ chiều ngang */
+  align-self: flex-start; /* Hoặc center/end tùy ý */
   position: relative;
   left: 50px;
 }
