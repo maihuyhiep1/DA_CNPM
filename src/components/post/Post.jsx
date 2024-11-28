@@ -21,6 +21,7 @@ const Post = ({ post }) => {
   const [commentBoxVisible, setCommentBoxVisible] = useState(false);
   const [apiComments, setApiComments] = useState([]);
   const [error, setError] = useState(null);
+  const [like, setLike] = useState(false);
 
   const { currentUser } = useContext(AuthContext);
 
@@ -46,18 +47,23 @@ const Post = ({ post }) => {
     return <div>Error: {error}</div>;
   }
 
-  const handleLike = async (postId) => {
-  try {
-    const response = await axios.post(
-      `http://localhost:8386/api/posts/${post.post_id}/like`,
-      {}, // Body nếu cần
-      { withCredentials: true } // Gửi cookie/session
-    );
-    console.log("Like successful:", response.data);
-  } catch (error) {
-    console.error("Error liking post:", error.response?.data || error.message);
-  }
-};
+  const handleLike = async () => {
+    if (post.isDummy) return; // Skip fetching for dummy posts
+    try {
+      const response = await axios.post(
+        `http://localhost:8386/api/posts/${post.post_id}/like`,
+        {}, // Body nếu cần
+        { withCredentials: true } // Gửi cookie/session
+      );
+      console.log("Like successful:", response.data);
+      setLike(true);
+    } catch (error) {
+      console.error(
+        "Error liking post:",
+        error.response?.data || error.message
+      );
+    }
+  };
 
   // Handle fallback for dummy vs. API posts
   const user = Users.find((u) => u.id === post.userId) || post.author || {};

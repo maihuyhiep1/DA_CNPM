@@ -56,12 +56,31 @@ export const AuthContextProvider = ({ children }) => {
     }
   };
 
+  const logout = async () => {
+    try {
+      // Call the logout API
+      const res = await axios.get(
+        "http://localhost:8386/logout",
+        {},
+        { withCredentials: true }
+      );
+      console.log("Đăng xuất thành công", res);
+
+      // Clear user data
+      setCurrentUser(null);
+      localStorage.removeItem("user");
+    } catch (err) {
+      console.log("Logout error:", err);
+      alert("Đăng xuất thất bại. Vui lòng thử lại.");
+    }
+  };
+
   useEffect(() => {
     localStorage.setItem("user", JSON.stringify(currentUser));
   }, [currentUser]);
 
   return (
-    <AuthContext.Provider value={{ currentUser, login }}>
+    <AuthContext.Provider value={{ currentUser, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
