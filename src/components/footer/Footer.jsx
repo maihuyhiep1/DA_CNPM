@@ -11,12 +11,15 @@ const footerStyles = {
     padding: '60px',
   },
   row: {
+    display: 'flex',
     marginLeft: '-25px',
     marginRight: '-25px',
+    gap :'10px',
   },
   col: {
     paddingRight: '25px',
     paddingLeft: '25px',
+    
   },
   widgetTitle: {
     marginBottom: '1.5rem',
@@ -65,9 +68,7 @@ const Footer = () => {
                 <a href="#" style={footerStyles.socialIcon}>
                   <i className="fa fa-facebook"></i>
                 </a>
-                <a href="#" style={footerStyles.socialIcon}>
-                  <i className="fa fa-pinterest"></i>
-                </a>
+  
                 <a href="#" style={footerStyles.socialIcon}>
                   <i className="fa fa-skype"></i>
                 </a>

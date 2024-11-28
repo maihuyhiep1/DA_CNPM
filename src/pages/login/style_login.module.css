@@ -78,7 +78,7 @@ body {background-color:  #f0f0f0;}
   position: absolute;
   width: 431px;
   height: 43px;
-  top: 416px;
+  top: 380px;
   left: 25px;
   background-color: #f9f9fb;
   border-radius: 8px;
@@ -134,7 +134,7 @@ body {background-color:  #f0f0f0;}
   position: absolute;
   width: 431px;
   height: 40px;
-  top: 345px;
+  top: 325px;
   left: 25px;
   background-color: #0768ea;
   border-radius: 8px;
@@ -207,7 +207,7 @@ body {background-color:  #f0f0f0;}
   width: 66px;
   height: 60px;
   top: 124px;
-  left: 208px;
+  left: 188px;
   background-image: url(./img/logo.png);
   background-size: cover;
   background-position: 50% 50%;
@@ -237,7 +237,13 @@ body {background-color:  #f0f0f0;}
   line-height: 24px;
   white-space: nowrap;
 }
-
+.container{
+  display: flex;
+  flex-direction: column;
+  margin-top: auto;
+  position: relative;
+  top:30px;
+}
 .loginButton { /* login_button */
   background-color: transparent; /* Giữ nguyên màu nền của div */
   border: none; /* Loại bỏ đường viền mặc định của button */
@@ -255,10 +261,7 @@ body {background-color:  #f0f0f0;}
   outline: none; /* Loại bỏ viền bao quanh khi button được focus */
 }
 /* Đặt kích thước và căn chỉnh của phần tử chứa */
-.password {
-  display: block;
-  margin-bottom: 10px; /* Khoảng cách dưới, có thể tùy chỉnh */
-}
+
 
 
 /* Thiết lập giao diện cho input mật khẩu */
@@ -278,11 +281,7 @@ body {background-color:  #f0f0f0;}
   border-color: #dcdce1; /* Subtle border color change */
 }
 /* Focus effect */
-.passwordInput:focus {
-  border-color: #0768ea; /* Highlight border on focus */
-  box-shadow: 0 0 5px rgba(7, 104, 234, 0.5); /* Subtle glow effect */
-  background-color: #ffffff; /* Change background to white */
-}
+
 .usernameInput { /* username_input */
   width: 100%; /* Hoặc kích thước mong muốn */
   padding: 8px; /* Khoảng cách bên trong cho input */
@@ -299,8 +298,3 @@ body {background-color:  #f0f0f0;}
   border-color: #dcdce1; /* Subtle border color change */
 }
 /* Focus effect */
-.usernameInput:focus {
-  border-color: #0768ea; /* Highlight border on focus */
-  box-shadow: 0 0 5px rgba(7, 104, 234, 0.5); /* Subtle glow effect */
-  background-color: #ffffff; /* Change background to white */
-}

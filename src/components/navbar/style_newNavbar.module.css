@@ -7,18 +7,20 @@
 }
 
 .logo {
-    padding: 0.5%;
+    padding: 0.3%;
+    scale: 0.9;
   }
   
   .container{
     display: flex;
     flex-direction: column;
+    gap : 3px;
   }
  .brand {
     width: 69px;
     height: 24px;
 
-    font-family: "Lato-SemiBold", Helvetica;
+    font-family: "Poppins", Helvetica;
     font-weight: 600;
     color: #2d3748;
     font-size: 24px;
@@ -31,11 +33,11 @@
     width: 79px;
     height: 7px;
 
-    font-family: "Lato-SemiBold", Helvetica;
+    font-family: "Poppins", Helvetica;
     font-weight: 600;
     color: #2d3748;
-    font-size: 8px;
-    letter-spacing: 2.20px;
+    font-size: 9px;
+    letter-spacing: 1.8px;
     line-height: 7px;
     white-space: nowrap;
   }

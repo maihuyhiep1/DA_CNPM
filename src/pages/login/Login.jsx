@@ -52,7 +52,7 @@ const Login = () => {
         <div className={styles.logo}>
           <img src="img_login/logo.png" alt="Logo" />
         </div>
-
+      <div className={styles.container}>
         <div className={styles.username}>
           <input
             type="text"
@@ -74,19 +74,23 @@ const Login = () => {
             onChange={(e) => setValue({ ...value, password: e.target.value })}
           />
         </div>
-
-        <button
+        <div className={styles.loginButtonContainter}> 
+          <button
           type="submit"
           className={styles.loginButton}
           onClick={handleSubmit}
         >
           <div className={styles.textInLoginButton}>Đăng nhập</div>
-        </button>
+        </button> </div>
+       
+        <div className={styles.googleButtonContainter}> 
 
         <button className={styles.googleButton} onClick={handleGGSubmit}>
           <div className={styles.googlePng}></div>
           <div className={styles.textInGoogleButton}>Đăng nhập bằng Google</div>
-        </button>
+        </button> 
+        </div>
+        
 
         <div className={styles.signInAndForgetPassword}>
           <div className={styles.textInSignIn}>Chưa có tài khoản?</div>
@@ -99,6 +103,7 @@ const Login = () => {
           >
             <div className={styles.link}>Quên mật khẩu</div>
           </div>
+        </div>
         </div>
       </form>
     </div>

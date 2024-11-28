@@ -34,7 +34,7 @@ function App() {
   const Layout = () => {
     return (
       <div>
-        <QnAContent />
+        <Footer />
       </div>
     );
   };
