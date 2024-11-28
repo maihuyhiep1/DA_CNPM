@@ -1,0 +1,52 @@
+
+.storyCard{
+    border: solid 1px;
+    height: 180px;
+    width: 108px;
+
+}
+
+    .storyProfile {
+        width: 32px;
+        height: 32px;
+        flex-shrink: 0;
+        position: relative;
+        top:-167px;
+        left: 10px;
+        border-radius: 32px;
+        border: 1px solid #1570EF;
+        background-size: cover; /* Ensures the image covers the entire background */
+        background-position: center; /* Centers the image */
+        background-repeat: no-repeat; /* Avoids tiling */
+    }
+
+    .storyBackground {
+        background-size: cover; /* Ensures the image covers the entire background */
+        background-position: center; /* Centers the image */
+        background-repeat: no-repeat; /* Avoids tiling */
+        border-radius: 8px;
+        width: 100%;
+        height: 100%;
+    }
+
+    .storyAdd {
+        position: relative;
+        top : -100px;
+        color: #0047a3;
+        width: 30px;
+        bottom: 40px;
+        cursor: pointer;
+    }
+
+    .storyText {
+        width: 56px;
+        height: 16px;
+        color: #FFfffF;
+        font-family: "Roboto-Regular", Helvetica;
+        font-size: 15px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 24px; 
+        position: relative;
+        top :-30px;
+    }
