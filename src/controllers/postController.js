@@ -59,14 +59,23 @@ exports.getPopularPosts = async (req, res) => {
 // Lấy tất cả bài đăng
 exports.getAllPosts = async (req, res) => {
     try {
+        // Lấy tham số `isQna` từ query string, mặc định là `null`
+        const { is_qna } = req.query;
+
+        // Cấu hình điều kiện where dựa trên giá trị của isQna
+        const whereCondition = is_qna !== undefined ? { isQna: isQna === 'true' } : {};
+
+        // Truy vấn cơ sở dữ liệu với điều kiện where
         const results = await Post.findAll({
-            attributes: ['post_id', 'title', 'avatar', 'createdAt','like_count'],
+            attributes: ['post_id', 'title', 'avatar', 'createdAt', 'like_count'],
             include: [
                 { model: User, as: 'author', attributes: ['id', 'name', 'avatar'] },
             ],
+            where: whereCondition,
             order: [['createdAt', 'DESC']],
         });
 
+        // Định dạng lại kết quả trước khi trả về
         const formattedResults = results.map(post => ({
             ...post.toJSON(),
             avatar: formatAvatarUrl(post.avatar, req),
@@ -78,6 +87,7 @@ exports.getAllPosts = async (req, res) => {
         res.status(500).json({ message: 'Lỗi khi lấy danh sách bài đăng', error: err.message });
     }
 };
+
 
 // Lấy bài đăng theo ID
 exports.getPostById = async (req, res) => {
