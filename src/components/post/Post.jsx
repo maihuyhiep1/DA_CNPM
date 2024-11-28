@@ -20,12 +20,13 @@ import axios from "axios";
 const Post = ({ post }) => {
   const [commentBoxVisible, setCommentBoxVisible] = useState(false);
   const [apiComments, setApiComments] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   const { currentUser } = useContext(AuthContext);
 
   useEffect(() => {
+    if (post.isDummy) return; // Skip fetching for dummy posts
+
     const fetchComments = async () => {
       try {
         const response = await axios.get(
@@ -35,21 +36,25 @@ const Post = ({ post }) => {
         setApiComments(response.data); // Store API posts
       } catch (err) {
         setError(err.message); // Handle any errors
-      } finally {
-        setLoading(false); // Stop the loading spinner
       }
     };
 
     fetchComments();
   }, []);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
   if (error) {
     return <div>Error: {error}</div>;
   }
+
+  const handleLike = async() => {
+    if (post.isDummy) return;
+    try {
+      const res = await axios.post(`http://localhost:8386/api/posts/${post.post_id}/like`)
+      console.log("LIKE THANH CONG:", res);
+    } catch (err){
+      console.log("GOi API LIKE BI LOI", err);
+    }
+  };
 
   // Handle fallback for dummy vs. API posts
   const user = Users.find((u) => u.id === post.userId) || post.author || {};
@@ -87,14 +92,14 @@ const Post = ({ post }) => {
           </div>
           <div className="postBottomRight">
             <span className="postCommentText">
-              {post.comment || apiComments.data.length} Comments
+              {post.comment || apiComments.data?.length || 0} Comments
             </span>
           </div>
         </div>
 
         <hr className="footerHr" />
         <div className="postBottomFooter">
-          <div className="postBottomFooterItem">
+          <div className="postBottomFooterItem" onClick={handleLike}>
             <ThumbUpAltOutlined className="footerIcon" />
             <span className="footerText">Like</span>
           </div>

@@ -7,14 +7,14 @@ import Rightbar from "../../components/rightbar/Rightbar";
 import { AuthContext } from "../../context/authContext";
 
 const Home = () => {
-  const { currentUser } = useContext(AuthContext);
-  const navigate = useNavigate();
+  // const { currentUser } = useContext(AuthContext);
+  // const navigate = useNavigate();
 
-  useEffect(() => {
-    if (!currentUser) {
-      navigate("/login");
-    }
-  }, [currentUser, navigate]);
+  // useEffect(() => {
+  //   if (!currentUser) {
+  //     navigate("/login");
+  //   }
+  // }, [currentUser, navigate]);
 
   return (
     <div className="homeContainer">

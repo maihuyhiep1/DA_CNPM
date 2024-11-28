@@ -35,7 +35,10 @@ const Feed = () => {
   }
 
   // Combine dummy posts and API posts
-  const allPosts = [...apiPosts, ...dummyPosts];
+  const allPosts = [
+    ...apiPosts,
+    ...dummyPosts.map((post) => ({ ...post, isDummy: true })),
+  ];
 
   return (
     <div className="feed">
