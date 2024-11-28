@@ -1,13 +1,12 @@
 import React from "react";
-import "./StoryCard.scss";
+import styles from "./style_storyCard.module.css";
 
 const StoryCard = ({ user }) => {
   return (
-    <div className="storyCard">
-        <div className="storyOverlay"></div>
-      <img src={user.profilePicture} alt="User" className="storyProfile" />
-      <img src={user.profilePicture} alt="Background" className="storyBackground" />
-      <span className="storyText">{user.username}</span>
+    <div className={styles.storyCard}>
+      <img src={user.profilePicture} alt="Background" className={styles.storyBackground} />
+      <img src={user.profilePicture} alt="User" className={styles.storyProfile} />
+      <span className={styles.storyText}>{user.username}</span>
     </div>
   );
 };

@@ -1,0 +1,24 @@
+.container {
+  display: flex;
+  flex-wrap: nowrap; /* Prevent wrapping, enable horizontal scrolling */
+  overflow-x: auto; /* Add horizontal scrolling */
+  overflow-y: hidden; /* Add horizontal scrolling */
+
+  gap: 10px; /* Add spacing between items */
+  padding: 10px; /* Optional: Add padding around the container */
+  scroll-snap-type: x mandatory; /* Optional: Smooth scrolling */
+  width: 50%;
+  scroll-snap-type: x mandatory; /* Optional: Smooth scrolling */
+}
+
+.item {
+  flex: 0 0 calc(20% - 10px); /* Each item takes 20% of the container width minus the gap */
+  height: 180px; /* Example height */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  scroll-snap-align: center; /* Optional: Snap items into view */
+  gap: 10px; /* Add spacing between items */
+
+}
