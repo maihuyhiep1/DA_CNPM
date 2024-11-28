@@ -63,7 +63,7 @@ exports.getAllPosts = async (req, res) => {
         const { is_qna } = req.query;
 
         // Cấu hình điều kiện where dựa trên giá trị của isQna
-        const whereCondition = is_qna !== undefined ? { isQna: isQna === 'true' } : {};
+        const whereCondition = is_qna !== undefined ? { is_qna: is_qna === 'true' } : {};
 
         // Truy vấn cơ sở dữ liệu với điều kiện where
         const results = await Post.findAll({
@@ -81,6 +81,7 @@ exports.getAllPosts = async (req, res) => {
             avatar: formatAvatarUrl(post.avatar, req),
             createdAt: formatDistanceToNow(new Date(post.createdAt), { addSuffix: true, locale: vi }),
         }));
+
 
         res.status(200).json(formattedResults);
     } catch (err) {
