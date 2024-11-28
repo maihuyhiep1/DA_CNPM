@@ -13,8 +13,10 @@ const Feed = () => {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await axios.get("http://localhost:8386/api/posts");
-        console.log(response.data);
+        const response = await axios.get(
+          "http://localhost:8386/api/posts?is_qna=false"
+        );
+        console.log("LẤY THÔNG TIN POST:", response.data);
         setApiPosts(response.data); // Store API posts
       } catch (err) {
         setError(err.message); // Handle any errors

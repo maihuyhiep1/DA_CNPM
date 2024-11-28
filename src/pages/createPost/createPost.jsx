@@ -5,9 +5,11 @@ import Editor from "../../components/CKEditor/CKEditor5";
 const CreatePost = () => {
   const [titleWordCount, setTitleWordCount] = useState(0);
   const [contentWordCount, setContentWordCount] = useState(0);
+
   const [image, setImage] = useState(null);
   const [content, setContent] = useState(""); // Nội dung từ CKEditor
   const [title, setTitle] = useState(""); // Tiêu đề bài viết
+  const [isQna, setIsQna] = useState(false);
 
   const handleWordCount = (e) => {
     const text = e.target.value;
@@ -17,10 +19,8 @@ const CreatePost = () => {
       .filter((word) => word);
 
     if (e.target.name === "title") {
-      setTitleWordCount(words.length);
       setTitle(text);
-    } else if (e.target.name === "content") {
-      setContentWordCount(words.length);
+      setTitleWordCount(words.length);
     }
 
     e.target.style.height = "auto"; // Reset height
@@ -57,6 +57,13 @@ const CreatePost = () => {
     if (image && image instanceof File) {
       formData.append("avatar", image); // Key phải khớp với định nghĩa multer trên server
     }
+    formData.append("is_qna", isQna); // Add the checkbox value to the form data
+
+    console.log("THÔNG TIN BÀI POST ĐƯỢC ĐĂNG:");
+
+    for (let [key, value] of formData.entries()) {
+      console.log(`${key}:`, value);
+    }
 
     try {
       const response = await fetch("http://localhost:8386/api/posts", {
@@ -74,6 +81,7 @@ const CreatePost = () => {
       setTitle("");
       setContent("");
       setImage(null);
+      setIsQna(false);
     } catch (error) {
       console.error("Error submitting form:", error);
       alert("Có lỗi xảy ra khi đăng bài viết.");
@@ -91,6 +99,27 @@ const CreatePost = () => {
   };
   const handleDragOver = (e) => {
     e.preventDefault();
+  };
+
+  const countWordsFromHTML = (html) => {
+    // Parse the HTML content
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, "text/html");
+
+    // Extract only the visible text
+    const plainText = doc.body.textContent || ""; // Extracts visible text
+
+    // Count words by splitting and filtering
+    const words = plainText
+      .trim()
+      .split(/\s+/) // Split by whitespace
+      .filter((word) => word); // Remove empty strings
+
+    return words.length; // Return the word count
+  };
+
+  const handleCheckboxChange = () => {
+    setIsQna((prev) => !prev); // Toggle checkbox state
   };
 
   return (
@@ -144,7 +173,14 @@ const CreatePost = () => {
         </div>
 
         {/* Sử dụng CKEditor để nhập nội dung bài viết */}
-        <Editor initData="Helllo" setData={setContent} />
+        <Editor
+          initData=""
+          setData={(data) => {
+            setContent(data); // Update the content state
+            const wordCount = countWordsFromHTML(data); // Count words in the content
+            setContentWordCount(wordCount); // Update the word count state
+          }}
+        />
 
         <div className={styles.wordCount}>
           <span>Bài viết {totalWordCount} từ</span>
@@ -155,6 +191,8 @@ const CreatePost = () => {
             className={styles.substituted}
             type="checkbox"
             aria-hidden="true"
+            checked={isQna} // Bind checkbox state to the value
+            onChange={handleCheckboxChange} // Listen to changes
           />
           <label htmlFor="example-1" className={styles.label}>
             QnA
@@ -186,7 +224,7 @@ const CreatePost = () => {
         <p>{title}</p>
         <div>
           <h4>Nội dung:</h4>
-          <p>{content}</p>
+          <p>{`ĐÂY LÀ NỘI DUNG CKEDITOR: ${content}`}</p>
           {/* Hiển thị HTML nội dung của CKEditor */}
           <div dangerouslySetInnerHTML={{ __html: content }} />
         </div>
