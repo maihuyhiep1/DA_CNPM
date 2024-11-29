@@ -1,10 +1,10 @@
 {
   "development": {
     "username": "root",
-    "password": "tan01012004",
-    "database": "social_network",
+    "password": "Matkhaugi%1",
+    "database": "da_cnpm",
     "host": "localhost",
-    "dialect": "mysql",
+    "dialect": "mariadb",
     "timezone": "+07:00"
   },
   "test": {
