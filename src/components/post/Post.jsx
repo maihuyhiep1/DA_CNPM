@@ -50,23 +50,15 @@ const Post = ({ post: initialPost }) => {
   const handleAddComment = async (content) => {
     console.log("NỘI DUNG CONTENT: ", content);
     content.userId = JSON.parse(localStorage.getItem("user")).id; 
-    console.log(content);
-    console.log(localStorage.getItem("user"));
     try {
       const response = await axios.post(
         `http://localhost:8386/api/comments/post/${post.post_id}`,
         content,
         { withCredentials: true }
       );
+      console.log(response);
       const newComment = response.data;
-
-      // Kiểm tra lại kiểu dữ liệu của apiComments
-      if (Array.isArray(apiComments)) {
-        // Cập nhật state với mảng bình luận mới
-        setApiComments((prevComments) => [...prevComments, newComment]);
-      } else {
-        console.error('apiComments không phải là mảng');
-      }
+      setApiComments([...apiComments, [newComment]]);
     } catch (err) {
       console.error("Error adding comment:", err.message);
     }
