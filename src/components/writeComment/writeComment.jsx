@@ -21,13 +21,18 @@ const WriteComment = ({
 
   useEffect(() => {
     autoResize(); // Ensure size updates on mount
+    console.log("NỘI DUNG COMMENT:", value);
   }, [value]);
 
   const handleSubmit = (e) => {
     e.preventDefault(); // Prevent form reload
-    if (onSubmit) {
-      onSubmit(value); // Pass data to parent
-      setValue(""); // Reset input after submission
+    if (onSubmit && value.trim()) {
+      const commentObject = {
+        content: value,
+        commentId: null, // Default value
+      };
+      onSubmit(commentObject); // Pass the comment object to the parent component
+      setValue(""); // Clear the input
     }
   };
 

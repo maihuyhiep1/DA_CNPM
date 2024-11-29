@@ -4,8 +4,7 @@
   flex-wrap: wrap; /* Cho phép con xuống hàng */
 
   width: 100%;
-  max-width: 410px;
-  background-color: #f9f9f9;
+  max-width: 500px;
   gap: 10px; /* Khoảng cách giữa avatar và textarea */
   left: 50px;
   position: relative;
@@ -24,6 +23,7 @@
   padding: 10px;
   flex: 1;
   position: relative;
+  background-color: #f9f9f9;
 }
 
 .autoExpandInput {
