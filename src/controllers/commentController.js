@@ -1,6 +1,8 @@
 const Comment = require('../models/index').Comment
 const Post = require('../models/index').Post;
 const {  User } = require('../models');
+const { formatDistanceToNow } = require('date-fns');
+const { vi } = require('date-fns/locale'); // Định dạng tiếng Việt nếu cần
 const commentController = {
     async create(req, res) {
         try {
@@ -143,10 +145,26 @@ const commentController = {
     async findAllofPostId(req, res) {
         try {
             const comments = await Comment.findAll({
-                where: { postId: req.params.id }
+                where: { postId: req.params.id },
             });
+
+            for (const comment of comments) {
+              const user = await User.findByPk(comment.userId, {
+                attributes: ['name', 'avatar'], // Chỉ lấy các thuộc tính cần thiết
+              });
+            
+              if (user) {
+                comment.dataValues.user = user; // Gán user đã lọc vào comment
+              }
+              delete comment.dataValues.updatedAt;
+              delete comment.dataValues.userId; // Loại bỏ userId nếu không cần thiết
+            }
             
             const transformComments = (comments) => {
+                comments = comments.map(cmt => ({
+                    ...cmt.toJSON(),
+                    createdAt: formatDistanceToNow(new Date(cmt.createdAt), { addSuffix: true, locale: vi }),
+                }));
                 const rootComments = comments.filter(comment => comment.commentId === null);
                 const nestedComments = rootComments.map(rootComment => {
                     const children = comments.filter(comment => comment.commentId === rootComment.id);
