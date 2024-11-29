@@ -1,3 +1,4 @@
+"use client"
 import { useState, useContext, useEffect } from "react";
 import "./Post.scss";
 import { Users } from "../../data";
@@ -34,7 +35,7 @@ const Post = ({ post: initialPost }) => {
     const fetchComments = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8386/api/comments/post/${post.post_id}`
+          `http://localhost:8386/api/comments/post/${post.post_id}`,
         );
         console.log(response.data);
         setApiComments(response.data); // Store API posts
@@ -48,14 +49,24 @@ const Post = ({ post: initialPost }) => {
 
   const handleAddComment = async (content) => {
     console.log("NỘI DUNG CONTENT: ", content);
+    content.userId = JSON.parse(localStorage.getItem("user")).id; 
+    console.log(content);
+    console.log(localStorage.getItem("user"));
     try {
       const response = await axios.post(
         `http://localhost:8386/api/comments/post/${post.post_id}`,
-        { content },
+        content,
         { withCredentials: true }
       );
       const newComment = response.data;
-      setApiComments((prev) => [...prev, [newComment]]);
+
+      // Kiểm tra lại kiểu dữ liệu của apiComments
+      if (Array.isArray(apiComments)) {
+        // Cập nhật state với mảng bình luận mới
+        setApiComments((prevComments) => [...prevComments, newComment]);
+      } else {
+        console.error('apiComments không phải là mảng');
+      }
     } catch (err) {
       console.error("Error adding comment:", err.message);
     }
