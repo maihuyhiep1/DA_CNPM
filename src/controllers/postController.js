@@ -5,10 +5,22 @@ const {  User } = require('../models');
 const { Op } = require('sequelize'); // Dùng để tạo các điều kiện lọc
 const { formatDistanceToNow } = require('date-fns');
 const { vi } = require('date-fns/locale'); // Định dạng tiếng Việt nếu cần
-
+const uuid = require('uuid').v4;
+const path = require('path');
+const fs = require('fs');
 const formatAvatarUrl = (avatarPath, req) => {
     if (!avatarPath) return null;
     return `${req.protocol}://${req.get("host")}/${avatarPath.replace(/\\/g, "/")}`;
+};
+
+const formatContentImages = (content, req) => {
+    return content.replace(/<img[^>]+src="([^"]+)"/g, (match, src) => {
+        // Nếu src là đường dẫn tương đối (không phải URL tuyệt đối), thay thế nó
+        if (!src.startsWith('http')) {
+            return match.replace(src, `${req.protocol}://${req.get("host")}/${src.replace(/\\/g, "/")}`);
+        }
+        return match;
+    });
 };
 
 exports.getPopularPosts = async (req, res) => {
@@ -97,7 +109,7 @@ exports.getPostById = async (req, res) => {
 
         const result = await Post.findByPk(postId, {
             include: [
-                { model: User, as: 'author', attributes: ['id', 'name', 'avatar','like_count'] }, // Thông tin tác giả
+                { model: User, as: 'author', attributes: ['id', 'name', 'avatar', 'like_count'] },
             ],
         });
 
@@ -105,9 +117,10 @@ exports.getPostById = async (req, res) => {
             return res.status(404).json({ message: 'Không tìm thấy bài đăng.' });
         }
 
-        // Định dạng lại thời gian tạo bài viết
         const formattedResult = {
             ...result.toJSON(),
+            avatar: formatAvatarUrl(result.avatar, req),
+            content: formatContentImages(result.content, req),  // Format images in content
             createdAt: formatDistanceToNow(new Date(result.createdAt), { addSuffix: true, locale: vi }),
         };
 
@@ -140,7 +153,9 @@ exports.getPostsByUser = async (req, res) => {
         // Định dạng lại thời gian tạo bài viết
         const formattedPosts = posts.map(post => ({
             ...post.toJSON(),
-            createdAt: formatDistanceToNow(new Date(post.createdAt), { addSuffix: true, locale: vi }),
+            avatar: formatAvatarUrl(result.avatar, req),
+            content: formatContentImages(result.content, req),  // Format images in content
+            createdAt: formatDistanceToNow(new Date(result.createdAt), { addSuffix: true, locale: vi }),
         }));
 
         res.status(200).json(formattedPosts);
@@ -150,12 +165,18 @@ exports.getPostsByUser = async (req, res) => {
     }
 };
 
-// Tạo bài đăng mới
+// Hàm xử lý ảnh base64
 exports.createPost = async (req, res) => {
     try {
         const author_id = req.user.id; // Lấy user ID từ session
-        const { title, is_qna, content } = req.body;
+        let { title, is_qna, content } = req.body;
 
+        // Kiểm tra nếu content không phải là chuỗi, chuyển thành chuỗi
+        if (typeof content !== 'string') {
+            content = String(content); // Chuyển content thành chuỗi nếu cần thiết
+        }
+
+        // Kiểm tra nội dung bài viết
         if (!content || content.trim() === '') {
             return res.status(400).json({ message: 'Nội dung bài viết không được để trống.' });
         }
@@ -168,13 +189,28 @@ exports.createPost = async (req, res) => {
             }
         }
 
+        // Xử lý ảnh từ CKEditor nếu có
+        const imageUrls = [];
+        const base64Images = content.match(/data:image\/(png|jpg|jpeg|gif|bmp);base64,[^\"]+/g); // Tìm tất cả ảnh base64
+
+        if (base64Images) {
+            // Lưu các ảnh base64 vào thư mục uploads
+            for (let i = 0; i < base64Images.length; i++) {
+                const imageUrl = await uploadImageFromBase64(base64Images[i]); // Lưu ảnh và trả về URL
+                imageUrls.push(imageUrl); // Lưu URL ảnh vào mảng
+            }
+
+            // Thay thế base64 bằng đường dẫn ảnh trong nội dung bài viết
+            imageUrls.forEach((imageUrl, index) => {
+                content = content.replace(base64Images[index], imageUrl);
+            });
+        }
+
         // Xử lý avatar
         let avatar = null;
         if (req.files && req.files.avatar && req.files.avatar[0]) {
-            avatar = req.files.avatar[0].path; // Đường dẫn ảnh được tải lên
-          } else {
-            return res.status(400).json({ message: "Avatar là bắt buộc." });
-          }
+            avatar = `/uploads/${path.basename(req.files.avatar[0].path)}`; // Đường dẫn ảnh được tải lên (chuyển thành URL tương đối)
+        }
 
         // Tạo bài viết
         const newPost = await Post.create({
@@ -185,19 +221,17 @@ exports.createPost = async (req, res) => {
             avatar,  // Lưu đường dẫn ảnh đại diện (nếu có)
         });
 
-        // Trích xuất URL ảnh từ nội dung bài viết
-        const imageUrls = content.match(/<img[^>]+src="([^">]+)"/g)?.map((img) => {
-            return img.match(/src="([^">]+)"/)[1];
-        });
-
-        // Lưu các ảnh vào bảng PostImage
-        if (imageUrls && imageUrls.length > 0) {
+        // Lưu các ảnh vào bảng PostImage nếu có ảnh
+        if (imageUrls.length > 0) {
             const postImages = imageUrls.map((url) => ({
                 post_id: newPost.post_id,
                 image_url: url,
             }));
             await PostImage.bulkCreate(postImages);
         }
+
+        // Trả về kết quả với đường dẫn ảnh đầy đủ (URL tuyệt đối)
+    
 
         res.status(201).json({ message: 'Tạo bài viết thành công', postId: newPost.post_id });
     } catch (err) {
@@ -206,6 +240,26 @@ exports.createPost = async (req, res) => {
     }
 };
 
+// Hàm xử lý ảnh base64
+const uploadImageFromBase64 = async (base64Data) => {
+    const matches = base64Data.match(/^data:image\/([a-zA-Z0-9]+);base64,(.+)$/);
+    if (matches.length !== 3) {
+        throw new Error('Dữ liệu không phải ảnh base64 hợp lệ');
+    }
+
+    const type = matches[1]; // Tên loại ảnh (png, jpg, ...)
+    const imageBuffer = Buffer.from(matches[2], 'base64');
+
+    // Tạo tên file duy nhất
+    const fileName = `${uuid()}.${type}`; // Sử dụng uuid() để tạo tên file duy nhất
+    const uploadPath = path.join(__dirname,'..', '../uploads', fileName);
+
+    // Lưu ảnh vào thư mục
+    await fs.promises.writeFile(uploadPath, imageBuffer);
+
+    // Trả về URL ảnh
+    return `/uploads/${fileName}`;
+};
 
 
 // Cập nhật bài đăng

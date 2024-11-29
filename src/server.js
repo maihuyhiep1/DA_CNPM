@@ -35,6 +35,9 @@ app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+app.use(express.json({ limit: '100mb' })); // Giới hạn đối với dữ liệu JSON
+app.use(express.urlencoded({ limit: '100mb', extended: true }));
+
 // Kiểm tra và in đường dẫn đến thư mục uploads
 console.log('Uploads folder path:', path.join(__dirname, 'uploads'));
 
