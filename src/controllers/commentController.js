@@ -6,12 +6,14 @@ const { vi } = require('date-fns/locale'); // Định dạng tiếng Việt nế
 const commentController = {
     async create(req, res) {
         try {
-            const userId = req.user.id; // Lấy ID người dùng từ session
+            // console.log(req.user);
+            // const userId = req.user.id; // Lấy ID người dùng từ session
             const postId = req.params.postId; // Lấy ID bài viết từ URL
-            const { content, commentId } = req.body; // Nội dung và ID comment cha (nếu có)
+            const { userId, content, commentId } = req.body; // Nội dung và ID comment cha (nếu có)
+            console.log(req.body);
     
             // Kiểm tra nội dung comment không được để trống
-            if (!content || content.trim() === '') {
+            if (!content || content === '') {
                 return res.status(400).json({ success: false, message: "Nội dung không được để trống." });
             }
     

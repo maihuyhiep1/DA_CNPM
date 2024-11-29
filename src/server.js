@@ -12,7 +12,7 @@ const app = express();
 
 // Cấu hình CORS
 const corsOptions = {
-  origin: process.env.CLIENT_URL, // Đổi với URL frontend (ví dụ: http://localhost:3001)
+  origin: "http://localhost:5173", // Đổi với URL frontend (ví dụ: http://localhost:3001)
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,  // Cho phép cookie (session)
@@ -23,7 +23,11 @@ app.use(session({
   secret: process.env.SESSION_SECRET_KEY,
   resave: false,
   saveUninitialized: true,
-  cookie: { secure: false } // Nếu dùng HTTPS, cần đặt true
+  cookie: { 
+      secure: false, // Đặt là true nếu sử dụng HTTPS
+      httpOnly: true, // Đảm bảo chỉ có server mới có thể đọc cookie này
+      maxAge: 1000 * 60 * 60 * 24 // Ví dụ, cookie hết hạn sau 24 giờ
+  }
 }));
 app.use(passport.initialize());
 app.use(passport.session());
