@@ -26,6 +26,9 @@ const commentController = {
                 const parentComment = await Comment.findByPk(commentId);
                 if (!parentComment) {
                     return res.status(404).json({ success: false, message: "Comment được trả lời không tồn tại." });
+                } 
+                if(parentComment.commentId) {
+                    return res.status(400).json({ success: false, message: "Comment này là comment con, không được trả lời"});
                 }
             }
     
