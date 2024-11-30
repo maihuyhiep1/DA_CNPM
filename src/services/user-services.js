@@ -37,8 +37,8 @@ let createUser = async (body) => { //body of html file which contains register i
         })
       } 
        // Check if username is provided and already exists
-      if (body.name) {
-        let usernameExists = await checkUsername(body.name);
+      if (body.username) {
+        let usernameExists = await checkUsername(body.username);
         if (usernameExists) {
           resolve({
             errCode: 5,
