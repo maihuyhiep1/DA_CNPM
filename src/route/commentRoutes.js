@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const commentController = require('../controllers/commentController');
-const isAuthenticated = require('../middlewares/auth');
+const { isAuthenticated } = require('../middlewares/auth');
 // Comment routes
 router.post("/post/:postId",isAuthenticated, commentController.create); // Thêm comment vào bài viết
 router.put("/:id",isAuthenticated, commentController.update); // Cập nhật comment

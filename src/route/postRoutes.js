@@ -2,7 +2,7 @@ const express = require('express');
 const postController = require('../controllers/postController');
 const router = express.Router();
 const upload = require('../middlewares/upload');
-const isAuthenticated = require('../middlewares/auth');
+const { isAuthenticated }= require('../middlewares/auth');
 
 // Route upload ảnh từ CKEditor
 router.post(
