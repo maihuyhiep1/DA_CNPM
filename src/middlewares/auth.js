@@ -7,4 +7,26 @@ function isAuthenticated(req, res, next) {
     }
 }
 
-module.exports = isAuthenticated;
+// Middleware to check if user is an admin
+function isAdmin(req, res, next) {
+    if (req.user && req.user.role === 'admin') {
+        return next();
+    } else {
+        return res.status(403).json({ message: 'Bạn không có quyền truy cập' });
+    }
+}
+
+// Middleware to check if user is a moderator
+function isModerator(req, res, next) {
+    if (req.user && (req.user.role === 'moderator' || req.user.role === 'admin')) {
+        return next();
+    } else {
+        return res.status(403).json({ message: 'Bạn không có quyền truy cập' });
+    }
+}
+
+module.exports = { 
+    isAuthenticated: isAuthenticated,
+    isAdmin: isAdmin,
+    isModerator: isModerator 
+};
