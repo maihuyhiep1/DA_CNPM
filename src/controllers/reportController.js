@@ -46,29 +46,6 @@ const reportController = {
         }
     },
 
-    // Lấy tất cả báo cáo
-    async getAllReports(req, res) {
-        try {
-            const reports = await Report.findAll();
-            if (!reports || reports.length === 0) {
-                return res.status(404).json({
-                    success: false,
-                    message: 'No reports found'
-                });
-            }
-            res.status(200).json({
-                success: true,
-                data: reports
-            });
-        } catch (error) {
-            console.error('Error fetching reports:', error);
-            res.status(500).json({
-                success: false,
-                message: 'Internal server error'
-            });
-        }
-    },
-
     // Lấy báo cáo theo ID
     async getReportById(req, res) {
         try {
@@ -154,7 +131,7 @@ const reportController = {
             const reports = await Report.findAll({
                 where: { status },
                 include: [
-                    { model: Post, as: "post", attributes: ["title"] },
+                    { model: Post, as: "post", attributes: ["title", "avatar"] },
                     { model: User, as: "reporter", attributes: ["name", "email"] },
                 ],
             });
@@ -200,7 +177,113 @@ const reportController = {
                 message: 'Internal server error'
             });
         }
+    },
+
+    // Lấy tất cả báo cáo từ một reporter
+    async getReportsByReporter(req, res) {
+        try {
+            const { reporterId } = req.params;
+
+            // Kiểm tra nếu người báo cáo tồn tại
+            const reporter = await User.findByPk(reporterId);
+            if (!reporter) {
+                return res.status(404).json({
+                    success: false,
+                    message: 'Reporter not found'
+                });
+            }
+
+            // Lấy tất cả các báo cáo từ người báo cáo này
+            const reports = await Report.findAll({
+                where: { reporterId },
+                include: [
+                    { model: Post, as: "post", attributes: ["title", "avatar"] },
+                ],
+            });
+
+            res.status(200).json({
+                success: true,
+                data: reports
+            });
+        } catch (error) {
+            console.error('Error fetching reports by reporter:', error);
+            res.status(500).json({
+                success: false,
+                message: 'Internal server error'
+            });
+        }
+    },
+    // Lấy tất cả báo cáo được giải quyết bởi resolvedBy
+    async getReportsByResolver(req, res) {
+        try {
+            const { resolvedBy } = req.params;
+
+            // Kiểm tra nếu người giải quyết tồn tại
+            const resolver = await User.findByPk(resolvedBy);
+            if (!resolver) {
+                return res.status(404).json({
+                    success: false,
+                    message: 'Resolver not found'
+                });
+            }
+
+            // Lấy tất cả báo cáo đã được giải quyết bởi người này
+            const reports = await Report.findAll({
+                where: { resolvedBy },
+                include: [
+                    { model: Post, as: "post", attributes: ["title", "avatar"] },
+                    { model: User, as: "reporter", attributes: ["name", "email"] },
+                ],
+            });
+
+            res.status(200).json({
+                success: true,
+                data: reports
+            });
+        } catch (error) {
+            console.error('Error fetching reports by resolver:', error);
+            res.status(500).json({
+                success: false,
+                message: 'Internal server error'
+            });
+        }
+    },
+    // Lấy tất cả bài viết bị báo cáo
+    async getReportedPosts(req, res) {
+        try {
+            // Lấy tất cả báo cáo và đính kèm thông tin bài viết mà báo cáo hướng tới
+            const reports = await Report.findAll({
+                include: [
+                    {
+                        model: Post,
+                        as: "post", // Tên alias trong định nghĩa model (nếu có)
+                        attributes: ["post_id", "title", "avatar"], // Chỉ lấy các trường cần thiết
+                    },
+                ],
+                attributes: ["id", "reason", "status", "reporterId", "resolvedBy"], // Các trường từ Report
+            });
+
+            if (!reports || reports.length === 0) {
+                return res.status(404).json({
+                    success: false,
+                    message: 'No reports found'
+                });
+            }
+
+            res.status(200).json({
+                success: true,
+                data: reports
+            });
+        } catch (error) {
+            console.error('Error fetching reports with posts:', error);
+            res.status(500).json({
+                success: false,
+                message: 'Internal server error'
+            });
+        }
     }
+
+
 };
 
 module.exports = reportController;
