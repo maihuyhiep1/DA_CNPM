@@ -153,6 +153,7 @@ exports.getPostsByUser = async (req, res) => {
 // Tạo bài đăng mới
 exports.createPost = async (req, res) => {
     try {
+        console.log(req.user);
         const author_id = req.user.id; // Lấy user ID từ session
         const { title, is_qna, content } = req.body;
 
