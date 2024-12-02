@@ -209,7 +209,7 @@ exports.createPost = async (req, res) => {
         // Xử lý avatar
         let avatar = null;
         if (req.files && req.files.avatar && req.files.avatar[0]) {
-            avatar = `/uploads/${path.basename(req.files.avatar[0].path)}`; // Đường dẫn ảnh được tải lên (chuyển thành URL tương đối)
+            avatar = `uploads/${path.basename(req.files.avatar[0].path)}`; // Đường dẫn ảnh được tải lên (chuyển thành URL tương đối)
         }
 
         // Tạo bài viết
