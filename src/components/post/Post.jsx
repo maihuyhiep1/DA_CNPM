@@ -36,8 +36,8 @@ const Post = ({ post: initialPost }) => {
         const response = await axios.get(
           `http://localhost:8386/api/comments/post/${post.post_id}`
         );
+        setApiComments(response.data.data); // Store API posts
         console.log(response.data);
-        setApiComments(response.data); // Store API posts
       } catch (err) {
         setError(err.message); // Handle any errors
       }
@@ -47,23 +47,29 @@ const Post = ({ post: initialPost }) => {
   }, [post.post_id]);
 
   const handleAddComment = async (content) => {
-    console.log("NỘI DUNG CONTENT: ", content);
+    console.log("Current Comments:", apiComments);
+    console.log("New Comment Content: ", content);
+
     try {
       const response = await axios.post(
         `http://localhost:8386/api/comments/post/${post.post_id}`,
-        { content },
+        content,
         { withCredentials: true }
       );
-      const newComment = response.data;
-      setApiComments((prev) => [...prev, [newComment]]);
+
+      const newComment = response.data.data; // Extract the new comment data
+      console.log("Newly Added Comment:", newComment);
+
+      // Add the new comment as a new group at the start of apiComments
+      setApiComments((prev) => {
+        const updatedData = [[newComment], ...prev];
+        console.log("Updated Comments Data:", updatedData);
+        return updatedData; // Update the state with the new array
+      });
     } catch (err) {
       console.error("Error adding comment:", err.message);
     }
   };
-
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
 
   const handleLike = async () => {
     if (post.isDummy) return; // Skip fetching for dummy posts
@@ -134,7 +140,7 @@ const Post = ({ post: initialPost }) => {
           </div>
           <div className="postBottomRight">
             <span className="postCommentText">
-              {post.comment || apiComments.data?.length || 0} Comments
+              {post.comment || apiComments?.length || 0} Comments
             </span>
           </div>
         </div>
@@ -164,20 +170,25 @@ const Post = ({ post: initialPost }) => {
             avatarUrl={currentUser.avatar}
             onSubmit={handleAddComment}
           />
-          {apiComments.data.map((commentGroup) => (
-            <div key={commentGroup[0].id} className="commentGroup">
+          {console.log("THONG TIN COMMENT TOAN BO:", apiComments)}
+          {apiComments.map((commentGroup, groupIndex) => (
+            <div key={`commentGroup-${groupIndex}`} className="commentGroup">
               {/* Main comment */}
               <CommentContent
-                key={commentGroup[0].id}
-                avatarUrl={commentGroup[0].userAvatar}
+                avatarUrl={commentGroup[0]?.user?.avatar}
                 content={commentGroup[0].content}
                 createdAt={commentGroup[0].createdAt}
+                commentId={commentGroup[0].id}
+                post_id={post.post_id}
               />
               {/* Replies */}
-              {commentGroup.slice(1).map((reply) => (
-                <div key={reply.id} style={{ marginLeft: "20px" }}>
+              {commentGroup.slice(1).map((reply, replyIndex) => (
+                <div
+                  key={`reply-${groupIndex}-${replyIndex}`}
+                  style={{ marginLeft: "20px" }}
+                >
                   <RepplyCommentContent
-                    avatarUrl={reply.userAvatar}
+                    avatarUrl={reply?.user?.avatar}
                     content={reply.content}
                     createdAt={reply.createdAt}
                   />

@@ -1,15 +1,17 @@
-import React, { useRef, useEffect, useState } from "react";
-import styles from "./style_writeComment.module.css"; // Ensure correct file path
+import React, { useRef, useEffect, useState, useContext } from "react";
+import styles from "./style_writeComment.module.css";
+import { AuthContext } from "../../context/authContext";
 
 const WriteComment = ({
   placeholder = "Nhập nội dung...",
   onSubmit,
-  avatarUrl,
   showCommentResponse = false, // Default is false
   responseContent = "Phản hồi", // Default response content
+  commentId
 }) => {
   const inputRef = useRef(null);
   const [value, setValue] = useState("");
+  const { currentUser } = useContext(AuthContext);
 
   const autoResize = () => {
     const input = inputRef.current;
@@ -21,7 +23,7 @@ const WriteComment = ({
 
   useEffect(() => {
     autoResize(); // Ensure size updates on mount
-    console.log("NỘI DUNG COMMENT:", value);
+    console.log("NỘI DUNG COMMENT LA:", value);
   }, [value]);
 
   const handleSubmit = (e) => {
@@ -29,7 +31,8 @@ const WriteComment = ({
     if (onSubmit && value.trim()) {
       const commentObject = {
         content: value,
-        commentId: null, // Default value
+        commentId: null || commentId, // Default value
+        userId: currentUser.id,
       };
       onSubmit(commentObject); // Pass the comment object to the parent component
       setValue(""); // Clear the input
@@ -38,7 +41,7 @@ const WriteComment = ({
 
   return (
     <form onSubmit={handleSubmit} className={styles.container}>
-      <img src={avatarUrl} alt="Avatar" className={styles.avatar} />
+      <img src={currentUser.avatar} alt="Avatar" className={styles.avatar} />
       <div className={styles.textAreaWrapper}>
         <textarea
           ref={inputRef}

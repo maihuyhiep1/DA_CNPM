@@ -20,6 +20,7 @@ import CreatePost from "./pages/createPost/createPost";
 
 import Navbar from "./components/navbar/Navbar";
 import Footer from "./components/footer/Footer";
+import ShowPost from "./pages/showPost/ShowPost";
 
 function App() {
   const Layout = () => {
@@ -73,6 +74,10 @@ function App() {
     {
       path: "/re-password",
       element: <RePassword />,
+    },
+    {
+      path: "/showPost",
+      element: <ShowPost />,
     },
   ]);
 

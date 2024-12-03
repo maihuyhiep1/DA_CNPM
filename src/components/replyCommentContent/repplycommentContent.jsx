@@ -12,10 +12,10 @@ const RepplyCommentContent = ({ avatarUrl, content, createdAt }) => {
           className={styles.avatar}
         />
         <div className={styles.textAreaWrapper}>
-          <p className={styles.contentText}>{content}</p>
+          <p className={styles.contentText}>{content || "No content provided"}</p>
         </div>
       </div>
-      <div className={styles.replyHowLong}>{createdAt}</div>
+      <div className={styles.replyHowLong}>{createdAt || "Just now"}</div>
     </div>
   );
 };

@@ -7,7 +7,8 @@ import Rightbar from "../../components/rightbar/Rightbar";
 import { AuthContext } from "../../context/authContext";
 
 const Home = () => {
-  // const { currentUser } = useContext(AuthContext);
+  const { currentUser } = useContext(AuthContext);
+  console.log("THONG TIN USER:", currentUser);
   // const navigate = useNavigate();
 
   // useEffect(() => {
