@@ -2,6 +2,7 @@
 import { useState, useContext, useEffect } from "react";
 import "./Post.scss";
 import { Users } from "../../data";
+import { useNavigate } from "react-router-dom";
 import { IconButton } from "@mui/material";
 import {
   ChatBubbleOutline,
@@ -28,6 +29,12 @@ const Post = ({ post: initialPost }) => {
   const [like, setLike] = useState(false);
 
   const { currentUser } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  // Hàm xử lý chuyển hướng
+  const handleNavigateToPost = () => {
+    navigate(`/post/${post.post_id}`);
+  };
 
   useEffect(() => {
     if (post.isDummy) return; // Skip fetching for dummy posts
@@ -49,7 +56,7 @@ const Post = ({ post: initialPost }) => {
 
   const handleAddComment = async (content) => {
     console.log("NỘI DUNG CONTENT: ", content);
-    content.userId = JSON.parse(localStorage.getItem("user")).id; 
+    content.userId = JSON.parse(localStorage.getItem("user")).id;
     try {
       const response = await axios.post(
         `http://localhost:8386/api/comments/post/${post.post_id}`,
@@ -111,7 +118,9 @@ const Post = ({ post: initialPost }) => {
   return (
     <div className="post">
       <div className="postWrapper">
-        <div className="postTop">
+        <div className="postTop"
+          onClick={handleNavigateToPost}
+          style={{ cursor: "pointer" }}>
           <div className="postTopLeft">
             <img src={profilePicture} alt="" className="postProfileImg" />
             <span className="postUsername">{username}</span>
