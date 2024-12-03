@@ -8,6 +8,7 @@ const { vi } = require('date-fns/locale'); // Định dạng tiếng Việt nế
 const uuid = require('uuid').v4;
 const path = require('path');
 const fs = require('fs');
+const { sendNotificationToUser } = require('../ws/websocketHandler');
 const formatAvatarUrl = (avatarPath, req) => {
     if (!avatarPath) return null;
     return `${req.protocol}://${req.get("host")}/${avatarPath.replace(/\\/g, "/")}`;
@@ -370,6 +371,11 @@ exports.likePost = async (req, res) => {
             // Nếu chưa like, tạo mới bản ghi và tăng like_count
             await PostLike.create({ post_id: postId, user_id: userId });
             await Post.increment('like_count', { where: { post_id: postId } });
+
+            const post = await Post.findByPk(postId);
+            const notification = `Có ai đó vừa thích bài viết ${post.title} của bạn!`;
+            sendNotificationToUser(post.author_id, notification);
+
             return res.status(200).json({ message: 'Đã like bài viết thành công!' });
         } else {
             // Nếu đã like, xóa bản ghi và giảm like_count

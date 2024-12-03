@@ -9,6 +9,8 @@ require('./passport.js');
 const session = require('express-session');
 const cors = require('cors');
 const app = express();
+const http = require('http'); // Import HTTP để tạo server
+const { initWebSocketServer } = require('./ws/websocketHandler'); // WebSocket handler
 
 // Cấu hình CORS
 const corsOptions = {
@@ -50,8 +52,14 @@ connectDB();
 // Khởi tạo các route
 initWebRoutes(app);
 
+// Tạo HTTP server từ Express
+const server = http.createServer(app);
+
+// Khởi tạo WebSocket server
+initWebSocketServer(server);
+
 // Chạy server
 const port = process.env.PORT || 3000;
-app.listen(port, () => {
+server.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
