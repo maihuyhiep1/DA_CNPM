@@ -12,7 +12,7 @@ import {
   ThumbUp,
   Reply,
 } from "@mui/icons-material";
-
+import Dropdown from "./dropdown";
 import { AuthContext } from "../../context/authContext";
 
 import WriteComment from "../writeComment/writeComment";
@@ -119,7 +119,7 @@ const Post = ({ post: initialPost }) => {
           </div>
           <div className="postTopRight">
             <IconButton>
-              <MoreVert className="postVertButton" />
+              <Dropdown className="postVertButton" />
             </IconButton>
           </div>
         </div>

@@ -44,7 +44,7 @@ const Feed = () => {
 
   return (
     <div className={styles.feed}>
-      <div className={styles.text}> QnA</div>
+      <div className={styles.text}> QnA hay phết</div>
       <div className={styles.text2}> Xem tất cả</div>
       <div className={styles.feedWrapper}>
       <div className={styles.str}> <Stories /> </div>

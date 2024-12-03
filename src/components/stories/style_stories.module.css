@@ -23,3 +23,11 @@
   gap: 10px; /* Add spacing between items */
 
 }
+::-webkit-scrollbar{
+  width: 15px;
+}
+::-webkit-scrollbar-track{
+  background: #d1e5ff;
+}
+::-webkit-scrollbar-thumb{
+  background-image: linear-gradient(to top, #fbc2eb 0%, #a6c1ee 100%);}

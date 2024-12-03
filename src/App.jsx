@@ -21,6 +21,7 @@ import CreatePost from "./pages/createPost/createPost";
 import Navbar from "./components/navbar/Navbar";
 import Footer from "./components/footer/Footer";
 import AddQnA from "./components/stories/addQnA";
+import Dropdown from "./components/post/dropdown";
 function App() {
   const Layout = () => {
     return (
@@ -28,6 +29,7 @@ function App() {
         <Navbar />
         <Outlet />
         <Footer />
+        {/* <Dropdown/> */}
       </div>
     );
   };

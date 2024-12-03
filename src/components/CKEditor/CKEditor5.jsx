@@ -1,198 +1,85 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import axios from "axios";
 
-import {
-  ClassicEditor,
-  AccessibilityHelp,
-  Autoformat,
-  AutoImage,
-  Autosave,
-  Base64UploadAdapter,
-  BlockQuote,
-  BlockToolbar,
-  Bold,
-  CloudServices,
-  Essentials,
-  Heading,
-  ImageBlock,
-  ImageCaption,
-  ImageInline,
-  ImageInsert,
-  ImageInsertViaUrl,
-  ImageResize,
-  ImageStyle,
-  ImageTextAlternative,
-  ImageToolbar,
-  ImageUpload,
-  Indent,
-  IndentBlock,
-  Italic,
-  Link,
-  LinkImage,
-  List,
-  ListProperties,
-  MediaEmbed,
-  Paragraph,
-  PasteFromOffice,
-  SelectAll,
-  Table,
-  TableCaption,
-  TableCellProperties,
-  TableColumnResize,
-  TableProperties,
-  TableToolbar,
-  TextTransformation,
-  TodoList,
-  Underline,
-  Undo,
-} from "ckeditor5";
+// Plugin Upload Adapter
+class CloudinaryUploadAdapter {
+  constructor(loader) {
+    this.loader = loader;
+    this.url = "https://api.cloudinary.com/v1_1/dymqzmlcm/image/upload"; // Thay bằng URL Cloudinary của bạn
+    this.uploadPreset = "no39tpbp"; // Thay bằng upload preset của bạn
+  }
 
-import "ckeditor5/ckeditor5.css";
+  // Upload file lên Cloudinary
+  upload() {
+    return this.loader.file.then(
+      (file) =>
+        new Promise((resolve, reject) => {
+          const formData = new FormData();
+          formData.append("file", file);
+          formData.append("upload_preset", this.uploadPreset);
 
-import "./CKEditor5.css";
+          axios
+            .post(this.url, formData)
+            .then((response) => {
+              if (response.data.secure_url) {
+                resolve({
+                  default: response.data.secure_url, // URL ảnh từ Cloudinary
+                });
+              } else {
+                reject("Upload failed");
+              }
+            })
+            .catch((error) => {
+              console.error("Upload failed:", error);
+              reject(error);
+            });
+        })
+    );
+  }
+
+  abort() {
+    // Optional: Handle abort logic here
+  }
+}
+
+// Plugin CKEditor
+function CloudinaryUploadAdapterPlugin(editor) {
+  editor.plugins.get("FileRepository").createUploadAdapter = (loader) => {
+    return new CloudinaryUploadAdapter(loader);
+  };
+}
 
 export default function Editor({ initData, setData }) {
-  const editorContainerRef = useRef(null);
-  const editorRef = useRef(null);
-  const [isLayoutReady, setIsLayoutReady] = useState(false);
+  const [editorData, setEditorData] = useState(initData || "");
 
-  useEffect(() => {
-    setIsLayoutReady(true);
-
-    return () => setIsLayoutReady(false);
-  }, []);
-
+  // Cấu hình CKEditor
   const editorConfig = {
-    toolbar: {
-      items: [
-        "undo",
-        "redo",
-        "|",
-        "heading",
-        "|",
-        "bold",
-        "italic",
-        "underline",
-        "|",
-        "link",
-        "insertImage",
-        "mediaEmbed",
-        "insertTable",
-        "blockQuote",
-        "|",
-        "bulletedList",
-        "numberedList",
-        "todoList",
-        "outdent",
-        "indent",
-      ],
-      shouldNotGroupWhenFull: false,
-    },
-    plugins: [
-      AccessibilityHelp,
-      Autoformat,
-      AutoImage,
-      Autosave,
-      Base64UploadAdapter,
-      BlockQuote,
-      BlockToolbar,
-      Bold,
-      CloudServices,
-      Essentials,
-      Heading,
-      ImageBlock,
-      ImageCaption,
-      ImageInline,
-      ImageInsert,
-      ImageInsertViaUrl,
-      ImageResize,
-      ImageStyle,
-      ImageTextAlternative,
-      ImageToolbar,
-      ImageUpload,
-      Indent,
-      IndentBlock,
-      Italic,
-      Link,
-      LinkImage,
-      List,
-      ListProperties,
-      MediaEmbed,
-      Paragraph,
-      PasteFromOffice,
-      SelectAll,
-      Table,
-      TableCaption,
-      TableCellProperties,
-      TableColumnResize,
-      TableProperties,
-      TableToolbar,
-      TextTransformation,
-      TodoList,
-      Underline,
-      Undo,
-    ],
-    blockToolbar: [
+    toolbar: [
+      "undo",
+      "redo",
+      "|",
+      "heading",
+      "|",
       "bold",
       "italic",
+      "underline",
       "|",
       "link",
-      "insertImage",
+      "imageUpload",
+      "mediaEmbed",
       "insertTable",
+      "blockQuote",
       "|",
       "bulletedList",
       "numberedList",
+      "todoList",
       "outdent",
       "indent",
     ],
-    heading: {
-      options: [
-        {
-          model: "paragraph",
-          title: "Paragraph",
-          class: "ck-heading_paragraph",
-        },
-        {
-          model: "heading1",
-          view: "h1",
-          title: "Heading 1",
-          class: "ck-heading_heading1",
-        },
-        {
-          model: "heading2",
-          view: "h2",
-          title: "Heading 2",
-          class: "ck-heading_heading2",
-        },
-        {
-          model: "heading3",
-          view: "h3",
-          title: "Heading 3",
-          class: "ck-heading_heading3",
-        },
-        {
-          model: "heading4",
-          view: "h4",
-          title: "Heading 4",
-          class: "ck-heading_heading4",
-        },
-        {
-          model: "heading5",
-          view: "h5",
-          title: "Heading 5",
-          class: "ck-heading_heading5",
-        },
-        {
-          model: "heading6",
-          view: "h6",
-          title: "Heading 6",
-          class: "ck-heading_heading6",
-        },
-      ],
-    },
     image: {
       toolbar: [
-        "toggleImageCaption",
         "imageTextAlternative",
         "|",
         "imageStyle:inline",
@@ -202,64 +89,23 @@ export default function Editor({ initData, setData }) {
         "resizeImage",
       ],
     },
-    initialData: "",
-    link: {
-      addTargetToExternalLinks: true,
-      defaultProtocol: "https://",
-      decorators: {
-        toggleDownloadable: {
-          mode: "manual",
-          label: "Downloadable",
-          attributes: {
-            download: "file",
-          },
-        },
-      },
-    },
-    list: {
-      properties: {
-        styles: true,
-        startIndex: true,
-        reversed: true,
-      },
-    },
-    placeholder: "Type or paste your content here!",
-    table: {
-      contentToolbar: [
-        "tableColumn",
-        "tableRow",
-        "mergeTableCells",
-        "tableProperties",
-        "tableCellProperties",
-      ],
-    },
+    extraPlugins: [CloudinaryUploadAdapterPlugin], // Thêm plugin upload ảnh
+    placeholder: "Type or paste  content here!",
   };
 
   return (
     <div>
-      <div className="main-container">
-        <div
-          className="editor-container editor-container_classic-editor editor-container_include-block-toolbar"
-          ref={editorContainerRef}
-        >
-          <div className="editor-container__editor">
-            <div ref={editorRef}>
-              {isLayoutReady && (
-                <CKEditor
-                  editor={ClassicEditor}
-                  config={editorConfig}
-                  data={initData}
-                  onChange={(event, editor) => {
-                    const data = editor.getData();
-                    console.log(data);
-                    setData(data);
-                  }}
-                />
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
+      <CKEditor
+        editor={ClassicEditor}
+        config={editorConfig}
+        data={editorData}
+        onChange={(event, editor) => {
+          const data = editor.getData();
+          console.log(data); // Xem dữ liệu HTML trong console
+          setEditorData(data);
+          if (setData) setData(data);
+        }}
+      />
     </div>
   );
 }
