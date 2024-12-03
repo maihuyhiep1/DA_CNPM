@@ -121,6 +121,9 @@
   }
 
   .commentSection {
-    padding: 10px 30px;
+    padding: 10px 50px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
   }
 }

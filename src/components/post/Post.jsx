@@ -1,3 +1,4 @@
+"use client"
 import { useState, useContext, useEffect } from "react";
 import "./Post.scss";
 import { Users } from "../../data";
@@ -16,8 +17,11 @@ import { AuthContext } from "../../context/authContext";
 
 import WriteComment from "../writeComment/writeComment";
 import axios from "axios";
+import CommentContent from "../commentContent/commentContent";
+import RepplyCommentContent from "../replyCommentContent/repplycommentContent";
 
-const Post = ({ post }) => {
+const Post = ({ post: initialPost }) => {
+  const [post, setPost] = useState(initialPost);
   const [commentBoxVisible, setCommentBoxVisible] = useState(false);
   const [apiComments, setApiComments] = useState([]);
   const [error, setError] = useState(null);
@@ -31,7 +35,7 @@ const Post = ({ post }) => {
     const fetchComments = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8386/api/comments/post/${post.post_id}`
+          `http://localhost:8386/api/comments/post/${post.post_id}`,
         );
         console.log(response.data);
         setApiComments(response.data); // Store API posts
@@ -41,7 +45,24 @@ const Post = ({ post }) => {
     };
 
     fetchComments();
-  }, []);
+  }, [post.post_id]);
+
+  const handleAddComment = async (content) => {
+    console.log("NỘI DUNG CONTENT: ", content);
+    content.userId = JSON.parse(localStorage.getItem("user")).id; 
+    try {
+      const response = await axios.post(
+        `http://localhost:8386/api/comments/post/${post.post_id}`,
+        content,
+        { withCredentials: true }
+      );
+      console.log(response);
+      const newComment = response.data;
+      setApiComments([...apiComments, [newComment]]);
+    } catch (err) {
+      console.error("Error adding comment:", err.message);
+    }
+  };
 
   if (error) {
     return <div>Error: {error}</div>;
@@ -50,16 +71,31 @@ const Post = ({ post }) => {
   const handleLike = async () => {
     if (post.isDummy) return; // Skip fetching for dummy posts
     try {
-      const response = await axios.post(
-        `http://localhost:8386/api/posts/${post.post_id}/like`,
-        {}, // Body nếu cần
-        { withCredentials: true } // Gửi cookie/session
-      );
-      console.log("Like successful:", response.data);
-      setLike(true);
+      if (!like) {
+        await axios.post(
+          `http://localhost:8386/api/posts/${post.post_id}/like`,
+          {},
+          { withCredentials: true }
+        );
+        setPost((prevPost) => ({
+          ...prevPost,
+          like: (prevPost.like || prevPost.like_count || 0) + 1,
+        }));
+      } else {
+        await axios.post(
+          `http://localhost:8386/api/posts/${post.post_id}/like`,
+          {},
+          { withCredentials: true }
+        );
+        setPost((prevPost) => ({
+          ...prevPost,
+          like: Math.max((prevPost.like || prevPost.like_count || 1) - 1, 0),
+        }));
+      }
+      setLike(!like);
     } catch (error) {
       console.error(
-        "Error liking post:",
+        `Error ${like ? "unliking" : "liking"} post:`,
         error.response?.data || error.message
       );
     }
@@ -127,7 +163,31 @@ const Post = ({ post }) => {
       </div>
       {commentBoxVisible && (
         <div className="commentSection">
-          <WriteComment avatarUrl={currentUser.avatar} />
+          <WriteComment
+            avatarUrl={currentUser.avatar}
+            onSubmit={handleAddComment}
+          />
+          {apiComments.data.map((commentGroup) => (
+            <div key={commentGroup[0].id} className="commentGroup">
+              {/* Main comment */}
+              <CommentContent
+                key={commentGroup[0].id}
+                avatarUrl={commentGroup[0].userAvatar}
+                content={commentGroup[0].content}
+                createdAt={commentGroup[0].createdAt}
+              />
+              {/* Replies */}
+              {commentGroup.slice(1).map((reply) => (
+                <div key={reply.id} style={{ marginLeft: "20px" }}>
+                  <RepplyCommentContent
+                    avatarUrl={reply.userAvatar}
+                    content={reply.content}
+                    createdAt={reply.createdAt}
+                  />
+                </div>
+              ))}
+            </div>
+          ))}
         </div>
       )}
     </div>
