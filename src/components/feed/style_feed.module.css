@@ -1,0 +1,41 @@
+.feed {
+    flex: 4;
+    width: 100%;
+    }
+    .feedWrapper 
+    {
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+    .str{
+        width: 70%;
+        margin-top: 10px;
+    }
+    .pos{
+        position: relative;
+        left: 100px;
+    }
+.text{
+    font-family: "Roboto-Regular", Helvetica;
+    font-size: 25px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 30px; 
+    width: 10px;
+    position: relative;
+    left: 236px;
+    top:30px;
+}
+.text2{
+    font-family: "Roboto-Regular", Helvetica;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 30px; 
+    width: 150px;
+    position: relative;
+    left: 1236px;
+}

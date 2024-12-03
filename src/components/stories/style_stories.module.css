@@ -7,8 +7,9 @@
   gap: 10px; /* Add spacing between items */
   padding: 10px; /* Optional: Add padding around the container */
   scroll-snap-type: x mandatory; /* Optional: Smooth scrolling */
-  width: 50%;
+  width: 100%;
   scroll-snap-type: x mandatory; /* Optional: Smooth scrolling */
+  margin: auto;
 }
 
 .item {

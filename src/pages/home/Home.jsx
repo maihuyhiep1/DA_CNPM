@@ -18,9 +18,7 @@ const Home = () => {
 
   return (
     <div className="homeContainer">
-      <Sidebar />
       <Feed />
-      <Rightbar />
     </div>
   );
 };

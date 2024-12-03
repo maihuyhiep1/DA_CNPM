@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import "./Feed.scss";
+import styles from "./style_feed.module.css";
 import Stories from "../stories/Stories";
 import Post from "../post/Post";
 import { Posts as dummyPosts } from "../../data"; // Dummy data
@@ -43,12 +43,17 @@ const Feed = () => {
   ];
 
   return (
-    <div className="feed">
-      <div className="feedWrapper">
-        <Stories />
-        {allPosts.map((post) => (
+    <div className={styles.feed}>
+      <div className={styles.text}> QnA</div>
+      <div className={styles.text2}> Xem tất cả</div>
+      <div className={styles.feedWrapper}>
+      <div className={styles.str}> <Stories /> </div>
+      <div className={styles.pos}>  
+      {allPosts.map((post) => (
           <Post key={post.id || post.post_id} post={post} />
         ))}
+      </div>
+       
       </div>
     </div>
   );

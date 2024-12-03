@@ -25,7 +25,6 @@ const Stories = () => {
         <StoryCard key={u.id} user={u} />
       ))}
           </div>
-
     </div>
   );
 };
