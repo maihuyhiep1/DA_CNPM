@@ -1,21 +1,24 @@
 const express = require('express');
 const path = require('path');
-const initWebRoutes = require('./route/index.js');  // Để sử dụng các routes
-const connectDB = require('./config/database.js');  // Kết nối database
+const initWebRoutes = require('./route/index.js'); // Routes
+const connectDB = require('./config/database.js'); // Database
 const bodyParser = require('body-parser');
 require('dotenv').config();
 const passport = require('passport');
 require('./passport.js');
 const session = require('express-session');
 const cors = require('cors');
+const http = require('http'); // Import HTTP để tạo server
+const { initWebSocketServer } = require('./ws/websocketHandler'); // WebSocket handler
+
 const app = express();
 
 // Cấu hình CORS
 const corsOptions = {
-  origin: "http://localhost:5173", // Đổi với URL frontend (ví dụ: http://localhost:3001)
+  origin: "http://localhost:5173", // URL frontend
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true,  // Cho phép cookie (session)
+  credentials: true, // Cho phép cookie (session)
 };
 
 // Cấu hình Session
@@ -26,7 +29,7 @@ app.use(session({
   cookie: { 
       secure: false, // Đặt là true nếu sử dụng HTTPS
       httpOnly: true, // Đảm bảo chỉ có server mới có thể đọc cookie này
-      maxAge: 1000 * 60 * 60 * 24 // Ví dụ, cookie hết hạn sau 24 giờ
+      maxAge: 1000 * 60 * 60 * 24 // Cookie hết hạn sau 24 giờ
   }
 }));
 app.use(passport.initialize());
@@ -39,9 +42,6 @@ app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Kiểm tra và in đường dẫn đến thư mục uploads
-console.log('Uploads folder path:', path.join(__dirname, 'uploads'));
-
 // Đảm bảo rằng ảnh và các tệp tĩnh trong thư mục 'uploads' có thể được truy cập
 app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
 
@@ -51,8 +51,14 @@ connectDB();
 // Khởi tạo các route
 initWebRoutes(app);
 
+// Tạo HTTP server từ Express
+const server = http.createServer(app);
+
+// Khởi tạo WebSocket server
+initWebSocketServer(server);
+
 // Chạy server
 const port = process.env.PORT || 3000;
-app.listen(port, () => {
+server.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
