@@ -17,6 +17,7 @@ import AvtAndInformation from "./pages/profile/avtAndInformation";
 import ForgetPassword from "./pages/forgetPassword/ForgetPassword";
 import RePassword from "./pages/rePassword/RePassword";
 import CreatePost from "./pages/createPost/createPost";
+import FullPost from "./components/fullPost/fullPost";
 
 import Navbar from "./components/navbar/Navbar";
 import Footer from "./components/footer/Footer";
@@ -47,6 +48,10 @@ function App() {
         {
           path: "/create-post",
           element: <CreatePost />,
+        },
+        {
+          path: "/post/:id",
+          element: <FullPost />,
         },
       ],
     },

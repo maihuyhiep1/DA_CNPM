@@ -19,6 +19,8 @@ export const AuthContextProvider = ({ children }) => {
             withCredentials: true,
           }
         );
+        console.log(inputs);
+        console.log(res);
         if (res.data.errCode === 0) {
           console.log("Đăng nhập thành công", res);
 
