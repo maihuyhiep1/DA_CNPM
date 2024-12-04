@@ -18,7 +18,7 @@ const formatContentImages = (content, req) => {
     return content.replace(/<img[^>]+src="([^"]+)"/g, (match, src) => {
         // Nếu src là đường dẫn tương đối (không phải URL tuyệt đối), thay thế nó
         if (!src.startsWith('http')) {
-            return match.replace(src, `${req.protocol}://${req.get("host")}/${src.replace(/\\/g, "/")}`);
+            return match.replace(src, `${req.protocol}://${req.get("host")}${src.replace(/\\/g, "/")}`);
         }
         return match;
     });
@@ -387,3 +387,23 @@ exports.likePost = async (req, res) => {
         res.status(500).json({ message: 'Lỗi khi xử lý lượt thích', error: err.message });
     }
 };
+
+exports.likeStatus = async (req, res) => {
+
+    try {
+        const { postId } = req.params;
+        const userId = req.user?.id; // Lấy user_id từ thông tin user trong token
+
+        // Kiểm tra xem người dùng đã đăng nhập chưa
+        if (!userId) {
+            return res.status(401).json({ message: 'Bạn cần đăng nhập để thực hiện hành động này.' });
+        }
+
+        // Kiểm tra xem người dùng đã like bài viết chưa
+        const existingLike = await PostLike.findOne({ where: { post_id: postId, user_id: userId } });
+
+        return res.status(200).json({ message: `Bạn ${existingLike != null?"đã":"chưa"} like bài viết.`, data: existingLike != null });
+    }catch (err) {
+        res.status(500).json({ message: 'Lỗi khi xử lý lượt thích', error: err.message });
+    }
+}
