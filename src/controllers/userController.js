@@ -123,10 +123,42 @@ let forgotPassword_verify = async (req, res) => {
   })
 }
 
+let updateUserInfo = async (req, res) => {
+  const { name, description } = req.body;
+  const userId = req.user.id;
+  const avatar = req.file ? req.file.path : null;
+
+  if (!name && !avatar && !description) {
+    return res.status(400).json({
+      errCode: 4,
+      message: "Missing parameter.",
+    });
+  }
+  const imageUrl = `http://localhost:${process.env.PORT || 3000}/uploads/${req.file.filename}`;
+  let updateData = {};
+  if (name) updateData.name = name;
+  if (avatar) updateData.avatar = imageUrl;
+  if (description) updateData.description = description;
+
+  try {
+    await userService.updateUserInfo(userId, updateData);
+    return res.status(200).json({
+      errCode: 0,
+      message: "User information updated successfully.",
+    });
+  } catch (e) {
+    return res.status(500).json({
+      errCode: 1,
+      message: "An error occurred while updating user information.",
+    });
+  }
+};
+
 module.exports = {
   handleLogin: handleLogin,
   handleUserSignin_sentAuthCode: handleUserSignin_sentAuthCode,
   handleUserSignin_verifyAuthCode: handleUserSignin_verifyAuthCode,
   forgotPassword_send: forgotPassword_send,
   forgotPassword_verify: forgotPassword_verify,
+  updateUserInfo: updateUserInfo,
 }
