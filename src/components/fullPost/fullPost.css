@@ -124,3 +124,27 @@
 .postBottomFooterItem:hover {
   background-color: rgba(0, 0, 0, 0.3);
 }
+
+.liked {
+  color: blue; /* Màu khi đã like */
+}
+
+.notLiked {
+  color: gray; /* Màu mặc định */
+}
+
+.likedIcon {
+  color: blue;
+}
+
+.notLikedIcon {
+  color: gray;
+}
+
+.likedText {
+  font-weight: bold;
+}
+
+.notLikedText {
+  font-weight: normal;
+}
