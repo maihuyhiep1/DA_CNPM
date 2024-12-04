@@ -12,10 +12,12 @@ const http = require('http'); // Import HTTP để tạo server
 const { initWebSocketServer } = require('./ws/websocketHandler'); // WebSocket handler
 
 const app = express();
+const http = require('http'); // Import HTTP để tạo server
+const { initWebSocketServer } = require('./ws/websocketHandler'); // WebSocket handler
 
 // Cấu hình CORS
 const corsOptions = {
-  origin: "http://localhost:5173", // URL frontend
+  origin: [process.env.CLIENT_URL, 'http://localhost:5173'], // Đổi với URL frontend (ví dụ: http://localhost:3001)
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true, // Cho phép cookie (session)

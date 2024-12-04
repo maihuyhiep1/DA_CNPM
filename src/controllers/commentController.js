@@ -43,7 +43,7 @@ const commentController = {
                 commentId: commentId || null, // ID comment cha (nếu có)
             });
 
-            const notification = `Có người vừa bình luận vào bài viết ${post.title}`;
+            const notification = `Có ai đó vừa bình luận vào bài viết ${post.title} của bạn!`;
             sendNotificationToUser(post.author_id, notification);
     
             // Tăng số lượng comment cho bài viết

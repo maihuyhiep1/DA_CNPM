@@ -1,8 +1,7 @@
 const userService = require('../services/user-services');
 const passport = require('passport');
+const { User } = require('../models');
 //API
-
-
 
 // localhost:{port}/api/login
 let handleLogin = async(req, res, next) => {
@@ -39,12 +38,14 @@ let handleLogin = async(req, res, next) => {
 
 //localhost{port}/api/create-new-user
 let handleUserSignin_sentAuthCode = async (req, res) => {
-      if (!req.body.email || !req.body.password || !req.body.username || !req.body.name) {
-        return res.status(400).json({
-          errCode:4,
-          message: 'Missing parameter.',
-        })
-      }
+  if(!process.env.NODE_ENV === 'development') { // disable this in development
+    if (!req.body.email || !req.body.password || !req.body.username || !req.body.name) {
+      return res.status(400).json({
+        errCode:4,
+        message: 'Missing parameter.',
+      })
+    }
+  }
   let message = await userService.handleUserSignin_sentAuthCode(req.body.email);
   // let message = await userService.createUser(req.body);
   return res.status(200).json({
@@ -54,27 +55,39 @@ let handleUserSignin_sentAuthCode = async (req, res) => {
 }
 
 let handleUserSignin_verifyAuthCode = async (req, res) => {
-      if (!req.body.email || !req.body.password || !req.body.username || !req.body.name || !req.body.code) {
-        return res.status(400).json({
-          errCode:4,
-          message: 'Missing parameter.',
-        })
-      }
-    let message = await userService.handleUserSignin_verifyAuthCode(req.body, req.body.code);
-    return res.status(200).json({
-      errCode: message.errCode,
-      message: message.message
-    })
-    
-}
+  if (!process.env.NODE_ENV === "development") { // disable this in development
+    if (
+      !req.body.email ||
+      !req.body.password ||
+      !req.body.username ||
+      !req.body.name ||
+      !req.body.code
+    ) {
+      return res.status(400).json({
+        errCode: 4,
+        message: "Missing parameter.",
+      });
+    }
+  }
+  let message = await userService.handleUserSignin_verifyAuthCode(
+    req.body,
+    req.body.code
+  );
+  return res.status(200).json({
+    errCode: message.errCode,
+    message: message.message,
+  });
+};
 
 let forgotPassword_send = async (req, res) => {
+  if(!process.env.NODE_ENV === 'development') { // disable this in development
   if(!req.body.username) {
     res.status(400).json({
       errCode: 3,
       message: 'Missing input'
     })
   }
+}
   let response = await userService.forgotPassword_sendCode(req.body.username);
   res.status(200).json({
     errCode: response.errCode,
@@ -84,12 +97,14 @@ let forgotPassword_send = async (req, res) => {
 }
 
 let forgotPassword_verify = async (req, res) => {
+  if(!process.env.NODE_ENV === 'development') { // disable this in development
   if (!req.body.code || !req.body.password || !req.body.username) {
     res.status(400).json({
       errCode: 3,
       message: 'Missing input'
     })
   }
+}
   let user = await userService.getUserByUsername(req.body.username)
   if(!user) {
     res.status(400).json({

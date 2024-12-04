@@ -37,8 +37,8 @@ let createUser = async (body) => { //body of html file which contains register i
         })
       } 
        // Check if username is provided and already exists
-      if (body.name) {
-        let usernameExists = await checkUsername(body.name);
+      if (body.username) {
+        let usernameExists = await checkUsername(body.username);
         if (usernameExists) {
           resolve({
             errCode: 5,
@@ -73,6 +73,9 @@ let generateOTP = () => {
     return otp.toString();
 }
 let sendOtpEmail = async (email, otp) => {
+    if (process.env.NODE_ENV === 'development') {
+        return otp; // Skip sending email in development mode
+    }
     const transporter = nodemailer.createTransport({
         service: 'Gmail', 
         auth: {
@@ -102,6 +105,14 @@ let sendOtpEmail = async (email, otp) => {
 let forgotPassword_sendCode = (username) => {
   return new Promise( async (resolve, reject) => {
     try {
+      if (process.env.NODE_ENV === 'development') {
+        resolve({
+          errCode: 0,
+          message: 'Ok. Authentication code has been sent',
+          email: '*****@gmail.com'
+        });
+        return;
+      }
       let user = await db.User.findOne({
         where: {username: username}
       })
@@ -143,7 +154,13 @@ let forgotPassword_sendCode = (username) => {
 let forgotPassword_verify = (email, code) => {
   return new Promise( async (resolve, reject) => {
     try {
-      
+      if (process.env.NODE_ENV === 'development') {
+        resolve({
+          errCode: 0,
+          message: 'Ok'
+        });
+        return;
+      }
       let check = await checkAuthCode(email, code);
       if(check) {
         resolve({
@@ -165,6 +182,13 @@ let forgotPassword_verify = (email, code) => {
 let handleUserSignin_sentAuthCode = (email) => {
   return new Promise( async (resolve, reject) => {
     try {
+      if (process.env.NODE_ENV === 'development') {
+        resolve({
+          errCode: 0,
+          message: 'Ok. Authentication code has been sent'
+        });
+        return;
+      }
       if (!email) {
         resolve({
           errCode: 4,
@@ -202,6 +226,14 @@ let handleUserSignin_sentAuthCode = (email) => {
 let handleUserSignin_verifyAuthCode = (userData, authCode) => {
   return new Promise( async (resolve, reject) => {
     try {
+      if (process.env.NODE_ENV === 'development') {
+        let createUserMessage = await createUser(userData);
+        resolve({
+          errCode: createUserMessage.errCode,
+          message: createUserMessage.message
+        });
+        return;
+      }
       let check = await checkAuthCode(userData.email, authCode);
       if(check) {
         let createUserMessage = await createUser(userData);
