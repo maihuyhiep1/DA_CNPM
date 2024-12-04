@@ -2,6 +2,7 @@ import { useState, useContext, useEffect } from "react";
 import "./Post.scss";
 import { Users } from "../../data";
 import { IconButton } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 import {
   ChatBubbleOutline,
   Favorite,
@@ -22,11 +23,16 @@ import RepplyCommentContent from "../replyCommentContent/repplycommentContent";
 const Post = ({ post: initialPost }) => {
   const [post, setPost] = useState(initialPost);
   const [commentBoxVisible, setCommentBoxVisible] = useState(false);
-  const [apiComments, setApiComments] = useState([]);
+  const [apiComments, setApiComments] = useState();
   const [error, setError] = useState(null);
   const [like, setLike] = useState(false);
+  const navigate = useNavigate();
 
   const { currentUser } = useContext(AuthContext);
+
+  const handleNavigateToPost = () => {
+    navigate(`/post/${post.post_id}`);
+  };
 
   useEffect(() => {
     if (post.isDummy) return; // Skip fetching for dummy posts
@@ -47,24 +53,24 @@ const Post = ({ post: initialPost }) => {
   }, [post.post_id]);
 
   const handleAddComment = async (content) => {
-    console.log("Current Comments:", apiComments);
-    console.log("New Comment Content: ", content);
+    console.log("NỘI DUNG CONTENT: ", content);
+    content.userId = "c8029506-4377-4399-9931-8fe279cb1159";
 
     try {
+      content.user = currentUser;
+      console.log(currentUser);
+      content.createdAt = "Vừa xong";
       const response = await axios.post(
         `http://localhost:8386/api/comments/post/${post.post_id}`,
         content,
         { withCredentials: true }
       );
+      console.log(response);
 
-      const newComment = response.data.data; // Extract the new comment data
-      console.log("Newly Added Comment:", newComment);
-
-      // Add the new comment as a new group at the start of apiComments
-      setApiComments((prev) => {
-        const updatedData = [[newComment], ...prev];
-        console.log("Updated Comments Data:", updatedData);
-        return updatedData; // Update the state with the new array
+      setComments((prevComments) => {
+        const updatedComments = [...prevComments];
+        updatedComments.push([content]); // Thêm bình luận mới vào mảng
+        return updatedComments;
       });
     } catch (err) {
       console.error("Error adding comment:", err.message);
@@ -114,7 +120,9 @@ const Post = ({ post: initialPost }) => {
   return (
     <div className="post">
       <div className="postWrapper">
-        <div className="postTop">
+        <div className="postTop"
+          onClick={handleNavigateToPost}
+          style={{ cursor: "pointer" }}>
           <div className="postTopLeft">
             <img src={profilePicture} alt="" className="postProfileImg" />
             <span className="postUsername">{username}</span>
@@ -153,7 +161,7 @@ const Post = ({ post: initialPost }) => {
           </div>
           <div
             className="postBottomFooterItem"
-            onClick={() => setCommentBoxVisible(!commentBoxVisible)}
+            onClick={() => handleNavigateToPost()}
           >
             <ChatBubbleOutline className="footerIcon" />
             <span className="footerText">Comment</span>
@@ -164,40 +172,44 @@ const Post = ({ post: initialPost }) => {
           </div>
         </div>
       </div>
-      {commentBoxVisible && (
+      {/* {commentBoxVisible && (
         <div className="commentSection">
           <WriteComment
             avatarUrl={currentUser.avatar}
             onSubmit={handleAddComment}
           />
           {console.log("THONG TIN COMMENT TOAN BO:", apiComments)}
-          {apiComments.map((commentGroup, groupIndex) => (
-            <div key={`commentGroup-${groupIndex}`} className="commentGroup">
-              {/* Main comment */}
-              <CommentContent
-                avatarUrl={commentGroup[0]?.user?.avatar}
-                content={commentGroup[0].content}
-                createdAt={commentGroup[0].createdAt}
-                commentId={commentGroup[0].id}
-                post_id={post.post_id}
-              />
-              {/* Replies */}
-              {commentGroup.slice(1).map((reply, replyIndex) => (
-                <div
-                  key={`reply-${groupIndex}-${replyIndex}`}
-                  style={{ marginLeft: "20px" }}
-                >
-                  <RepplyCommentContent
-                    avatarUrl={reply?.user?.avatar}
-                    content={reply.content}
-                    createdAt={reply.createdAt}
+          {apiComments && apiComments.length > 0 ? (
+            apiComments.map((commentGroup) => (
+              <div key={commentGroup[0]?.id} className="commentGroup">
+                {commentGroup[0] && (
+                  <CommentContent
+                    avatarUrl={commentGroup[0].user?.avatar || ""}
+                    content={commentGroup[0].content || ""}
+                    createdAt={commentGroup[0].createdAt || ""}
                   />
-                </div>
-              ))}
-            </div>
-          ))}
+                )}
+
+                {commentGroup.slice(1).map((reply) => (
+                  <div
+                    key={reply.id}
+                    className="replyComment"
+                    style={{ marginLeft: "20px" }}
+                  >
+                    <ReplyCommentContent
+                      avatarUrl={reply.user?.avatar || ""}
+                      content={reply.content || ""}
+                      createdAt={reply.createdAt || ""}
+                    />
+                  </div>
+                ))}
+              </div>
+            ))
+          ) : (
+            <p>Không có bình luận nào.</p>
+          )}
         </div>
-      )}
+      )} */}
     </div>
   );
 };
