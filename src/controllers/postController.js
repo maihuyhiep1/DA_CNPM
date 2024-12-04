@@ -225,6 +225,9 @@ exports.createPost = async (req, res) => {
             avatar,  // Lưu đường dẫn ảnh đại diện (nếu có)
         });
 
+        // Increment post_count of the user
+        await User.increment('post_count', { where: { id: author_id } });
+
         // Lưu các ảnh vào bảng PostImage nếu có ảnh
         if (imageUrls.length > 0) {
             const postImages = imageUrls.map((url) => ({
@@ -234,6 +237,7 @@ exports.createPost = async (req, res) => {
             await PostImage.bulkCreate(postImages);
         }
 
+        
         // Trả về kết quả với đường dẫn ảnh đầy đủ (URL tuyệt đối)
     
 
@@ -244,7 +248,7 @@ exports.createPost = async (req, res) => {
     }
 };
 
-// Hàm xử lý ảnh base64
+// Hàm xử lý ��nh base64
 const uploadImageFromBase64 = async (base64Data) => {
     const matches = base64Data.match(/^data:image\/([a-zA-Z0-9]+);base64,(.+)$/);
     if (matches.length !== 3) {
@@ -348,7 +352,7 @@ exports.deletePost = async (req, res) => {
 
     // Xóa bài viết
     await Post.destroy({ where: { post_id: postId } });
-
+    await User.decrement('post_count', { where: { id: post.author_id } });
     res.status(200).json({ message: 'Xóa bài viết thành công.' });
   } catch (error) {
     res.status(500).json({ message: 'Lỗi khi xóa bài viết.', error: error.message });
@@ -374,7 +378,7 @@ exports.likePost = async (req, res) => {
             // Nếu chưa like, tạo mới bản ghi và tăng like_count
             await PostLike.create({ post_id: postId, user_id: userId });
             await Post.increment('like_count', { where: { post_id: postId } });
-
+            await User.increment('like_count', { where: { id: post.author_id } });
             const post = await Post.findByPk(postId);
             const notification = `Có ai đó vừa thích bài viết ${post.title} của bạn!`;
             sendNotificationToUser(post.author_id, notification);
@@ -384,6 +388,7 @@ exports.likePost = async (req, res) => {
             // Nếu đã like, xóa bản ghi và giảm like_count
             await PostLike.destroy({ where: { post_id: postId, user_id: userId } });
             await Post.decrement('like_count', { where: { post_id: postId } });
+            await User.decrement('like_count', { where: { id: post.author_id } });
             return res.status(200).json({ message: 'Đã bỏ like bài viết thành công!' });
         }
     } catch (err) {
