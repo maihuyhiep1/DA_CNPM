@@ -1,8 +1,9 @@
+"use client"
 import { useState, useContext, useEffect } from "react";
 import "./Post.scss";
 import { Users } from "../../data";
-import { IconButton } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { IconButton } from "@mui/material";
 import {
   ChatBubbleOutline,
   Favorite,
@@ -23,13 +24,14 @@ import RepplyCommentContent from "../replyCommentContent/repplycommentContent";
 const Post = ({ post: initialPost }) => {
   const [post, setPost] = useState(initialPost);
   const [commentBoxVisible, setCommentBoxVisible] = useState(false);
-  const [apiComments, setApiComments] = useState();
+  const [apiComments, setApiComments] = useState([]);
   const [error, setError] = useState(null);
   const [like, setLike] = useState(false);
-  const navigate = useNavigate();
 
   const { currentUser } = useContext(AuthContext);
+  const navigate = useNavigate();
 
+  // Hàm xử lý chuyển hướng
   const handleNavigateToPost = () => {
     navigate(`/post/${post.post_id}`);
   };
@@ -40,10 +42,10 @@ const Post = ({ post: initialPost }) => {
     const fetchComments = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8386/api/comments/post/${post.post_id}`
+          `http://localhost:8386/api/comments/post/${post.post_id}`,
         );
-        setApiComments(response.data.data); // Store API posts
         console.log(response.data);
+        setApiComments(response.data); // Store API posts
       } catch (err) {
         setError(err.message); // Handle any errors
       }
@@ -54,28 +56,24 @@ const Post = ({ post: initialPost }) => {
 
   const handleAddComment = async (content) => {
     console.log("NỘI DUNG CONTENT: ", content);
-    content.userId = "c8029506-4377-4399-9931-8fe279cb1159";
-
+    content.userId = currentUser.id;
     try {
-      content.user = currentUser;
-      console.log(currentUser);
-      content.createdAt = "Vừa xong";
       const response = await axios.post(
         `http://localhost:8386/api/comments/post/${post.post_id}`,
         content,
         { withCredentials: true }
       );
       console.log(response);
-
-      setComments((prevComments) => {
-        const updatedComments = [...prevComments];
-        updatedComments.push([content]); // Thêm bình luận mới vào mảng
-        return updatedComments;
-      });
+      const newComment = response.data;
+      setApiComments([...apiComments, [newComment]]);
     } catch (err) {
       console.error("Error adding comment:", err.message);
     }
   };
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
 
   const handleLike = async () => {
     if (post.isDummy) return; // Skip fetching for dummy posts
@@ -148,7 +146,7 @@ const Post = ({ post: initialPost }) => {
           </div>
           <div className="postBottomRight">
             <span className="postCommentText">
-              {post.comment || apiComments?.length || 0} Comments
+              {post.comment || apiComments.data?.length || 0} Comments
             </span>
           </div>
         </div>
@@ -172,44 +170,6 @@ const Post = ({ post: initialPost }) => {
           </div>
         </div>
       </div>
-      {/* {commentBoxVisible && (
-        <div className="commentSection">
-          <WriteComment
-            avatarUrl={currentUser.avatar}
-            onSubmit={handleAddComment}
-          />
-          {console.log("THONG TIN COMMENT TOAN BO:", apiComments)}
-          {apiComments && apiComments.length > 0 ? (
-            apiComments.map((commentGroup) => (
-              <div key={commentGroup[0]?.id} className="commentGroup">
-                {commentGroup[0] && (
-                  <CommentContent
-                    avatarUrl={commentGroup[0].user?.avatar || ""}
-                    content={commentGroup[0].content || ""}
-                    createdAt={commentGroup[0].createdAt || ""}
-                  />
-                )}
-
-                {commentGroup.slice(1).map((reply) => (
-                  <div
-                    key={reply.id}
-                    className="replyComment"
-                    style={{ marginLeft: "20px" }}
-                  >
-                    <ReplyCommentContent
-                      avatarUrl={reply.user?.avatar || ""}
-                      content={reply.content || ""}
-                      createdAt={reply.createdAt || ""}
-                    />
-                  </div>
-                ))}
-              </div>
-            ))
-          ) : (
-            <p>Không có bình luận nào.</p>
-          )}
-        </div>
-      )} */}
     </div>
   );
 };
