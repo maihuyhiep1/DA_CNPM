@@ -122,6 +122,7 @@ const Post = ({ post: initialPost }) => {
           onClick={handleNavigateToPost}
           style={{ cursor: "pointer" }}>
           <div className="postTopLeft">
+            
             <img src={profilePicture} alt="" className="postProfileImg" />
             <span className="postUsername">{username}</span>
             <span className="postDate">{date}</span>
@@ -132,7 +133,9 @@ const Post = ({ post: initialPost }) => {
             </IconButton>
           </div>
         </div>
-        <div className="postCenter">
+        <div className="postCenter"  
+        onClick={handleNavigateToPost}
+          style={{ cursor: "pointer" }}>
           <span className="postText">{post.title}</span>
           {photo && <img src={photo} alt="" className="postImg" />}
         </div>

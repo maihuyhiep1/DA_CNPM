@@ -209,29 +209,6 @@ const CreatePost = ({ qua: boolean}) => {
           <span>Đăng</span>
         </button>
       </form>
-
-      <div>
-        <h2>Preview</h2>
-        <h3>Ảnh bìa</h3>
-        {image ? (
-          <img
-            src={URL.createObjectURL(image)} // Preview từ file
-            alt="Uploaded preview"
-            className={styles.previewImage}
-            style={{ maxWidth: "200px", maxHeight: "200px" }}
-          />
-        ) : (
-          <p>Chưa chọn ảnh</p>
-        )}
-        <h3>Tiêu đề: </h3>
-        <p>{title}</p>
-        <div>
-          <h4>Nội dung:</h4>
-          <p>{`ĐÂY LÀ NỘI DUNG CKEDITOR: ${content}`}</p>
-          {/* Hiển thị HTML nội dung của CKEditor */}
-          <div dangerouslySetInnerHTML={{ __html: content }} />
-        </div>
-      </div>
     </div>
   );
 };

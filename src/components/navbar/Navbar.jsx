@@ -3,19 +3,32 @@ import styles from "./style_navbar.module.css"
 import Dropdown from "./dropdown"
 import Notice from "./notice";
 import { Link } from "react-router-dom"; // Import Link from React Router
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () =>{
+  const navigate = useNavigate();
+
     return(
+      
         <div className={styles.navbar}>
-        <img
-          className={styles.logo}
-          src="img_navbar/logo.png"
-          alt="HayPhet Logo"
-        />
-        <div className={styles.container}>       
-            <div className={styles.brand}>HayPhết</div>
-            <div className={styles.brandTitle}>Review Công Nghệ</div>
-        </div>
+        <Link to="/">
+    <img
+      className={styles.logo}
+      src="img_navbar/logo.png"
+      alt="HayPhet Logo"
+    />
+  </Link>
+
+  <div
+  className={styles.container}
+  onClick={() => window.location.href = "/"}
+  style={{ cursor: "pointer" }} /* Để hiển thị con trỏ tay */
+>
+  <div className={styles.brand}>HayPhết</div>
+  <div className={styles.brandTitle}>Review Công Nghệ</div>
+</div>
+
+
         <div className={styles.search}>       
             <input type="text"  className={styles.searchInput}  placeholder="Tìm kiếm sản phẩm công nghệ, cộng đồng, bạn bè..."></input>
         </div>
