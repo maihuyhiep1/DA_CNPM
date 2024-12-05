@@ -1,0 +1,114 @@
+/* General Styling */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  h1, h2 {
+    font-family: 'Arial', sans-serif;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  
+  p {
+    font-size: 1rem;
+    margin-bottom: 8px;
+  }
+  
+  .table-auto {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .table-auto th, .table-auto td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .table-auto th {
+    background-color: #f4f4f4;
+  }
+  
+  /* Table Row Hover Effect */
+  .table-auto tr:hover {
+    background-color: #f9f9f9;
+  }
+  
+  /* Reporter Column Styling */
+  .table-auto .reporter-name {
+    display: flex;
+    align-items: center;
+  }
+  
+  .table-auto .reporter-name img {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    margin-right: 8px;
+  }
+  
+  .table-auto .reporter-name span {
+    font-weight: bold;
+  }
+  
+  /* Action Button Styles */
+  button {
+    border: none;
+    cursor: pointer;
+    padding: 8px 12px;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+  }
+  
+  button:hover {
+    opacity: 0.8;
+  }
+  
+  .bg-green-500 {
+    background-color: #28a745;
+    color: white;
+  }
+  
+  .bg-red-500 {
+    background-color: #dc3545;
+    color: white;
+  }
+  
+  /* Button Icon */
+  button svg {
+    width: 18px;
+    height: 18px;
+  }
+  
+  /* Positioning Action Buttons in the bottom right */
+  .action-buttons {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    gap: 10px;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .table-auto th, .table-auto td {
+      padding: 8px;
+    }
+  
+    .table-auto .reporter-name img {
+      width: 24px;
+      height: 24px;
+    }
+  
+    button {
+      padding: 6px 10px;
+    }
+  
+    .action-buttons {
+      bottom: 15px;
+      right: 15px;
+    }
+  }
+  

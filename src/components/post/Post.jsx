@@ -159,7 +159,7 @@ const Post = ({ post: initialPost }) => {
           </div>
           <div
             className="postBottomFooterItem"
-            onClick={() => setCommentBoxVisible(!commentBoxVisible)}
+            onClick={() => handleNavigateToPost()}
           >
             <ChatBubbleOutline className="footerIcon" />
             <span className="footerText">Comment</span>
@@ -170,7 +170,7 @@ const Post = ({ post: initialPost }) => {
           </div>
         </div>
       </div>
-      {commentBoxVisible && (
+      {/* {commentBoxVisible && (
         <div className="commentSection">
           <WriteComment
             avatarUrl={currentUser.avatar}
@@ -178,14 +178,12 @@ const Post = ({ post: initialPost }) => {
           />
           {apiComments.data.map((commentGroup) => (
             <div key={commentGroup[0].id} className="commentGroup">
-              {/* Main comment */}
               <CommentContent
                 key={commentGroup[0].id}
                 avatarUrl={commentGroup[0].userAvatar}
                 content={commentGroup[0].content}
                 createdAt={commentGroup[0].createdAt}
               />
-              {/* Replies */}
               {commentGroup.slice(1).map((reply) => (
                 <div key={reply.id} style={{ marginLeft: "20px" }}>
                   <RepplyCommentContent
@@ -198,7 +196,7 @@ const Post = ({ post: initialPost }) => {
             </div>
           ))}
         </div>
-      )}
+      )} */}
     </div>
   );
 };

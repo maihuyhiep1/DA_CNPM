@@ -20,6 +20,8 @@ import CreatePost from "./pages/createPost/createPost";
 import FullPost from "./components/fullPost/fullPost";
 
 import Navbar from "./components/navbar/Navbar";
+import ReportsPage from "./pages/admin/admin";
+import ReportDetailPage from "./pages/admin/detailPage";
 import Footer from "./components/footer/Footer";
 import AddQnA from "./components/stories/addQnA";
 import Dropdown from "./components/post/dropdown";
@@ -80,6 +82,14 @@ function App() {
     {
       path: "/re-password",
       element: <RePassword />,
+    },
+    {
+      path: "/admin",
+      element: <ReportsPage />,
+    },
+    {
+      path: "/admin/:postId",
+      element: <ReportDetailPage />,
     },
   ]);
 

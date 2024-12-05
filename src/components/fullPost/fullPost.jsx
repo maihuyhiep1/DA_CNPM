@@ -4,17 +4,19 @@ import WriteComment from "../writeComment/writeComment";
 import { useParams } from 'react-router-dom';
 import { useState, useEffect, useContext } from "react";
 import CommentContent from "../commentContent/commentContent";
+import CustomDialog from '../dialog/dialog';
 import RepplyCommentContent from "../replyCommentContent/repplycommentContent";
 import axios from 'axios';
 import { AuthContext } from "../../context/authContext";
+import { IconButton, Menu, MenuItem } from "@mui/material";
 import {
-  ChatBubbleOutline,
-  Favorite,
-  MoreVert,
-  ShareOutlined,
-  ThumbUpAltOutlined,
-  ThumbUp,
-  Reply,
+    ChatBubbleOutline,
+    Favorite,
+    MoreVert,
+    ShareOutlined,
+    ThumbUpAltOutlined,
+    ThumbUp,
+    Reply,
 } from "@mui/icons-material";
 
 const FullPost = () => {
@@ -23,18 +25,53 @@ const FullPost = () => {
     const [comments, setComments] = useState();
     const [loading, setLoading] = useState(true); // Trạng thái loading
     const { currentUser } = useContext(AuthContext);
+    const [like, setLike] = useState(false);
+    const [anchorEl, setAnchorEl] = useState(null);
+    const [openDialog, setOpenDialog] = useState(false);
+    const [reason, setReason] = useState("");
 
+    // Hàm mở menu
+    const handleMenuOpen = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
 
+    // Hàm đóng menu
+    const handleMenuClose = () => {
+        setAnchorEl(null);
+    };
 
-    const updateComments = (response) => {
-        if (response.success) {
-            // Lấy tất cả các comment từ mảng con
-            const allComments = response.data.flat();
+    // Mở dialog nhập lý do
+    const handleOpenDialog = () => {
+        handleMenuClose(); // Đóng menu trước khi mở dialog
+        setOpenDialog(true);
+    };
 
-            // Set lại giá trị cho comments (giả sử là một state trong React)
-            setComments(allComments); // Hoặc trực tiếp gán cho biến comments nếu không dùng React
-        } else {
-            console.error("Lỗi khi lấy comment:", response.message);
+    // Đóng dialog
+    const handleCloseDialog = () => {
+        setOpenDialog(false);
+        setReason(""); // Xóa nội dung sau khi đóng
+    };
+
+    // Hàm xử lý report
+    const handleReport = async () => {
+        handleMenuClose(); // Đóng menu
+        try {
+            const response = await axios.post(
+                `http://localhost:8386/api/reports`,
+                {
+                    reporterId: currentUser.id,
+                    post_id: id,
+                    reason: reason
+                },
+                { withCredentials: true }
+            );
+            alert("Báo cáo đã được gửi thành công!");
+            setOpenDialog(false)
+            console.log(response.data);
+        } catch (error) {
+            console.error("Lỗi khi báo cáo bài viết:", error.message);
+            alert("Có lỗi xảy ra khi báo cáo bài viết.");
+            setOpenDialog(false)
         }
     };
 
@@ -52,7 +89,6 @@ const FullPost = () => {
             }
         };
 
-
         const fetchComments = async () => {
             try {
                 const response = await axios.get(
@@ -66,18 +102,29 @@ const FullPost = () => {
             }
         };
 
+        const checkIfLiked = async () => {
+            try {
+                const response = await axios.post(
+                    `http://localhost:8386/api/posts/${id}/like-status`,
+                    {},
+                    { withCredentials: true }
+                );
+                console.log("Kiểm tra like: ", response.data);
+                setLike(response.data.data);
+            } catch (err) {
+                console.error("Error fetching comments:", err.message);
+                setComments({ data: [] }); // Set mảng rỗng khi có lỗi
+            }
+        }
+
         getPostById();
         fetchComments();
+        checkIfLiked();
     }, [id]); // useEffect sẽ chạy lại khi `id` thay đổi
-
-    useEffect(() => {
-        console.log(comments); // Giá trị mới của comments sau khi được cập nhật
-    }, [comments]);
-
 
     const handleAddComment = async (content) => {
         console.log("NỘI DUNG CONTENT: ", content);
-        content.userId = "c8029506-4377-4399-9931-8fe279cb1159";
+        content.userId = currentUser.id;
 
         try {
             content.user = currentUser;
@@ -101,53 +148,40 @@ const FullPost = () => {
     };
 
     const handleLike = async () => {
-      if (post.isDummy) return; // Skip fetching for dummy posts
-      try {
-        if (!like) {
-          await axios.post(
-            `http://localhost:8386/api/posts/${post.post_id}/like`,
-            {},
-            { withCredentials: true }
-          );
-          setPost((prevPost) => ({
-            ...prevPost,
-            like: (prevPost.like || prevPost.like_count || 0) + 1,
-          }));
-        } else {
-          await axios.post(
-            `http://localhost:8386/api/posts/${post.post_id}/like`,
-            {},
-            { withCredentials: true }
-          );
-          setPost((prevPost) => ({
-            ...prevPost,
-            like: Math.max((prevPost.like || prevPost.like_count || 1) - 1, 0),
-          }));
+        try {
+            const response = await axios.post(
+                `http://localhost:8386/api/posts/${id}/like`,
+                {},
+                { withCredentials: true }
+            );
+            console.log("Người dùng bấm like", response.message);
+            setLike(!like);
+
+            setPost((prevPost) => ({
+                ...prevPost,
+                like_count: like ? prevPost.like_count - 1 : prevPost.like_count + 1,
+            }));
+        } catch (error) {
+            console.error(
+                `Error ${like ? "unliking" : "liking"} post:`,
+                error.response?.data || error.message
+            );
         }
-        setLike(!like);
-      } catch (error) {
-        console.error(
-          `Error ${like ? "unliking" : "liking"} post:`,
-          error.response?.data || error.message
-        );
-      }
     };
 
 
     if (loading) {
         return (
-            <div className="loading">Loading...</div> // Hiển thị thông báo khi đang tải dữ liệu
+            <div className="loading">Loading...</div>
         );
     }
 
-    // Kiểm tra nếu post là null hoặc không có dữ liệu hợp lệ
     if (!post) {
         return (
-            <div className="error">Post not found</div> // Hiển thị thông báo khi không tìm thấy bài viết
+            <div className="error">Post not found</div>
         );
     }
 
-    // Sau khi bài viết đã được tải xong, hiển thị nội dung bài viết
     return (
         <div className="post">
             <div className="author-info">
@@ -155,6 +189,32 @@ const FullPost = () => {
                 <div className="author-details">
                     <h3 className="author-name">{post.author.name}</h3>
                     <p className="created-at">{post.createdAt}</p>
+                </div>
+                <div className="postTopRight">
+                    <IconButton onClick={handleMenuOpen}>
+                        <MoreVert className="postVertButton" />
+                    </IconButton>
+                    <Menu
+                        anchorEl={anchorEl}
+                        open={Boolean(anchorEl)}
+                        onClose={handleMenuClose}
+                    >
+                        <MenuItem onClick={handleOpenDialog}>Report</MenuItem>
+                    </Menu>
+
+                    <CustomDialog
+                        open={openDialog}
+                        onClose={() => setOpenDialog(false)}
+                        onSubmit={handleReport}
+                    >
+                        <textarea
+                            placeholder="Enter your reason..."
+                            value={reason}
+                            onChange={(e) => setReason(e.target.value)}
+                            rows="5"
+                            style={{ width: "100%" }}
+                        ></textarea>
+                    </CustomDialog>
                 </div>
             </div>
             <h2 className="post-title">{post.title}</h2>
@@ -169,16 +229,16 @@ const FullPost = () => {
             </div>
 
             <div className="postBottomFooter">
-                <div className="postBottomFooterItem" onClick={handleLike}>
-                    <ThumbUpAltOutlined className="footerIcon" />
-                    <span className="footerText">Like</span>
-                </div>
                 <div
-                    className="postBottomFooterItem"
-                    onClick={() => setCommentBoxVisible(!commentBoxVisible)}
+                    className={`postBottomFooterItem ${like ? 'liked' : 'notLiked'}`}
+                    onClick={handleLike}
                 >
-                    <ChatBubbleOutline className="footerIcon" />
-                    <span className="footerText">Comment</span>
+                    <ThumbUpAltOutlined
+                        className={`footerIcon ${like ? 'likedIcon' : 'notLikedIcon'}`}
+                    />
+                    <span className={`footerText ${like ? 'likedText' : 'notLikedText'}`}>
+                        Like
+                    </span>
                 </div>
                 <div className="postBottomFooterItem">
                     <ShareOutlined className="footerIcon" />

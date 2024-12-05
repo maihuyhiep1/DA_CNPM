@@ -1,0 +1,100 @@
+/* Overlay */
+.dialog-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5); /* Làm tối nền */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    animation: fadeIn 0.3s forwards; /* Thêm hiệu ứng fade-in */
+  }
+  
+  /* Animation cho overlay */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
+  /* Dialog container */
+  .dialog-container {
+    background: white;
+    border-radius: 8px;
+    max-width: 500px;
+    width: 90%;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    position: relative;
+    transform: scale(0.9); /* Ban đầu thu nhỏ */
+    animation: scaleIn 0.3s forwards; /* Thêm hiệu ứng phóng to */
+  }
+  
+  /* Animation cho dialog */
+  @keyframes scaleIn {
+    from {
+      transform: scale(0.9);
+      opacity: 0;
+    }
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+  
+  /* Header */
+  .dialog-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+  
+  .dialog-header h3 {
+    margin: 0;
+    font-size: 1.25rem;
+  }
+  
+  .dialog-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+  }
+  
+  /* Content */
+  .dialog-content {
+    margin-bottom: 15px;
+  }
+  
+  /* Footer */
+  .dialog-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+  
+  .dialog-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .dialog-btn.cancel {
+    background: #ccc;
+    color: #000;
+  }
+  
+  .dialog-btn.submit {
+    background: #007bff;
+    color: #fff;
+  }
+  
