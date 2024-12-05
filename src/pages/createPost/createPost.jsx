@@ -1,15 +1,18 @@
 import styles from "./style_createPost.module.css";
 import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import Editor from "../../components/CKEditor/CKEditor5";
 
-const CreatePost = () => {
+const CreatePost = ({ qua: boolean}) => {
+  const location = useLocation(); // Hook để lấy thông tin từ state của navigate
+  const { qna } = location.state || {};
   const [titleWordCount, setTitleWordCount] = useState(0);
   const [contentWordCount, setContentWordCount] = useState(0);
 
   const [image, setImage] = useState(null);
   const [content, setContent] = useState(""); // Nội dung từ CKEditor
   const [title, setTitle] = useState(""); // Tiêu đề bài viết
-  const [isQna, setIsQna] = useState(false);
+  const [isQna, setIsQna] = useState(qna || false);
 
   const handleWordCount = (e) => {
     const text = e.target.value;
