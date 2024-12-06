@@ -108,14 +108,32 @@
 }
 
 
-.avatar{
+/* .avatar{
     scale: 1.15;
     padding-right: 10px;
-}
+} */
 .function{
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 20px;
     margin-left: auto;
+}
+
+.avatar {
+  width: 40px; /* Kích thước chiều ngang của avatar */
+  height: 40px; /* Kích thước chiều cao của avatar */
+  border-radius: 50%; /* Bo tròn để hiển thị avatar hình tròn */
+  overflow: hidden; /* Cắt phần dư nếu ảnh vượt ra ngoài khung */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-right: 10px; /* Khoảng cách bên phải avatar */
+}
+
+.avatar img {
+  width: 100%; /* Avatar chiếm hết khung của thẻ cha */
+  height: 100%; /* Avatar giữ tỷ lệ kích thước */
+  object-fit: cover; /* Đảm bảo ảnh luôn vừa khung */
+  cursor: pointer; /* Hiển thị con trỏ tay khi hover */
 }

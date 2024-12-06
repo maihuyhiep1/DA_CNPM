@@ -57,6 +57,10 @@ function App() {
           path: "/post/:id",
           element: <FullPost />,
         },
+        {
+          path: "/update-info",
+          element: <SetupInformation />,
+        },
       ],
     },
     {
