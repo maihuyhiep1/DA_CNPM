@@ -18,6 +18,8 @@ import {
     ThumbUp,
     Reply,
 } from "@mui/icons-material";
+import { useNavigate } from 'react-router-dom';
+
 
 const FullPost = () => {
     const { id } = useParams();
@@ -30,6 +32,7 @@ const FullPost = () => {
     const [openDialog, setOpenDialog] = useState(false);
     const [reason, setReason] = useState("");
     const [isFollowing, setIsFollowing] = useState(false);
+    const navigate = useNavigate();
 
     // Hàm mở menu
     const handleMenuOpen = (event) => {
@@ -207,8 +210,33 @@ const FullPost = () => {
     }
 
     if (!post) {
+        const handleGoBack = () => {
+            navigate(-1); // Quay lại trang trước đó
+        };
+
+        const handleGoHome = () => {
+            navigate('/'); // Đi đến trang chủ
+        };
+
         return (
-            <div className="error">Post not found</div>
+            <div className="flex flex-col items-center justify-center h-screen text-center bg-gray-100">
+                <h1 className="text-6xl font-bold text-red-500">404</h1>
+                <p className="text-lg text-gray-600 mt-4">Oops! The page you're looking for doesn't exist.</p>
+                <div className="mt-6">
+                    <button
+                        onClick={handleGoBack}
+                        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 mx-2"
+                    >
+                        Go Back
+                    </button>
+                    <button
+                        onClick={handleGoHome}
+                        className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 mx-2"
+                    >
+                        Go to Homepage
+                    </button>
+                </div>
+            </div>
         );
     }
 
