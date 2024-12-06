@@ -1,6 +1,7 @@
 const Post = require('../models/index').Post;
 const PostLike = require('../models/index').PostLike;
 const PostImage = require('../models/index').PostImage;
+const PostNotification = require('../models/index').PostNotification;
 const {  User } = require('../models');
 const { Op } = require('sequelize'); // Dùng để tạo các điều kiện lọc
 const { formatDistanceToNow } = require('date-fns');
@@ -8,7 +9,7 @@ const { vi } = require('date-fns/locale'); // Định dạng tiếng Việt nế
 const uuid = require('uuid').v4;
 const path = require('path');
 const fs = require('fs');
-const { sendNotificationToUser } = require('../ws/websocketHandler');
+const { sendNotificationToUsers } = require('../ws/websocketHandler');
 const formatAvatarUrl = (avatarPath, req) => {
     if (!avatarPath) return null;
     return `${req.protocol}://${req.get("host")}/${avatarPath.replace(/\\/g, "/")}`;
@@ -315,14 +316,7 @@ exports.updatePost = async (req, res) => {
         res.status(500).json({ message: 'Lỗi khi cập nhật bài đăng.', error: err.message });
     }
 };
-
-
-
-
-
-
 // Xóa bài đăng
-
 
 exports.deletePost = async (req, res) => {
   try {
@@ -346,6 +340,9 @@ exports.deletePost = async (req, res) => {
 
     // Xóa bài viết
     await Post.destroy({ where: { post_id: postId } });
+
+    const notification = `Bài viết ${post.title} đã bị xoá!`;
+    sendNotificationToUsers(notification);
 
     res.status(200).json({ message: 'Xóa bài viết thành công.' });
   } catch (error) {
@@ -375,7 +372,7 @@ exports.likePost = async (req, res) => {
 
             const post = await Post.findByPk(postId);
             const notification = `Có ai đó vừa thích bài viết ${post.title} của bạn!`;
-            sendNotificationToUser(post.author_id, notification);
+            sendNotificationToUsers(notification);
 
             return res.status(200).json({ message: 'Đã like bài viết thành công!' });
         } else {
@@ -386,6 +383,48 @@ exports.likePost = async (req, res) => {
         }
     } catch (err) {
         res.status(500).json({ message: 'Lỗi khi xử lý lượt thích', error: err.message });
+    }
+};
+
+exports.followPost = async (req, res) => {
+    try {
+        const { postId } = req.params;
+        const userId = req.user?.id; // Lấy user_id từ thông tin user trong token
+
+        // Kiểm tra xem người dùng đã đăng nhập chưa
+        if (!userId) {
+            return res.status(401).json({ message: 'Bạn cần đăng nhập để thực hiện hành động này.' });
+        }
+
+        // Kiểm tra xem người dùng đã like bài viết chưa
+        const existingLike = await PostNotification.findOne({ where: { post_id: postId, user_id: userId } });
+
+        if (!existingLike) {
+            await PostNotification.create({ post_id: postId, user_id: userId });
+            return res.status(200).json({ message: 'Đã theo dõi bài viết thành công!' });
+        } else {
+            await PostNotification.destroy({ where: { post_id: postId, user_id: userId } });
+            return res.status(200).json({ message: 'Đã bỏ theo dõi bài viết thành công!' });
+        }
+    } catch (err) {
+        res.status(500).json({ message: 'Lỗi khi xử lý theo dõi', error: err.message });
+    }
+};
+
+exports.followStatus = async (req, res) => {
+    try {
+        const { postId } = req.params;
+        const userId = req.user?.id; // Lấy user_id từ thông tin user trong token
+
+        // Kiểm tra xem người dùng đã đăng nhập chưa
+        if (!userId) {
+            return res.status(401).json({ message: 'Bạn cần đăng nhập để thực hiện hành động này.' });
+        }
+        // Kiểm tra xem người dùng đã like bài viết chưa
+        const existingNotification = await PostNotification.findOne({ where: { post_id: postId, user_id: userId } });
+        return res.status(200).json({ message: `Bạn ${existingNotification != null?"đã":"chưa"} theo dõi bài viết.`, data: existingNotification != null });
+    } catch (err) {
+        res.status(500).json({ message: 'Lỗi khi xử lý theo dõi', error: err.message });
     }
 };
 

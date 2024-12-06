@@ -1,4 +1,5 @@
 const WebSocket = require('ws');
+const PostNotification = require('../models/index').PostNotification;
 
 const userConnections = new Map(); 
 
@@ -32,18 +33,42 @@ function initWebSocketServer(server) {
 
     console.log('WebSocket server initialized.');
 }
+async function sendNotificationToUsers(post_id, notification) {
+    try {
+        // Lấy tất cả postId và userId từ bảng PostNotification
+        const postNotifications = await PostNotification.findAll({
+            where: {post_id : post_id},
+            attributes: ['post_id', 'user_id'], // Điều chỉnh theo mô hình cơ sở dữ liệu của bạn
+        });
 
-function sendNotificationToUser(userId, notification) {
-    const socket = userConnections.get(userId);
-    if (socket && socket.readyState === WebSocket.OPEN) {
-        socket.send(JSON.stringify({ type: 'notification', data: notification }));
-        console.log(`Notification sent to userId: ${userId}`);
-    } else {
-        console.log(`User ${userId} is not connected.`);
+        // Tạo một Map để nhóm các userId theo post_id
+        const userGroups = new Map();
+        postNotifications.forEach(({ post_id, user_id }) => {
+            if (!userGroups.has(post_id)) {
+                userGroups.set(post_id, []);
+            }
+            userGroups.get(post_id).push(user_id);
+        });
+
+        // Gửi thông báo tới tất cả các user_id trong danh sách
+        userGroups.forEach((user_ids, post_id) => {
+            user_ids.forEach((user_id) => {
+                const socket = userConnections.get(user_id);
+                if (socket && socket.readyState === WebSocket.OPEN) {
+                    socket.send(JSON.stringify({ type: 'notification', post_id, data: notification }));
+                    console.log(`Notification sent to user_id: ${user_id} for post_id: ${post_id}`);
+                } else {
+                    console.log(`User ${user_id} is not connected.`);
+                }
+            });
+        });
+    } catch (error) {
+        console.error('Error sending notifications:', error);
     }
 }
 
+
 module.exports = {
     initWebSocketServer,
-    sendNotificationToUser,
+    sendNotificationToUsers,
 };

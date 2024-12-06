@@ -87,5 +87,7 @@ router.put(
 router.delete('/posts/:postId', isAuthenticated, postController.deletePost); // Xóa bài viết
 router.post('/posts/:postId/like', isAuthenticated,  postController.likePost);  // Thích bài viết
 router.post('/posts/:postId/like-status', isAuthenticated,  postController.likeStatus);  // Thích bài viết
+router.post('/posts/:postId/follow', isAuthenticated,  postController.followPost);  // Thích bài viết
+router.post('/posts/:postId/follow-status', isAuthenticated,  postController.followStatus);  // Thích bài viết
 
 module.exports = router;

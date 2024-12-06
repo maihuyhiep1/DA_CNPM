@@ -8,8 +8,6 @@ const passport = require('passport');
 require('./passport.js');
 const session = require('express-session');
 const cors = require('cors');
-const http = require('http'); // Import HTTP để tạo server
-const { initWebSocketServer } = require('./ws/websocketHandler'); // WebSocket handler
 
 const app = express();
 const http = require('http'); // Import HTTP để tạo server
