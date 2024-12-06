@@ -2,6 +2,7 @@ const Post = require('../models/index').Post;
 const PostLike = require('../models/index').PostLike;
 const PostImage = require('../models/index').PostImage;
 const PostNotification = require('../models/index').PostNotification;
+const Report = require('../models/index').Report;
 const {  User } = require('../models');
 const { Op } = require('sequelize'); // Dùng để tạo các điều kiện lọc
 const { formatDistanceToNow } = require('date-fns');
@@ -334,15 +335,20 @@ exports.deletePost = async (req, res) => {
     if (post.author_id !== userId && !['admin', 'moderator'].includes(userRole)) {
       return res.status(403).json({ message: 'Bạn không có quyền xóa bài viết này.' });
     }
+    const notification = `Bài viết ${post.title} đã bị xoá!`;
+    sendNotificationToUsers(postId, notification);
+
+    await Report.destroy({
+        where: {
+            post_id: postId,
+        },
+    });
 
     // Xóa hình ảnh liên quan
     await PostImage.destroy({ where: { post_id: postId } });
 
     // Xóa bài viết
     await Post.destroy({ where: { post_id: postId } });
-
-    const notification = `Bài viết ${post.title} đã bị xoá!`;
-    sendNotificationToUsers(notification);
 
     res.status(200).json({ message: 'Xóa bài viết thành công.' });
   } catch (error) {
