@@ -29,6 +29,7 @@ const FullPost = () => {
     const [anchorEl, setAnchorEl] = useState(null);
     const [openDialog, setOpenDialog] = useState(false);
     const [reason, setReason] = useState("");
+    const [isFollowing, setIsFollowing] = useState(false);
 
     // Hàm mở menu
     const handleMenuOpen = (event) => {
@@ -44,12 +45,6 @@ const FullPost = () => {
     const handleOpenDialog = () => {
         handleMenuClose(); // Đóng menu trước khi mở dialog
         setOpenDialog(true);
-    };
-
-    // Đóng dialog
-    const handleCloseDialog = () => {
-        setOpenDialog(false);
-        setReason(""); // Xóa nội dung sau khi đóng
     };
 
     // Hàm xử lý report
@@ -71,6 +66,25 @@ const FullPost = () => {
         } catch (error) {
             console.error("Lỗi khi báo cáo bài viết:", error.message);
             alert("Có lỗi xảy ra khi báo cáo bài viết.");
+            setOpenDialog(false)
+        }
+    };
+
+    const handleFollow = async () => {
+        handleMenuClose(); // Đóng menu
+        try {
+            const response = await axios.post(
+                `http://localhost:8386/api/posts/${id}/follow`,
+                {
+                },
+                { withCredentials: true }
+            );
+            console.log(response);
+            alert(response.data.message);
+            setOpenDialog(false)
+        } catch (error) {
+            console.error("Lỗi khi theo dõi bài viết:", error.message);
+            alert("Có lỗi xảy ra khi theo dõi bài viết.");
             setOpenDialog(false)
         }
     };
@@ -117,9 +131,25 @@ const FullPost = () => {
             }
         }
 
+        const checkIfFollowed = async () => {
+            try {
+                const response = await axios.post(
+                    `http://localhost:8386/api/posts/${id}/follow-status`,
+                    {},
+                    { withCredentials: true }
+                );
+                console.log("Kiểm tra follow: ", response.data);
+                setIsFollowing(response.data.data);
+            } catch (err) {
+                console.error("Error fetching comments:", err.message);
+                setComments({ data: [] }); // Set mảng rỗng khi có lỗi
+            }
+        }
+
         getPostById();
         fetchComments();
         checkIfLiked();
+        checkIfFollowed();
     }, [id]); // useEffect sẽ chạy lại khi `id` thay đổi
 
     const handleAddComment = async (content) => {
@@ -194,12 +224,18 @@ const FullPost = () => {
                     <IconButton onClick={handleMenuOpen}>
                         <MoreVert className="postVertButton" />
                     </IconButton>
+
                     <Menu
                         anchorEl={anchorEl}
                         open={Boolean(anchorEl)}
                         onClose={handleMenuClose}
                     >
+                        {/* Lựa chọn báo cáo */}
                         <MenuItem onClick={handleOpenDialog}>Report</MenuItem>
+                        {/* Lựa chọn theo dõi */}
+                        <MenuItem onClick={handleFollow}>
+                            {isFollowing ? "Bỏ theo dõi" : "Theo dõi"}
+                        </MenuItem>
                     </Menu>
 
                     <CustomDialog

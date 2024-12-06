@@ -1,5 +1,6 @@
 import axios from "axios";
 import { createContext, useEffect, useState } from "react";
+import connectWebSocket from "../client.js";
 
 export const AuthContext = createContext();
 
@@ -23,6 +24,7 @@ export const AuthContextProvider = ({ children }) => {
         console.log(res);
         if (res.data.errCode === 0) {
           console.log("Đăng nhập thành công", res);
+          connectWebSocket(res.data.user.id);
 
           // Second API call: Fetch user details
           const userRes = await axios.get(

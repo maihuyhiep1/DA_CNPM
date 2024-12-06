@@ -36,9 +36,9 @@ const Dropdown = () => {
             isOpen ? styles.show : ''
           }`}
         >
-          <a href="#home">Trang cá nhân</a>
+          <a href="/profile">Trang cá nhân</a>
           <a href="#about">Cài đặt</a>
-          <a href="#contact">Đăng xuất</a>
+          <a href="/login">Đăng xuất</a>
         </div>
       </div>
     </div>
