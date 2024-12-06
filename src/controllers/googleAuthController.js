@@ -32,7 +32,16 @@ const userLogout = (req, res) => {
         message: "Logout failed.",
       });
     }
-    res.redirect(`${process.env.CLIENT_URL}/login`); // Redirect to home page after logout
+    // req.session.destroy((err) => {
+    //   if (err) {
+    //     return res.status(500).json({
+    //       errCode: 1,
+    //       message: "Failed to destroy session.",
+    //     });
+    //   }
+    //   res.clearCookie('connect.sid'); // Clear the session cookie
+      res.redirect(`${process.env.CLIENT_URL}/login`); // Redirect to login page after logout
+    // });
   });
 };
 
