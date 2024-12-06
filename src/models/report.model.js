@@ -8,6 +8,7 @@ module.exports = (sequelize, DataTypes) => {
       references: {
         model: 'Posts',  // Chỉ rõ model mà khóa ngoại này tham chiếu tới
         key: 'post_id',  // Chỉ rõ cột khóa chính của bảng Post
+        onDelete: 'CASCADE',
       },
     },
     reporterId: {
@@ -16,6 +17,7 @@ module.exports = (sequelize, DataTypes) => {
       references: {
         model: 'Users',  // Chỉ rõ model mà khóa ngoại này tham chiếu tới
         key: 'id',  // Chỉ rõ cột khóa chính của bảng User
+        onDelete: 'CASCADE',
       },
     },
     reason: {
