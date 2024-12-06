@@ -1,11 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useParams } from "react-router-dom";
 import './detailPage.css'; // Import file CSS
-import axios from 'axios';
 import { useNavigate } from "react-router-dom";
+import axios from 'axios';
+import { AuthContext } from "../../context/authContext";
+
 const ReportDetailPage = () => {
     const { postId } = useParams();
     const navigate = useNavigate();
+    const { currentUser } = useContext(AuthContext);
     const [reportDetails, setReportDetails] = useState(null);
 
     useEffect(() => {
@@ -23,17 +26,16 @@ const ReportDetailPage = () => {
     // Hàm xử lý khi nhấn tick hoặc cross
     const handleResolution = async (id, status) => {
         console.log(`Report ID: ${postId} has been marked as ${status}`);
+        console.log(currentUser);
         if (status === "resolved") {
             try {
                 const response = await axios.delete(
-                    `http://localhost:8386/api/posts/${postId}`,
-                    {
-                    },
+                    `http://localhost:8386/api/admin/posts/${postId}`,
                     { withCredentials: true }
                 );
                 console.log(response);
                 alert(response.data.message);
-                setOpenDialog(false)
+                // setOpenDialog(false)
             } catch (error) {
                 console.error("Lỗi khi xoá bài viết:", error.message);
                 alert("Có lỗi xảy ra khi xoá bài viết.");
