@@ -336,7 +336,7 @@ exports.deletePost = async (req, res) => {
       return res.status(403).json({ message: 'Bạn không có quyền xóa bài viết này.' });
     }
     const notification = `Bài viết ${post.title} đã bị xoá!`;
-    sendNotificationToUsers(postId, notification);
+    sendNotificationToUsers(postId, notification, { delete: true });
 
     await Report.destroy({
         where: {

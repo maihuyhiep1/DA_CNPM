@@ -35,7 +35,7 @@ function initWebSocketServer(server) {
     console.log('WebSocket server initialized.');
 }
 
-async function sendNotificationToUsers(post_id, notificationContent) {
+async function sendNotificationToUsers(post_id, notificationContent, { delete: isDelete = false } = {}) {
     try {
         // Lấy tất cả postId và userId từ bảng PostNotification
         const postNotifications = await PostNotification.findAll({
@@ -58,9 +58,10 @@ async function sendNotificationToUsers(post_id, notificationContent) {
                 // Tạo notification mới trong cơ sở dữ liệu
                 await Notification.create({
                     user_id,
-                    post_id,
+                    post_id: (isDelete ? null : post_id), // Gán giá trị cho post_id dựa trên delete
                     content: notificationContent,
                 });
+                
 
                 // Gửi notification qua WebSocket nếu user đang kết nối
                 const socket = userConnections.get(user_id);

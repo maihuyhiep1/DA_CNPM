@@ -32,7 +32,7 @@ module.exports = (sequelize, DataTypes) => {
             },
             post_id: {
                 type: DataTypes.UUID,
-                allowNull: false,
+                allowNull: true,
             },
             content: {
                 type: DataTypes.STRING,
