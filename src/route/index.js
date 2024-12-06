@@ -6,6 +6,7 @@ const postRoutes = require('./postRoutes');
 const adminRoutes = require('./adminRoutes');
 const moderatorRoutes = require('./moderatorRoutes');
 const reportRoutes = require('./reportRoutes');
+const notifications = require('./noticesRoutes');
 
 let initWebRoutes = (app) => {
   router.use('/api', userRoutes); // User routes
@@ -15,6 +16,7 @@ let initWebRoutes = (app) => {
   router.use('/api/reports/', reportRoutes); 
   router.use('/api/admin', adminRoutes); // Admin routes
   router.use('/api/moderator', moderatorRoutes); // Moderator routes
+  router.use('/api', notifications); // Moderator routes
 
   return app.use("/", router);
 };
