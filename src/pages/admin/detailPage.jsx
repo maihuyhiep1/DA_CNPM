@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import './detailPage.css'; // Import file CSS
-
+import axios from 'axios';
+import { useNavigate } from "react-router-dom";
 const ReportDetailPage = () => {
     const { postId } = useParams();
+    const navigate = useNavigate();
     const [reportDetails, setReportDetails] = useState(null);
 
     useEffect(() => {
@@ -19,9 +21,44 @@ const ReportDetailPage = () => {
     if (!reportDetails) return <div>Loading...</div>;
 
     // Hàm xử lý khi nhấn tick hoặc cross
-    const handleResolution = (id, status) => {
-        console.log(`Report ID: ${id} has been marked as ${status}`);
-        // Bạn có thể thực hiện gọi API để thay đổi trạng thái của báo cáo ở đây
+    const handleResolution = async (id, status) => {
+        console.log(`Report ID: ${postId} has been marked as ${status}`);
+        if (status === "resolved") {
+            try {
+                const response = await axios.delete(
+                    `http://localhost:8386/api/posts/${postId}`,
+                    {
+                    },
+                    { withCredentials: true }
+                );
+                console.log(response);
+                alert(response.data.message);
+                setOpenDialog(false)
+            } catch (error) {
+                console.error("Lỗi khi xoá bài viết:", error.message);
+                alert("Có lỗi xảy ra khi xoá bài viết.");
+                setOpenDialog(false)
+            }
+        } else {
+            try {
+                for (let i = 0; i < reportDetails.length; i++) {
+                    const id = reportDetails[i].id;
+
+                    const response = await axios.delete(
+                        `http://localhost:8386/api/reports/${id}`,
+                        { withCredentials: true }
+                    );
+
+                    console.log(`Report with ID ${id} deleted:`, response.data.message);
+                }
+
+                alert("Tất cả các báo cáo đã được xóa thành công!");
+            } catch (error) {
+                console.error("Lỗi khi xoá báo cáo:", error.message);
+                alert("Có lỗi xảy ra khi xóa một số báo cáo.");
+            }
+        }
+        navigate("/admin");
     };
 
     return (

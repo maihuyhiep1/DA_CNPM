@@ -16,7 +16,8 @@ const ReportsPage = () => {
                     data.data.reduce((acc, curr) => {
                         if (!acc[curr.post_id]) {
                             acc[curr.post_id] = {
-                                post_id: curr.post_id,
+                                id: curr.id,
+                                post_id: curr.post.post_id,
                                 title: curr.post.title,
                                 author: curr.post.author.name,
                                 status: curr.status,
@@ -32,14 +33,6 @@ const ReportsPage = () => {
             })
             .catch((err) => console.error(err));
     }, []);
-
-    const handleStatusChange = (postId, action) => {
-        // Cập nhật trạng thái của bài viết (tick/cross)
-        const updatedReports = reports.map((report) =>
-            report.post_id === postId ? { ...report, status: action } : report
-        );
-        setReports(updatedReports);
-    };
 
     const handleReportClick = (postId) => {
         // Chuyển hướng tới trang chi tiết báo cáo
