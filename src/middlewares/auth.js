@@ -1,5 +1,6 @@
 // Middleware to check if user is authenticated
 function isAuthenticated(req, res, next) {
+    console.log(req.user);
     if (req.isAuthenticated()) {
         return next();
     } else {
@@ -9,6 +10,7 @@ function isAuthenticated(req, res, next) {
 
 // Middleware to check if user is an admin
 function isAdmin(req, res, next) {
+    console.log(req.user);
     if (req.user && req.user.role === 'admin') {
         return next();
     } else {

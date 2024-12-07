@@ -22,6 +22,11 @@ const upload = multer({
         const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
         const mimetype = filetypes.test(file.mimetype);
 
+        console.log('Headers:', req.headers);
+        console.log('Body:', req.body);
+        console.log('File:', req.file);
+
+
         if (extname && mimetype) {
             cb(null, true);  // Tệp hợp lệ
         } else {

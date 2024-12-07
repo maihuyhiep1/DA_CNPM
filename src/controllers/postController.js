@@ -1,6 +1,8 @@
 const Post = require('../models/index').Post;
 const PostLike = require('../models/index').PostLike;
 const PostImage = require('../models/index').PostImage;
+const PostNotification = require('../models/index').PostNotification;
+const Report = require('../models/index').Report;
 const {  User } = require('../models');
 const { Op } = require('sequelize'); // Dùng để tạo các điều kiện lọc
 const { formatDistanceToNow } = require('date-fns');
@@ -8,7 +10,7 @@ const { vi } = require('date-fns/locale'); // Định dạng tiếng Việt nế
 const uuid = require('uuid').v4;
 const path = require('path');
 const fs = require('fs');
-const { sendNotificationToUser } = require('../ws/websocketHandler');
+const { sendNotificationToUsers } = require('../ws/websocketHandler');
 const removeAccents = require('remove-accents');
 const { Sequelize} = require('sequelize');
 
@@ -21,7 +23,7 @@ const formatContentImages = (content, req) => {
     return content.replace(/<img[^>]+src="([^"]+)"/g, (match, src) => {
         // Nếu src là đường dẫn tương đối (không phải URL tuyệt đối), thay thế nó
         if (!src.startsWith('http')) {
-            return match.replace(src, `${req.protocol}://${req.get("host")}/${src.replace(/\\/g, "/")}`);
+            return match.replace(src, `${req.protocol}://${req.get("host")}${src.replace(/\\/g, "/")}`);
         }
         return match;
     });
@@ -41,7 +43,7 @@ exports.getPopularPosts = async (req, res) => {
             where: {
                 createdAt: { [Op.gte]: filterByTime },
             },
-            attributes: ['post_id', 'title', 'avatar', 'like_count'],
+            attributes: ['post_id', 'title', 'avatar', 'like_count', 'cmt_count'],
             order: [
                 ['like_count', 'DESC'],
                 ['createdAt', 'DESC'],
@@ -83,7 +85,7 @@ exports.getAllPosts = async (req, res) => {
 
         // Truy vấn cơ sở dữ liệu với điều kiện where
         const results = await Post.findAll({
-            attributes: ['post_id', 'title', 'avatar', 'createdAt', 'like_count','is_qna'],
+            attributes: ['post_id', 'title', 'avatar', 'createdAt', 'like_count','is_qna', 'cmt_count'],
             include: [
                 { model: User, as: 'author', attributes: ['id', 'name', 'avatar'] },
             ],
@@ -172,6 +174,7 @@ exports.getPostsByUser = async (req, res) => {
 // Hàm xử lý ảnh base64
 exports.createPost = async (req, res) => {
     try {
+        console.log(req.user);
         const author_id = req.user.id; // Lấy user ID từ session
         let { title, is_qna, content } = req.body;
 
@@ -321,14 +324,7 @@ exports.updatePost = async (req, res) => {
         res.status(500).json({ message: 'Lỗi khi cập nhật bài đăng.', error: err.message });
     }
 };
-
-
-
-
-
-
 // Xóa bài đăng
-
 
 exports.deletePost = async (req, res) => {
   try {
@@ -346,6 +342,14 @@ exports.deletePost = async (req, res) => {
     if (post.author_id !== userId && !['admin', 'moderator'].includes(userRole)) {
       return res.status(403).json({ message: 'Bạn không có quyền xóa bài viết này.' });
     }
+    const notification = `Bài viết ${post.title} đã bị xoá!`;
+    sendNotificationToUsers(postId, notification, { delete: true });
+
+    await Report.destroy({
+        where: {
+            post_id: postId,
+        },
+    });
 
     // Xóa hình ảnh liên quan
     await PostImage.destroy({ where: { post_id: postId } });
@@ -381,7 +385,7 @@ exports.likePost = async (req, res) => {
             await User.increment('like_count', { where: { id: post.author_id } });
             const post = await Post.findByPk(postId);
             const notification = `Có ai đó vừa thích bài viết ${post.title} của bạn!`;
-            sendNotificationToUser(post.author_id, notification);
+            sendNotificationToUsers(notification);
 
             return res.status(200).json({ message: 'Đã like bài viết thành công!' });
         } else {
@@ -449,3 +453,65 @@ exports.searchPosts = async (req, res) => {
         res.status(500).json({ message: 'Lỗi khi tìm kiếm bài viết', error: err.message });
     }
 };
+
+exports.followPost = async (req, res) => {
+    try {
+        const { postId } = req.params;
+        const userId = req.user?.id; // Lấy user_id từ thông tin user trong token
+
+        // Kiểm tra xem người dùng đã đăng nhập chưa
+        if (!userId) {
+            return res.status(401).json({ message: 'Bạn cần đăng nhập để thực hiện hành động này.' });
+        }
+
+        // Kiểm tra xem người dùng đã like bài viết chưa
+        const existingLike = await PostNotification.findOne({ where: { post_id: postId, user_id: userId } });
+
+        if (!existingLike) {
+            await PostNotification.create({ post_id: postId, user_id: userId });
+            return res.status(200).json({ message: 'Đã theo dõi bài viết thành công!' });
+        } else {
+            await PostNotification.destroy({ where: { post_id: postId, user_id: userId } });
+            return res.status(200).json({ message: 'Đã bỏ theo dõi bài viết thành công!' });
+        }
+    } catch (err) {
+        res.status(500).json({ message: 'Lỗi khi xử lý theo dõi', error: err.message });
+    }
+};
+
+exports.followStatus = async (req, res) => {
+    try {
+        const { postId } = req.params;
+        const userId = req.user?.id; // Lấy user_id từ thông tin user trong token
+
+        // Kiểm tra xem người dùng đã đăng nhập chưa
+        if (!userId) {
+            return res.status(401).json({ message: 'Bạn cần đăng nhập để thực hiện hành động này.' });
+        }
+        // Kiểm tra xem người dùng đã like bài viết chưa
+        const existingNotification = await PostNotification.findOne({ where: { post_id: postId, user_id: userId } });
+        return res.status(200).json({ message: `Bạn ${existingNotification != null?"đã":"chưa"} theo dõi bài viết.`, data: existingNotification != null });
+    } catch (err) {
+        res.status(500).json({ message: 'Lỗi khi xử lý theo dõi', error: err.message });
+    }
+};
+
+exports.likeStatus = async (req, res) => {
+
+    try {
+        const { postId } = req.params;
+        const userId = req.user?.id; // Lấy user_id từ thông tin user trong token
+
+        // Kiểm tra xem người dùng đã đăng nhập chưa
+        if (!userId) {
+            return res.status(401).json({ message: 'Bạn cần đăng nhập để thực hiện hành động này.' });
+        }
+
+        // Kiểm tra xem người dùng đã like bài viết chưa
+        const existingLike = await PostLike.findOne({ where: { post_id: postId, user_id: userId } });
+
+        return res.status(200).json({ message: `Bạn ${existingLike != null?"đã":"chưa"} like bài viết.`, data: existingLike != null });
+    }catch (err) {
+        res.status(500).json({ message: 'Lỗi khi xử lý lượt thích', error: err.message });
+    }
+}

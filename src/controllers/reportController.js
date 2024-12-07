@@ -256,8 +256,15 @@ const reportController = {
                 include: [
                     {
                         model: Post,
-                        as: "post", // Tên alias trong định nghĩa model (nếu có)
+                        as: "post",
                         attributes: ["post_id", "title", "avatar"], // Chỉ lấy các trường cần thiết
+                        include: [
+                            {
+                                model: User, // Giả định rằng Post có liên kết với User để lấy tên tác giả
+                                as: "author",
+                                attributes: ["name"], // Chỉ lấy trường "name"
+                            },
+                        ],
                     },
                 ],
                 attributes: ["id", "reason", "status", "reporterId", "resolvedBy"], // Các trường từ Report
@@ -281,7 +288,56 @@ const reportController = {
                 message: 'Internal server error'
             });
         }
+    }, async getReporterOfAPost(req, res) {
+        const { postId } = req.params; // Lấy postId từ params của URL
+
+        try {
+            // Lấy tất cả báo cáo của postId và đính kèm thông tin bài viết và thông tin tác giả của bài viết
+            const reports = await Report.findAll({
+                where: {
+                    post_id: postId, // Lọc theo post_id
+                },
+                include: [
+                    {
+                        model: Post,
+                        as: "post",
+                        attributes: ["title", "avatar", "author_id"], // Lấy thông tin bài viết và author_id
+                        include: [
+                            {
+                                model: User,
+                                as: "author",
+                                attributes: ["name", "avatar"], // Thêm thông tin tác giả bài viết
+                            }
+                        ]
+                    },
+                    {
+                        model: User,
+                        as: "reporter",
+                        attributes: ["name", "avatar"] // Thêm thông tin người báo cáo
+                    }
+                ],
+            });
+
+            if (!reports || reports.length === 0) {
+                return res.status(404).json({
+                    success: false,
+                    message: 'No reports found for this post'
+                });
+            }
+
+            res.status(200).json({
+                success: true,
+                data: reports
+            });
+        } catch (error) {
+            console.error('Error fetching reports for post:', error);
+            res.status(500).json({
+                success: false,
+                message: 'Internal server error'
+            });
+        }
     }
+
 
 
 };

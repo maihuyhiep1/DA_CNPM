@@ -1,4 +1,6 @@
 const WebSocket = require('ws');
+const PostNotification = require('../models/index').PostNotification;
+const Notification = require('../models/index').Notification;
 
 const userConnections = new Map(); 
 
@@ -33,17 +35,50 @@ function initWebSocketServer(server) {
     console.log('WebSocket server initialized.');
 }
 
-function sendNotificationToUser(userId, notification) {
-    const socket = userConnections.get(userId);
-    if (socket && socket.readyState === WebSocket.OPEN) {
-        socket.send(JSON.stringify({ type: 'notification', data: notification }));
-        console.log(`Notification sent to userId: ${userId}`);
-    } else {
-        console.log(`User ${userId} is not connected.`);
+async function sendNotificationToUsers(post_id, notificationContent, { delete: isDelete = false } = {}) {
+    try {
+        // Lấy tất cả postId và userId từ bảng PostNotification
+        const postNotifications = await PostNotification.findAll({
+            where: { post_id: post_id },
+            attributes: ['post_id', 'user_id'], // Điều chỉnh theo mô hình cơ sở dữ liệu của bạn
+        });
+
+        // Tạo một Map để nhóm các userId theo post_id
+        const userGroups = new Map();
+        postNotifications.forEach(({ post_id, user_id }) => {
+            if (!userGroups.has(post_id)) {
+                userGroups.set(post_id, []);
+            }
+            userGroups.get(post_id).push(user_id);
+        });
+
+        // Gửi thông báo tới tất cả các user_id trong danh sách
+        for (const [post_id, user_ids] of userGroups.entries()) {
+            for (const user_id of user_ids) {
+                // Tạo notification mới trong cơ sở dữ liệu
+                await Notification.create({
+                    user_id,
+                    post_id: (isDelete ? null : post_id), // Gán giá trị cho post_id dựa trên delete
+                    content: notificationContent,
+                });
+                
+
+                // Gửi notification qua WebSocket nếu user đang kết nối
+                const socket = userConnections.get(user_id);
+                if (socket && socket.readyState === WebSocket.OPEN) {
+                    socket.send(JSON.stringify({ type: 'notification', post_id, data: notificationContent }));
+                    console.log(`Notification sent to user_id: ${user_id} for post_id: ${post_id}`);
+                } else {
+                    console.log(`User ${user_id} is not connected.`);
+                }
+            }
+        }
+    } catch (error) {
+        console.error('Error sending notifications:', error);
     }
 }
 
 module.exports = {
     initWebSocketServer,
-    sendNotificationToUser,
+    sendNotificationToUsers,
 };

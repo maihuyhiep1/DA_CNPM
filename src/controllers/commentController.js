@@ -3,7 +3,7 @@ const Post = require('../models/index').Post;
 const {  User } = require('../models');
 const { formatDistanceToNow } = require('date-fns');
 const { vi } = require('date-fns/locale'); // Định dạng tiếng Việt nếu cần
-const { sendNotificationToUser } = require('../ws/websocketHandler');
+const { sendNotificationToUsers } = require('../ws/websocketHandler');
 const commentController = {
     async create(req, res) {
         try {
@@ -42,9 +42,9 @@ const commentController = {
                 postId, // ID bài viết
                 commentId: commentId || null, // ID comment cha (nếu có)
             });
-
-            const notification = `Có ai đó vừa bình luận vào bài viết ${post.title} của bạn!`;
-            sendNotificationToUser(post.author_id, notification);
+            
+            const notification = `Có ai đó vừa bình luận vào ${post.title} mà bạn theo dõi!`;
+            sendNotificationToUsers(postId, notification);
     
             // Tăng số lượng comment cho bài viết
             await Post.increment('cmt_count', { where: { post_id: postId } });
