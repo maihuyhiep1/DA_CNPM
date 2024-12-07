@@ -181,6 +181,31 @@ const FullPost = () => {
         }
     };
 
+    const handleAddChildComment = async (content) => {
+        // content.commentId = parrentId;
+        console.log("NỘI DUNG CONTENT: ", content);
+        // content.userId = currentUser.id;
+
+        try {
+            content.user = currentUser;
+            content.createdAt = "Vừa xong";
+            const response = await axios.post(
+                `http://localhost:8386/api/comments/post/${id}`,
+                content,
+                { withCredentials: true }
+            );
+            console.log(response);
+
+            setComments((prevComments) => {
+                const updatedComments = [...prevComments];
+                updatedComments.push([content]); // Thêm bình luận mới vào mảng
+                return updatedComments;
+            });
+        } catch (err) {
+            console.error("Error adding comment:", err.message);
+        }
+    };
+
     const handleLike = async () => {
         try {
             const response = await axios.post(
@@ -327,6 +352,9 @@ const FullPost = () => {
                                     avatarUrl={commentGroup[0].user?.avatar || ""}
                                     content={commentGroup[0].content || ""}
                                     createdAt={commentGroup[0].createdAt || ""}
+                                    onReply={ handleAddChildComment }
+                                    postId={ id }
+                                    parrentId={commentGroup[0].id}
                                 />
                             )}
 
@@ -337,7 +365,7 @@ const FullPost = () => {
                                     className="replyComment"
                                     style={{ marginLeft: "20px" }}
                                 >
-                                    <ReplyCommentContent
+                                    <RepplyCommentContent
                                         avatarUrl={reply.user?.avatar || ""}
                                         content={reply.content || ""}
                                         createdAt={reply.createdAt || ""}

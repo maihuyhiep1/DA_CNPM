@@ -149,7 +149,7 @@ const Post = ({ post: initialPost }) => {
           </div>
           <div className="postBottomRight">
             <span className="postCommentText">
-              {post.comment || apiComments.data?.length || 0} Comments
+              {post.comment || apiComments.data?.length || post.cmt_count} Comments
             </span>
           </div>
         </div>

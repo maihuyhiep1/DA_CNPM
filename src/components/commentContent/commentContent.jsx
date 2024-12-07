@@ -1,13 +1,20 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, useContext } from "react";
 import styles from "./style_commentContent_.module.css"; // Ensure correct CSS filename
 import defaultAvatar from "/img_profile/avt.png"; // Fallback avatar
+import WriteComment from "../writeComment/writeComment";
+import { AuthContext } from "../../context/authContext";
+import axios from 'axios';
 
-const CommentContent = ({ avatarUrl, content, createdAt, onReply }) => {
+const CommentContent = ({ avatarUrl, content, createdAt, onReply, parrentId, postId }) => {
   const [showReply, setShowReply] = useState(false);
+  const { currentUser } = useContext(AuthContext);
+
+  const onpeReply = () => {
+    setShowReply((prev) => !prev);
+  }
 
   const handleReply = () => {
-    setShowReply((prev) => !prev); // Toggle the reply component
-    if (onReply) onReply(); // Call parent reply logic if needed
+    onReply({content: content, commentId: parrentId, postId: postId}); // Call parent reply logic if needed
   };
 
   return (
@@ -22,14 +29,15 @@ const CommentContent = ({ avatarUrl, content, createdAt, onReply }) => {
           <p className={styles.contentText}>{content}</p>
         </div>
       </div>
-      <div className={styles.like} onClick={handleReply}>
+      <div className={styles.like} onClick={onpeReply}>
         <div className={styles.writeReplyButton}>Phản hồi</div>
         <div className={styles.replyHowLong}>{createdAt}</div>
       </div>
       {showReply && (
-        <div className={styles.replySection}>
-          Reply input or component goes here
-        </div>
+        <WriteComment
+          avatarUrl={currentUser.avatar}
+          onSubmit={handleReply}
+        />
       )}
     </div>
   );
