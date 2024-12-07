@@ -48,7 +48,7 @@ const CreatePost = ({ qua: boolean}) => {
       return;
     }
 
-    if (!content.trim()) {
+    if (!content.trim() && !isQna) {
       alert("Vui lòng nhập nội dung bài viết.");
       return;
     }
@@ -56,7 +56,7 @@ const CreatePost = ({ qua: boolean}) => {
     // Tạo FormData
     const formData = new FormData();
     formData.append("title", title);
-    formData.append("content", content); // Nội dung từ CKEditor
+    if(!isQna || content) formData.append("content", content); // Nội dung từ CKEditor
     if (image && image instanceof File) {
       formData.append("avatar", image); // Key phải khớp với định nghĩa multer trên server
     }

@@ -47,6 +47,22 @@ const Stories = () => {
     );
   }
 
+  const getRandomImage = () => {
+    const images = [
+      "img_QnA/image1.jpg",
+      "img_QnA/image2.jpg",
+      "img_QnA/image3.jpg",
+      "img_QnA/image4.jpg",
+      "img_QnA/image5.jpg",
+      "img_QnA/image6.jpg",
+      "img_QnA/image7.jpg",
+      "img_QnA/image8.jpg",
+      "img_QnA/image9.jpg",
+      "img_QnA/image10.jpg",
+    ];
+    return images[Math.floor(Math.random() * images.length)];
+  };
+  
   return (
     <div className={styles.container}>
       <div className={styles.item}>
@@ -56,14 +72,14 @@ const Stories = () => {
         {/* Render danh sách story */}
         {stories.map((story) => (
           <StoryCard
-            key={story.post_id}
-            user={{
-              profilePicture: story.author.avatar,
-              backgroundPicture: story.avatar,
-              username: story.author.name,
-            }}
-            postId={story.post_id} // Truyền postId cho StoryCard
-          />
+          key={story.post_id}
+          user={{
+            profilePicture: story.author.avatar || "default-profile.png",
+            backgroundPicture: story.avatar ? story.avatar : getRandomImage(),
+            username: story.author.name,
+          }}
+          postId={story.post_id} // Truyền postId cho StoryCard
+        />
         ))}
       </div>
     </div>

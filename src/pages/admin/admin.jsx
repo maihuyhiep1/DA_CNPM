@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import './admin.css'; 
+import './admin.css';
 
 const ReportsPage = () => {
     const [reports, setReports] = useState([]);
@@ -48,23 +48,22 @@ const ReportsPage = () => {
                         <th className="border px-6 py-3 text-left text-gray-700">STT</th>
                         <th className="border px-6 py-3 text-left text-gray-700">Post Title</th>
                         <th className="border px-6 py-3 text-left text-gray-700">Author</th>
-                        <th className="border px-6 py-3 text-left text-gray-700">Status</th>
+                        {/* <th className="border px-6 py-3 text-left text-gray-700">Status</th> */}
                         <th className="border px-6 py-3 text-center text-gray-700">Number of Reports</th>
                         <th className="border px-6 py-3 text-center text-gray-700">Post</th>
                     </tr>
                 </thead>
                 <tbody>
                     {reports.map((report, index) => (
-                        <tr key={report.post_id} className="hover:bg-gray-50 transition-colors">
+                        <tr key={report.post_id} className="hover:bg-gray-50 transition-colors hover:underline" onClick={() => handleReportClick(report.post_id)}>
                             <td className="border px-6 py-4">{index + 1}</td>
                             <td
-                                className="border px-6 py-4 text-blue-500 cursor-pointer hover:underline"
-                                onClick={() => handleReportClick(report.post_id)}
+                                className="border px-6 py-4 text-blue-500 cursor-pointer"
                             >
                                 {report.title}
                             </td>
                             <td className="border px-6 py-4">{report.author}</td>
-                            <td className="border px-6 py-4">
+                            {/* <td className="border px-6 py-4">
                                 <span
                                     className={`${
                                         report.status === "Resolved"
@@ -74,7 +73,7 @@ const ReportsPage = () => {
                                 >
                                     {report.status}
                                 </span>
-                            </td>
+                            </td> */}
                             <td className="border px-6 py-4 text-center">{report.reportCount}</td>
                             <td className="border px-6 py-4 text-center">
                                 <a

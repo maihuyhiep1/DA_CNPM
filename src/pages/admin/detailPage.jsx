@@ -99,9 +99,6 @@ const ReportDetailPage = () => {
                                     {report.reporter.name}
                                 </td>
                                 <td>{report.reason}</td>
-                                <td>
-                                    {/* Không cần status nữa */}
-                                </td>
                             </tr>
                         ))}
                     </tbody>

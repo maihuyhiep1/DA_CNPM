@@ -61,6 +61,14 @@ function App() {
           path: "/update-info",
           element: <SetupInformation />,
         },
+        {
+          path: "/admin",
+          element: <ReportsPage />,
+        },
+        {
+          path: "/admin/:postId",
+          element: <ReportDetailPage />,
+        },
       ],
     },
     {
@@ -86,14 +94,6 @@ function App() {
     {
       path: "/re-password",
       element: <RePassword />,
-    },
-    {
-      path: "/admin",
-      element: <ReportsPage />,
-    },
-    {
-      path: "/admin/:postId",
-      element: <ReportDetailPage />,
     },
   ]);
 

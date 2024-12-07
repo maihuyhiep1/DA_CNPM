@@ -2,10 +2,11 @@ import React from "react";
 import styles from "./style_QnA.module.css";
 
 const QnA = ({ avatar, name, title, createdAt }) => {
+  console.log("QNA!!!!");
   return (
     <div className={styles.background}>
       <div className={styles.qnaImage}>
-        <img src={avatar} alt="avatar" className={styles.avt} />
+        {styles.avt ? <img src={avatar} alt="avatar" className={styles.avt} />:<div className={styles.name}>{name}</div>}
         <div>
           <div className={styles.name}>{name}</div>
           <div className={styles.title}>{title}</div>

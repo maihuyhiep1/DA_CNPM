@@ -98,6 +98,7 @@ const FullPost = () => {
                 const response = await axios.get(`http://localhost:8386/api/posts/${id}`, {
                     withCredentials: true
                 });
+                console.log(response.data);
                 setPost(response.data);  // Lưu dữ liệu bài viết
                 setLoading(false);        // Dữ liệu đã tải xong
             } catch (err) {
@@ -282,10 +283,10 @@ const FullPost = () => {
                 </div>
             </div>
             <h2 className="post-title">{post.title}</h2>
-            <div className="post-header">
+            {post.avatar && <div className="post-header">
                 <img src={post.avatar} alt="Post image" className="post-image" />
-            </div>
-            <div className="post-content" dangerouslySetInnerHTML={{ __html: post.content }}></div>
+            </div>}
+            {post.content !== "undefined" && <div className="post-content" dangerouslySetInnerHTML={{ __html: post.content }}></div>}
 
             <div className="post-footer">
                 <p className="like-count">{post.like_count} Likes</p>
@@ -312,7 +313,7 @@ const FullPost = () => {
             <div className="commentSection">
                 {/* Viết bình luận mới */}
                 <WriteComment
-                    avatarUrl={post.author.avatar}
+                    avatarUrl={currentUser.avatar}
                     onSubmit={handleAddComment}
                 />
 
