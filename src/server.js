@@ -14,7 +14,7 @@ const { initWebSocketServer } = require('./ws/websocketHandler'); // WebSocket h
 
 // Cấu hình CORS
 const corsOptions = {
-  origin: process.env.CLIENT_URL, // Đổi với URL frontend (ví dụ: http://localhost:3001)
+  origin: [process.env.CLIENT_URL, "http://localhost:5173"], // Đổi với URL frontend (ví dụ: http://localhost:3001)
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,  // Cho phép cookie (session)

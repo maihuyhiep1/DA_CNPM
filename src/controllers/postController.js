@@ -40,7 +40,7 @@ exports.getPopularPosts = async (req, res) => {
             where: {
                 createdAt: { [Op.gte]: filterByTime },
             },
-            attributes: ['post_id', 'title', 'avatar', 'like_count'],
+            attributes: ['post_id', 'title', 'avatar', 'like_count', 'cmt_count'],
             order: [
                 ['like_count', 'DESC'],
                 ['createdAt', 'DESC'],
@@ -82,7 +82,7 @@ exports.getAllPosts = async (req, res) => {
 
         // Truy vấn cơ sở dữ liệu với điều kiện where
         const results = await Post.findAll({
-            attributes: ['post_id', 'title', 'avatar', 'createdAt', 'like_count','is_qna'],
+            attributes: ['post_id', 'title', 'avatar', 'createdAt', 'like_count','is_qna', 'cmt_count'],
             include: [
                 { model: User, as: 'author', attributes: ['id', 'name', 'avatar'] },
             ],
