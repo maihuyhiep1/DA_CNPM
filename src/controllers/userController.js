@@ -146,6 +146,11 @@ let updateUserInfo = async (req, res) => {
     return res.status(200).json({
       errCode: 0,
       message: "User information updated successfully.",
+      data: {
+        name: name,
+        description: description,
+        avatar: imageUrl,
+      }
     });
   } catch (e) {
     return res.status(500).json({

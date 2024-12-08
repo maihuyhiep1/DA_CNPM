@@ -369,14 +369,14 @@ exports.likePost = async (req, res) => {
         }
 
         // Kiểm tra xem người dùng đã like bài viết chưa
+
+        const post = await Post.findByPk(postId);
         const existingLike = await PostLike.findOne({ where: { post_id: postId, user_id: userId } });
 
         if (!existingLike) {
             // Nếu chưa like, tạo mới bản ghi và tăng like_count
             await PostLike.create({ post_id: postId, user_id: userId });
             await Post.increment('like_count', { where: { post_id: postId } });
-
-            const post = await Post.findByPk(postId);
             const notification = `Có ai đó vừa thích bài viết ${post.title} của bạn!`;
             sendNotificationToUsers(notification);
 
