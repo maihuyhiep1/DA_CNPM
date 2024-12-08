@@ -1,11 +1,22 @@
-import React from "react";
-import styles from "./style_avtAndInformation.module.css";
-import { useContext } from "react";
+import React, { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/authContext";
+import styles from "./style_avtAndInformation.module.css";
 
 const AvtAndInformation = () => {
   const { currentUser } = useContext(AuthContext);
-  console.log(currentUser);
+  const navigate = useNavigate();
+
+  const handleUpdateInfo = () => {
+    // Truyền các thông tin vào state khi điều hướng
+    navigate("/update-info", {
+      state: {
+        nickname: currentUser.name,
+        description: currentUser.description,
+        avatar: currentUser.avatar,
+      },
+    });
+  };
 
   return (
     <div className={styles.AvtAndInformation}>
@@ -38,6 +49,13 @@ const AvtAndInformation = () => {
               {currentUser.follower_count}
             </div>
           </div>
+        </div>
+
+        {/* Nút Cập nhật thông tin */}
+        <div className={styles.updateButtonContainer}>
+          <button className={styles.updateButton} onClick={handleUpdateInfo}>
+            Cập nhật thông tin
+          </button>
         </div>
       </div>
     </div>

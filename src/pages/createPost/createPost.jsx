@@ -1,19 +1,27 @@
 import styles from "./style_createPost.module.css";
 import { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import axios from 'axios';
 import Editor from "../../components/CKEditor/CKEditor5";
 
-const CreatePost = ({ qua: boolean}) => {
-  const location = useLocation(); // Hook để lấy thông tin từ state của navigate
-  const { qna } = location.state || {};
+const CreatePost = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const params = location.state || {}; // Nhận giá trị từ params, mặc định là {}
+  console.log(params);
+
+  // State khởi tạo từ params
+  const [image, setImage] = useState(params.avatar || null);
+  const [content, setContent] = useState(params.content || "");
+  const [title, setTitle] = useState(params.title || "");
+  const [isQna, setIsQna] = useState(params.qna || false);
+  const [isEditing, setIsEditing] = useState(params.edit || false);
+  const [postId, setPostId] = useState(params.postId || false);
+
   const [titleWordCount, setTitleWordCount] = useState(0);
   const [contentWordCount, setContentWordCount] = useState(0);
 
-  const [image, setImage] = useState(null);
-  const [content, setContent] = useState(""); // Nội dung từ CKEditor
-  const [title, setTitle] = useState(""); // Tiêu đề bài viết
-  const [isQna, setIsQna] = useState(qna || false);
-
+  // Đếm từ trong tiêu đề
   const handleWordCount = (e) => {
     const text = e.target.value;
     const words = text
@@ -26,20 +34,22 @@ const CreatePost = ({ qua: boolean}) => {
       setTitleWordCount(words.length);
     }
 
-    e.target.style.height = "auto"; // Reset height
-    e.target.style.height = `${e.target.scrollHeight}px`; // Set to scroll height
+    e.target.style.height = "auto";
+    e.target.style.height = `${e.target.scrollHeight}px`;
   };
 
-  // Tổng số từ trong cả title và content
+  // Đếm tổng số từ
   const totalWordCount = titleWordCount + contentWordCount;
 
+  // Thay đổi ảnh
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file && file.type.startsWith("image/")) {
-      setImage(file); // Lưu đúng file gốc
+      setImage(file);
     }
   };
 
+  // Submit form
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -56,31 +66,37 @@ const CreatePost = ({ qua: boolean}) => {
     // Tạo FormData
     const formData = new FormData();
     formData.append("title", title);
-    if(!isQna || content) formData.append("content", content); // Nội dung từ CKEditor
+    if (!isQna || content) formData.append("content", content);
     if (image && image instanceof File) {
-      formData.append("avatar", image); // Key phải khớp với định nghĩa multer trên server
+      formData.append("avatar", image);
     }
-    formData.append("is_qna", isQna); // Add the checkbox value to the form data
+    formData.append("is_qna", isQna);
 
-    console.log("THÔNG TIN BÀI POST ĐƯỢC ĐĂNG:");
-
+    console.log("Form Data:");
     for (let [key, value] of formData.entries()) {
       console.log(`${key}:`, value);
     }
 
     try {
-      const response = await fetch("http://localhost:8386/api/posts", {
-        method: "POST",
+      const url = isEditing ? `http://localhost:8386/api/posts/${postId}` : "http://localhost:8386/api/posts";
+      const response = await fetch(url, {
+        method: isEditing ?"PUT":"POST",
         body: formData,
         credentials: "include",
       });
+      console.log(response)
 
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
 
       const result = await response.json();
-      alert("Bài viết đã được đăng thành công!");
+      alert(isEditing ?"Bài viết được cập nhật thành công":"Bài viết đã được đăng thành công!");
+      if(isEditing) {
+        navigate(`/post/${postId}`);
+      } else {
+        handleFollow(result.postId);
+      }
       setTitle("");
       setContent("");
       setImage(null);
@@ -91,6 +107,23 @@ const CreatePost = ({ qua: boolean}) => {
     }
   };
 
+
+
+  const handleFollow = async (postId) => {
+    try {
+        const response = await axios.post(
+            `http://localhost:8386/api/posts/${postId}/follow`,
+            {
+            },
+            { withCredentials: true }
+        );
+        console.log(response);
+    } catch (error) {
+        console.error("Lỗi khi theo dõi bài viết:", error.message);
+    }
+};
+
+  // Drag & Drop ảnh
   const handleDrop = (e) => {
     e.preventDefault();
     const file = e.dataTransfer.files[0];
@@ -100,36 +133,27 @@ const CreatePost = ({ qua: boolean}) => {
       alert("Chỉ chấp nhận file hình ảnh!");
     }
   };
+
   const handleDragOver = (e) => {
     e.preventDefault();
   };
 
+  // Đếm từ từ nội dung HTML
   const countWordsFromHTML = (html) => {
-    // Parse the HTML content
     const parser = new DOMParser();
     const doc = parser.parseFromString(html, "text/html");
-
-    // Extract only the visible text
-    const plainText = doc.body.textContent || ""; // Extracts visible text
-
-    // Count words by splitting and filtering
+    const plainText = doc.body.textContent || "";
     const words = plainText
       .trim()
-      .split(/\s+/) // Split by whitespace
-      .filter((word) => word); // Remove empty strings
-
-    return words.length; // Return the word count
-  };
-
-  const handleCheckboxChange = () => {
-    setIsQna((prev) => !prev); // Toggle checkbox state
+      .split(/\s+/)
+      .filter((word) => word);
+    return words.length;
   };
 
   return (
     <div className={styles.background}>
       <div className={styles.guideLink}>
         <div className={styles.guideText}>Hướng dẫn viết bài</div>
-        <div className={styles.guideImage}></div>
       </div>
 
       <form className={styles.postForm}>
@@ -139,7 +163,7 @@ const CreatePost = ({ qua: boolean}) => {
           placeholder="Nhập tiêu đề bài viết..."
           rows="2"
           onChange={handleWordCount}
-          value={title} // Đảm bảo giá trị title được liên kết với state
+          value={title}
           style={{ overflow: "hidden" }}
         ></textarea>
 
@@ -158,8 +182,8 @@ const CreatePost = ({ qua: boolean}) => {
           />
           {image ? (
             <img
-              src={URL.createObjectURL(image)} // Hiển thị preview từ File
-              alt="Uploaded preview"
+              src={image instanceof File ? URL.createObjectURL(image) : image}
+              alt="Preview"
               className={styles.previewImage}
             />
           ) : (
@@ -170,18 +194,15 @@ const CreatePost = ({ qua: boolean}) => {
                 alt="Add"
               />
               <div className={styles.uploadText}>Thêm ảnh đại diện</div>
-              <div className={styles.dragDropText}>Hoặc kéo và thả</div>
             </>
           )}
         </div>
 
-        {/* Sử dụng CKEditor để nhập nội dung bài viết */}
         <Editor
-          initData=""
+          initData={content}
           setData={(data) => {
-            setContent(data); // Update the content state
-            const wordCount = countWordsFromHTML(data); // Count words in the content
-            setContentWordCount(wordCount); // Update the word count state
+            setContent(data);
+            setContentWordCount(countWordsFromHTML(data));
           }}
         />
 
@@ -193,9 +214,8 @@ const CreatePost = ({ qua: boolean}) => {
             id="example-1"
             className={styles.substituted}
             type="checkbox"
-            aria-hidden="true"
-            checked={isQna} // Bind checkbox state to the value
-            onChange={handleCheckboxChange} // Listen to changes
+            checked={isQna}
+            onChange={() => setIsQna((prev) => !prev)}
           />
           <label htmlFor="example-1" className={styles.label}>
             QnA
@@ -206,7 +226,7 @@ const CreatePost = ({ qua: boolean}) => {
           type="submit"
           className={styles.submitButton}
         >
-          <span>Đăng</span>
+          {isEditing?"Cập nhật":"Đăng"}
         </button>
       </form>
     </div>

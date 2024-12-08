@@ -19,6 +19,7 @@ import {
     Reply,
 } from "@mui/icons-material";
 import { useNavigate } from 'react-router-dom';
+import Popup from '../popUp/popUp';
 
 
 const FullPost = () => {
@@ -32,6 +33,7 @@ const FullPost = () => {
     const [openDialog, setOpenDialog] = useState(false);
     const [reason, setReason] = useState("");
     const [isFollowing, setIsFollowing] = useState(false);
+    const [openPopUp, setOpenPopUp] = useState(false);
     const navigate = useNavigate();
 
     // Hàm mở menu
@@ -49,6 +51,11 @@ const FullPost = () => {
         handleMenuClose(); // Đóng menu trước khi mở dialog
         setOpenDialog(true);
     };
+
+    const handleOpenPopup = () => {
+        handleMenuClose();
+        setOpenPopUp(true);
+    }
 
     // Hàm xử lý report
     const handleReport = async () => {
@@ -72,6 +79,24 @@ const FullPost = () => {
             setOpenDialog(false)
         }
     };
+
+    const handleOnDelete = async () => {
+        console.log("SMTH")
+        try {
+            const response = await axios.delete(
+                `http://localhost:8386/api/admin/posts/${id}`,
+                { withCredentials: true }
+            );
+            alert("Xoá post thành công!");
+            setOpenPopUp(false);
+            window.location.reload()
+            console.log(response.data);
+        } catch (error) {
+            console.error("Lỗi khi xoá bài viết:", error.message);
+            alert("Có lỗi xảy ra khi xoá bài viết.");
+            setOpenPopUp(false);
+        }
+    }
 
     const handleFollow = async () => {
         handleMenuClose(); // Đóng menu
@@ -228,6 +253,29 @@ const FullPost = () => {
         }
     };
 
+    const handleShareClick = () => {
+        const currentUrl = window.location.href; // Lấy link hiện tại
+        navigator.clipboard.writeText(currentUrl) // Copy link vào clipboard
+            .then(() => {
+                alert("Link đã được copy vào clipboard!");
+            })
+            .catch((error) => {
+                console.error("Lỗi khi copy link:", error);
+                alert("Không thể copy link. Vui lòng thử lại!");
+            });
+    };
+
+    const handleEdit = () => {
+        const params = {
+            title: post.title,
+            content: post.content,
+            avatar: post.avatar,
+            qna: post.isQna,
+            edit: true,
+            postId: id
+        }; // Tham số bạn muốn truyền
+        navigate(`/create-post`, { state: params });
+    }
 
     if (loading) {
         return (
@@ -285,8 +333,18 @@ const FullPost = () => {
                         onClose={handleMenuClose}
                     >
                         {/* Lựa chọn báo cáo */}
-                        <MenuItem onClick={handleOpenDialog}>Report</MenuItem>
+                        {currentUser.id !== post.author.id && (
+                            currentUser.role === "user" ? (
+                                <MenuItem onClick={handleOpenDialog}>Report</MenuItem>
+                            ) : (
+                                <MenuItem onClick={handleOpenPopup}>Xoá bài</MenuItem>
+                            )
+                        )}
+
                         {/* Lựa chọn theo dõi */}
+                        {currentUser.id === post.author.id && <MenuItem onClick={handleEdit}>
+                            Chỉnh sửa
+                        </MenuItem>}
                         <MenuItem onClick={handleFollow}>
                             {isFollowing ? "Bỏ theo dõi" : "Theo dõi"}
                         </MenuItem>
@@ -305,6 +363,13 @@ const FullPost = () => {
                             style={{ width: "100%" }}
                         ></textarea>
                     </CustomDialog>
+                    {openPopUp && (<Popup
+                        title={"Xoá bài"}
+                        message={"Bạn chắc chắn muốn xoá bài?"}
+                        onClose={() => { setOpenPopUp(false) }}
+                        onRetry={handleOnDelete}
+                        showRetry={true}
+                    />)}
                 </div>
             </div>
             <h2 className="post-title">{post.title}</h2>
@@ -330,7 +395,8 @@ const FullPost = () => {
                         Like
                     </span>
                 </div>
-                <div className="postBottomFooterItem">
+
+                <div className="postBottomFooterItem" onClick={handleShareClick}>
                     <ShareOutlined className="footerIcon" />
                     <span className="footerText">Share</span>
                 </div>
@@ -352,8 +418,8 @@ const FullPost = () => {
                                     avatarUrl={commentGroup[0].user?.avatar || ""}
                                     content={commentGroup[0].content || ""}
                                     createdAt={commentGroup[0].createdAt || ""}
-                                    onReply={ handleAddChildComment }
-                                    postId={ id }
+                                    onReply={handleAddChildComment}
+                                    postId={id}
                                     parrentId={commentGroup[0].id}
                                 />
                             )}
