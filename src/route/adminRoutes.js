@@ -7,4 +7,5 @@ router.put('/assign-moderator/:id', isAuthenticated, isAdmin, adminController.as
 router.put('/remove-moderator/:id', isAuthenticated, isAdmin, adminController.removeModerator);
 router.get('/moderators', isAuthenticated, isAdmin, adminController.getAllModerators);
 router.delete('/posts/:postId', isAuthenticated, isAdmin, postController.deletePost);
+router.get('/statistics', isAuthenticated, isAdmin, adminController.getStatistics);
 module.exports = router;
