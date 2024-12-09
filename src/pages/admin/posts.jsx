@@ -54,7 +54,7 @@ const PostManagementPage = () => {
                 { withCredentials: true }
             );
             console.log(response);
-            alert(response.data.message);
+            // alert(response.data.message);
             setPosts((prevPosts) => prevPosts.filter((post) => post.post_id !== postId));
         } catch (error) {
             console.error("Lỗi khi xoá bài viết:", error.message);

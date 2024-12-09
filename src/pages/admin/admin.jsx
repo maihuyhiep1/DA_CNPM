@@ -30,6 +30,20 @@ const AdminDashboard = () => {
             }
         };
 
+        const fetchNotices = async () => {
+            try {
+                const response = await axios.get(
+                    `http://localhost:8386/api/admin/server-notices`,
+                    { withCredentials: true }
+                );
+                console.log("LẤY SỐ LIỆU:", response.data);
+                setNotifications(response.data.data);
+                //   setAllPosts(response.data); // Store API posts
+            } catch (err) {
+                console.log(err.message); // Handle any errors
+            }
+        };
+
         const fetchReports = async () => {
             try {
                 const response = await axios.get(
@@ -63,6 +77,7 @@ const AdminDashboard = () => {
         }
         fetchReports();
         fetchStatics();
+        fetchNotices();
     }, []);
     const handleSendNotification = () => {
         if (currentNotification.trim()) {

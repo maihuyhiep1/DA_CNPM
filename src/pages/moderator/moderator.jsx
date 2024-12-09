@@ -41,16 +41,16 @@ const ReportsPage = () => {
 
     return (
         <div className="container mx-auto p-6 bg-gray-100 rounded-lg shadow-lg">
-            <h1 className="text-3xl font-bold text-center text-gray-800 mb-6">Report List</h1>
+            <h1 className="text-3xl font-bold text-center text-gray-800 mb-6">Quản lý báo cáo</h1>
             <table className="min-w-full bg-white border border-gray-300 shadow-lg rounded-lg">
                 <thead className="bg-gray-200">
                     <tr>
                         <th className="border px-6 py-3 text-left text-gray-700">STT</th>
-                        <th className="border px-6 py-3 text-left text-gray-700">Post Title</th>
-                        <th className="border px-6 py-3 text-left text-gray-700">Author</th>
+                        <th className="border px-6 py-3 text-left text-gray-700">Tiêu đề</th>
+                        <th className="border px-6 py-3 text-left text-gray-700">Tác giả</th>
                         {/* <th className="border px-6 py-3 text-left text-gray-700">Status</th> */}
-                        <th className="border px-6 py-3 text-center text-gray-700">Number of Reports</th>
-                        <th className="border px-6 py-3 text-center text-gray-700">Post</th>
+                        <th className="border px-6 py-3 text-center text-gray-700">Số lượt báo cáo</th>
+                        <th className="border px-6 py-3 text-center text-gray-700">Bài đăng</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -69,7 +69,7 @@ const ReportsPage = () => {
                                     href={`/post/${report.post_id}`}
                                     className="bg-blue-500 text-white px-6 py-3 rounded-lg shadow-md hover:bg-blue-600 transition-colors"
                                 >
-                                    View Post
+                                    Xem bài viết
                                 </a>
                             </td>
                         </tr>

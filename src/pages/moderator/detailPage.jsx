@@ -65,10 +65,10 @@ const ReportDetailPage = () => {
 
     return (
         <div className="container">
-            <h1>Report Details for Post</h1>
+            <h1>Chi tiết báo cáo</h1>
             <div>
-                <p><strong>Post Title:</strong> {reportDetails[0].post.title}</p>
-                <p><strong>Author:</strong> {reportDetails[0].post.author.name}</p>
+                <p><strong>Tiêu đề bài viết:</strong> {reportDetails[0].post.title}</p>
+                <p><strong>Tác giả:</strong> {reportDetails[0].post.author.name}</p>
             </div>
 
             <td className="border px-6 py-4 text-center">
@@ -76,16 +76,16 @@ const ReportDetailPage = () => {
                     href={`/post/${postId}`}
                     className="bg-blue-500 text-white px-6 py-3 rounded-lg shadow-md hover:bg-blue-600 transition-colors"
                 >
-                    View Post
+                    Xem bài viết
                 </a>
             </td>
             <div className="mt-4">
-                <h2>Report List</h2>
+                <h2>Danh sách báo cáo</h2>
                 <table className="table-auto">
                     <thead>
                         <tr>
-                            <th>Reporter</th>
-                            <th>Reason</th>
+                            <th>Người báo cáo</th>
+                            <th>Lý do</th>
                         </tr>
                     </thead>
                     <tbody>
