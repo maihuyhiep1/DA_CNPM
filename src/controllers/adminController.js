@@ -1,4 +1,5 @@
 const User = require('../models/index').User;
+const Post = require('../models/index').Post;
 
 // Controller method to assign a user as a moderator
 const assignModerator = async (req, res) => {
@@ -40,8 +41,20 @@ const getAllModerators = async (req, res) => {
     }
 };
 
+const getStatistics = async (req, res) => {
+    try {
+        const totalUsers = await User.count();
+        const totalPosts = await Post.count();
+        res.status(200).json({ success: true, totalUsers, totalPosts });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ success: false, message: 'Internal server error', error });
+    }
+};
+
 module.exports = {
     assignModerator,
     removeModerator,
     getAllModerators,
+    getStatistics,
 };
