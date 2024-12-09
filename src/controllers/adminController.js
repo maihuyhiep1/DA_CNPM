@@ -1,5 +1,6 @@
 const User = require('../models/index').User;
 const Post = require('../models/index').Post;
+const Notification = require('../models/index').Notification;
 const { noticeToAllUsers } = require("../ws/websocketHandler");
 
 // Controller method to assign a user as a moderator
@@ -37,7 +38,7 @@ const getAllModerators = async (req, res) => {
     try {
         const moderators = await User.findAll({ where: { role: 'moderator' } });
         moderators.forEach(user => {
-            user.setDataValue('createdAt', new Date(user.createdAt).toLocaleDateString('en-GB'));  
+            user.setDataValue('createdAt', new Date(user.createdAt).toLocaleDateString('en-GB'));
             user.setDataValue('updatedAt', new Date(user.updatedAt).toLocaleDateString('en-GB'));
         });
         res.status(200).json({ success: true, moderators });
@@ -64,7 +65,7 @@ const getAllUsers = async (req, res) => {
             where: { role: 'user' },
         });
         users.forEach(user => {
-            user.setDataValue('createdAt', new Date(user.createdAt).toLocaleDateString('en-GB'));  
+            user.setDataValue('createdAt', new Date(user.createdAt).toLocaleDateString('en-GB'));
             user.setDataValue('updatedAt', new Date(user.updatedAt).toLocaleDateString('en-GB'));
         });
         res.status(200).json({ success: true, users });
@@ -91,11 +92,27 @@ const noticeAllUser = async (req, res) => {
     }
 };
 
+const getServerNotices = async (req, res) => {
+    try {
+        let notifications = await Notification.findAll({
+            where: { user_id: null },
+            order: [['createdAt', 'DESC']]
+        });
+        console.log(notifications)
+
+        res.status(200).json({ success: true, data: notifications });
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ success: false, message: 'Internal server error', error });
+    }
+};
+
 module.exports = {
     assignModerator,
     removeModerator,
     getAllModerators,
     getStatistics,
     getAllUsers,
-    noticeAllUser
+    noticeAllUser,
+    getServerNotices
 };

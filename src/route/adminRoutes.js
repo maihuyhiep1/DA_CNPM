@@ -8,6 +8,7 @@ router.put('/remove-moderator/:id', isAuthenticated, isAdmin, adminController.re
 router.get('/moderators', isAuthenticated, isAdmin, adminController.getAllModerators);
 router.get('/users', isAuthenticated, isAdmin, adminController.getAllUsers);
 router.post('/notification', isAuthenticated, isAdmin, adminController.noticeAllUser);
+router.get('/server-notices', isAuthenticated, isAdmin, adminController.getServerNotices);
 router.delete('/posts/:postId', isAuthenticated, isAdmin, postController.deletePost);
 router.get('/statistics', isAuthenticated, isAdmin, adminController.getStatistics);
 module.exports = router;
