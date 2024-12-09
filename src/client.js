@@ -19,7 +19,8 @@ function connectWebSocket(userId) {
         }
     };
     socket.onclose = () => {
-        console.log('WebSocket connection closed.');
+        console.log('WebSocket disconnected, reconnecting...');
+        setTimeout(connectWebSocket, 500);  // Reconnect sau 3 giây
     };
     socket.onerror = (error) => {
         console.error('WebSocket error:', error);

@@ -46,10 +46,10 @@ const AvtAndInformation = () => {
             <p className={styles.likeLabel}>Lượt Like</p>
             <p className={styles.likeValue}>{currentUser.like_count}</p>
           </div>
-          <div>
+          {/* <div>
             <p className={styles.followLabel}>Lượt theo dõi</p>
             <p className={styles.followValue}>{currentUser.follower_count}</p>
-          </div>
+          </div> */}
         </div>
 
         {/* Nút cập nhật */}

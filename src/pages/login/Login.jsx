@@ -55,7 +55,7 @@ const Login = () => {
         </div>
 
         <div className={styles.logo}>
-          <img src="img_login/logo.png" alt="Logo" />
+          <img src="img_navbar/logo.png" alt="Logo" />
         </div>
 
         <div className={styles.username}>
