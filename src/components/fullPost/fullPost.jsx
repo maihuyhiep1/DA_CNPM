@@ -109,11 +109,13 @@ const FullPost = () => {
             );
             console.log(response);
             alert(response.data.message);
-            setOpenDialog(false)
+            setOpenDialog(false);
+            setIsFollowing(response.data.message === "Đã theo dõi bài viết thành công!");
         } catch (error) {
             console.error("Lỗi khi theo dõi bài viết:", error.message);
             alert("Có lỗi xảy ra khi theo dõi bài viết.");
-            setOpenDialog(false)
+            setOpenDialog(false);
+            setIsFollowing(false);
         }
     };
 
