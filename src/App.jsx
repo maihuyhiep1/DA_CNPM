@@ -18,10 +18,12 @@ import ForgetPassword from "./pages/forgetPassword/ForgetPassword";
 import RePassword from "./pages/rePassword/RePassword";
 import CreatePost from "./pages/createPost/createPost";
 import FullPost from "./components/fullPost/fullPost";
+import AdminDashboard from "./pages/admin/admin";
+import AdminRoutes from "./pages/admin/adminRoutes";
 
 import Navbar from "./components/navbar/Navbar";
-import ReportsPage from "./pages/admin/admin";
-import ReportDetailPage from "./pages/admin/detailPage";
+import ReportsPage from "./pages/moderator/moderator";
+import ReportDetailPage from "./pages/moderator/detailPage";
 import Footer from "./components/footer/Footer";
 import AddQnA from "./components/stories/addQnA";
 import Dropdown from "./components/post/dropdown";
@@ -62,12 +64,20 @@ function App() {
           element: <SetupInformation />,
         },
         {
-          path: "/admin",
+          path: "/moderator",
           element: <ReportsPage />,
         },
         {
-          path: "/admin/:postId",
+          path: "/moderator/:postId",
           element: <ReportDetailPage />,
+        },
+        {
+          path: "/admin",
+          element: <AdminDashboard />,
+        },
+        {
+          path: "/admin/:route",
+          element: <AdminRoutes />,
         },
       ],
     },

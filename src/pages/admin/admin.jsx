@@ -1,94 +1,113 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import './admin.css';
+import axios from 'axios';
+import "./admin.css";
 
-const ReportsPage = () => {
-    const [reports, setReports] = useState([]);
+const AdminDashboard = () => {
+    const [postCount, setPostCount] = useState(0);
+    const [accountCount, setAccountCount] = useState(0);
+    const deletedPostsCount = 10; // Số lượng bài viết bị báo cáo
     const navigate = useNavigate();
 
+    const [notifications, setNotifications] = useState([]); // Danh sách thông báo đã gửi
+    const [currentNotification, setCurrentNotification] = useState(""); // Thông báo hiện tại
+    const [showNotifications, setShowNotifications] = useState(false); // Hiển thị danh sách thông báo
+
     useEffect(() => {
-        // Gọi API
-        fetch("http://localhost:8386/api/reports/")
-            .then((res) => res.json())
-            .then((data) => {
-                // Nhóm báo cáo theo post_id
-                const groupedReports = Object.values(
-                    data.data.reduce((acc, curr) => {
-                        if (!acc[curr.post_id]) {
-                            acc[curr.post_id] = {
-                                id: curr.id,
-                                post_id: curr.post.post_id,
-                                title: curr.post.title,
-                                author: curr.post.author.name,
-                                status: curr.status,
-                                reportCount: 0,
-                                post: curr.post,
-                            };
-                        }
-                        acc[curr.post_id].reportCount++;
-                        return acc;
-                    }, {})
+        const fetchStatics = async () => {
+            try {
+                const response = await axios.get(
+                    `http://localhost:8386/api/admin/statistics`,
+                    { withCredentials: true }
                 );
-                setReports(groupedReports);
-            })
-            .catch((err) => console.error(err));
+                console.log("LẤY SỐ LIỆU:", response.data);
+                setPostCount(response.data.totalPosts);
+                setAccountCount(response.data.totalUsers);
+                //   setAllPosts(response.data); // Store API posts
+            } catch (err) {
+                console.log(err.message); // Handle any errors
+            }
+        };
+        fetchStatics();
     }, []);
 
-    const handleReportClick = (postId) => {
-        // Chuyển hướng tới trang chi tiết báo cáo
-        navigate(`/admin/${postId}`);
+    const handleSendNotification = () => {
+        if (currentNotification.trim()) {
+            setNotifications((prev) => [...prev, currentNotification]); // Thêm thông báo vào danh sách
+            setCurrentNotification(""); // Xóa nội dung thông báo
+            alert("Thông báo đã được gửi đến toàn hệ thống.");
+        } else {
+            alert("Vui lòng nhập nội dung thông báo.");
+        }
+    };
+
+    const handleNavigation = (path) => {
+        navigate(path);
+    };
+
+    const toggleShowNotifications = () => {
+        setShowNotifications((prev) => !prev);
     };
 
     return (
-        <div className="container mx-auto p-6 bg-gray-100 rounded-lg shadow-lg">
-            <h1 className="text-3xl font-bold text-center text-gray-800 mb-6">Report List</h1>
-            <table className="min-w-full bg-white border border-gray-300 shadow-lg rounded-lg">
-                <thead className="bg-gray-200">
-                    <tr>
-                        <th className="border px-6 py-3 text-left text-gray-700">STT</th>
-                        <th className="border px-6 py-3 text-left text-gray-700">Post Title</th>
-                        <th className="border px-6 py-3 text-left text-gray-700">Author</th>
-                        {/* <th className="border px-6 py-3 text-left text-gray-700">Status</th> */}
-                        <th className="border px-6 py-3 text-center text-gray-700">Number of Reports</th>
-                        <th className="border px-6 py-3 text-center text-gray-700">Post</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {reports.map((report, index) => (
-                        <tr key={report.post_id} className="hover:bg-gray-50 transition-colors hover:underline" onClick={() => handleReportClick(report.post_id)}>
-                            <td className="border px-6 py-4">{index + 1}</td>
-                            <td
-                                className="border px-6 py-4 text-blue-500 cursor-pointer"
-                            >
-                                {report.title}
-                            </td>
-                            <td className="border px-6 py-4">{report.author}</td>
-                            {/* <td className="border px-6 py-4">
-                                <span
-                                    className={`${
-                                        report.status === "Resolved"
-                                            ? "text-green-500"
-                                            : "text-red-500"
-                                    } font-semibold`}
-                                >
-                                    {report.status}
-                                </span>
-                            </td> */}
-                            <td className="border px-6 py-4 text-center">{report.reportCount}</td>
-                            <td className="border px-6 py-4 text-center">
-                                <a
-                                    href={`/post/${report.post_id}`}
-                                    className="bg-blue-500 text-white px-6 py-3 rounded-lg shadow-md hover:bg-blue-600 transition-colors"
-                                >
-                                    View Post
-                                </a>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+        <div className="admin-dashboard">
+            <h1>Admin Dashboard</h1>
+
+            <div className="stats">
+                <div className="stat-item"
+                    onClick={() => handleNavigation("/admin/posts")}
+                    role="button">
+                    <h2>{postCount}</h2>
+                    <p>Bài đăng</p>
+                </div>
+                <div className="stat-item"
+                    onClick={() => handleNavigation("/admin/users")}
+                    role="button">
+                    <h2>{accountCount}</h2>
+                    <p>Tài khoản</p>
+                </div>
+                <div className="stat-item"
+                    onClick={() => handleNavigation("/admin/deleted-posts")}
+                    role="button">
+                    <h2>{deletedPostsCount}</h2>
+                    <p>Bài viết bị báo cáo</p>
+                </div>
+            </div>
+
+            <div className="notification-section">
+                <h3>Gửi Thông Báo</h3>
+                <textarea
+                    className="notification-input"
+                    placeholder="Viết thông báo ở đây..."
+                    value={currentNotification}
+                    onChange={(e) => setCurrentNotification(e.target.value)}
+                ></textarea>
+                <button className="send-button" onClick={handleSendNotification}>
+                    Gửi Thông Báo
+                </button>
+            </div>
+
+            <div className="show-notifications-section">
+                <button className="show-button" onClick={toggleShowNotifications}>
+                    {showNotifications ? "Ẩn Thông Báo" : "Hiển Thị Tất Cả Thông Báo"}
+                </button>
+                {showNotifications && (
+                    <div className="notification-list">
+                        <h3>Danh Sách Thông Báo Đã Gửi</h3>
+                        {notifications.length > 0 ? (
+                            <ul>
+                                {notifications.map((note, index) => (
+                                    <li key={index}>{note}</li>
+                                ))}
+                            </ul>
+                        ) : (
+                            <p>Chưa có thông báo nào được gửi.</p>
+                        )}
+                    </div>
+                )}
+            </div>
         </div>
     );
 };
 
-export default ReportsPage;
+export default AdminDashboard;

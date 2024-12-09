@@ -1,90 +1,133 @@
-/* Container style */
-.container {
+.admin-dashboard {
+  padding: 20px;
+  max-width: 800px;
   margin: 0 auto;
-  padding: 24px;
-  background-color: #f7fafc;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  font-family: Arial, sans-serif;
 }
 
-/* Title style */
-h1 {
-  font-size: 2rem;
-  font-weight: bold;
+.admin-dashboard h1 {
   text-align: center;
-  color: #2d3748;
-  margin-bottom: 24px;
+  color: #333;
+  margin-bottom: 30px;
 }
 
-/* Table styling */
-table {
-  width: 100%;
-  background-color: #ffffff;
-  border: 1px solid #e2e8f0;
+.stats {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 30px;
+}
+
+.stat-item {
+  background: #f7f7f7;
+  border: 1px solid #ddd;
   border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  text-align: center;
+  flex: 1;
+  margin: 0 10px;
 }
 
-/* Header row styling */
-thead {
-  background-color: #edf2f7;
+.stat-item h2 {
+  font-size: 2em;
+  color: #2d89ef;
+  margin: 0;
 }
 
-th {
-  border: 1px solid #e2e8f0;
-  padding: 12px 24px;
-  text-align: left;
-  color: #4a5568;
+.stat-item p {
+  font-size: 1.2em;
+  color: #555;
 }
 
-/* Body row styling */
-tbody tr {
-  transition: background-color 0.3s;
+.notification-section {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-tbody tr:hover {
-  background-color: #f7fafc;
+.notification-section h3 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-size: 1.5em;
+  color: #333;
 }
 
-td {
-  border: 1px solid #e2e8f0;
-  padding: 12px 24px;
+.notification-input {
+  width: 100%;
+  height: 100px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 10px;
+  font-size: 1em;
+  margin-bottom: 10px;
 }
 
-/* Post title styling */
-td a {
-  color: #3182ce;
-  text-decoration: none;
+.send-button {
+  display: block;
+  width: 100%;
+  background: #2d89ef;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 10px;
+  font-size: 1em;
   cursor: pointer;
 }
 
-td a:hover {
-  text-decoration: underline;
+.send-button:hover {
+  background: #1b5bbf;
 }
-
-/* Status styling */
-.status-resolved {
-  color: #48bb78;
-  font-weight: 600;
-}
-
-.status-pending {
-  color: #f56565;
-  font-weight: 600;
-}
-
-/* Button style */
-a.view-post {
-  background-color: #3182ce;
-  color: #ffffff;
-  padding: 12px 24px;
-  border-radius: 6px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  text-decoration: none;
+.stat-item {
+  background: #f7f7f7;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 20px;
   text-align: center;
-  transition: background-color 0.3s;
+  flex: 1;
+  margin: 0 10px;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 }
 
-a.view-post:hover {
-  background-color: #2b6cb0;
+.stat-item:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.show-notifications-section {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.show-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.show-button:hover {
+  background-color: #0056b3;
+}
+
+.notification-list {
+  margin-top: 20px;
+  text-align: left;
+}
+
+.notification-list ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.notification-list li {
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  padding: 10px;
+  margin-bottom: 5px;
+  border-radius: 5px;
 }

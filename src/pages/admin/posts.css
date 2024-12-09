@@ -1,0 +1,54 @@
+.post-management {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  }
+  
+  h1 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .post-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0 auto;
+  }
+  
+  .post-table th,
+  .post-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+  }
+  
+  .post-table th {
+    background-color: #f4f4f4;
+  }
+  
+  .delete-button,
+  .view-button {
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .delete-button {
+    background-color: #dc3545;
+    color: white;
+  }
+  
+  .delete-button:hover {
+    background-color: #a71d2a;
+  }
+  
+  .view-button {
+    background-color: #007bff;
+    color: white;
+  }
+  
+  .view-button:hover {
+    background-color: #0056b3;
+  }
+  
