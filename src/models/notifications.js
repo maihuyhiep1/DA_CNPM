@@ -28,7 +28,7 @@ module.exports = (sequelize, DataTypes) => {
             },
             user_id: {
                 type: DataTypes.UUID,
-                allowNull: false,
+                allowNull: true,
             },
             post_id: {
                 type: DataTypes.UUID,
@@ -38,6 +38,10 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.STRING,
                 allowNull: false,
             },
+            toMod: {
+                type: DataTypes.BOOLEAN,
+                defaultValue: false
+            }
         },
         {
             sequelize,

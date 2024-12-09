@@ -1,5 +1,6 @@
 const User = require('../models/index').User;
 const Post = require('../models/index').Post;
+const { noticeToAllUsers } = require("../ws/websocketHandler");
 
 // Controller method to assign a user as a moderator
 const assignModerator = async (req, res) => {
@@ -35,6 +36,10 @@ const removeModerator = async (req, res) => {
 const getAllModerators = async (req, res) => {
     try {
         const moderators = await User.findAll({ where: { role: 'moderator' } });
+        moderators.forEach(user => {
+            user.setDataValue('createdAt', new Date(user.createdAt).toLocaleDateString('en-GB'));  
+            user.setDataValue('updatedAt', new Date(user.updatedAt).toLocaleDateString('en-GB'));
+        });
         res.status(200).json({ success: true, moderators });
     } catch (error) {
         res.status(500).json({ success: false, message: 'Internal server error', error });
@@ -52,9 +57,45 @@ const getStatistics = async (req, res) => {
     }
 };
 
+// Controller method to get all users
+const getAllUsers = async (req, res) => {
+    try {
+        const users = await User.findAll({
+            where: { role: 'user' },
+        });
+        users.forEach(user => {
+            user.setDataValue('createdAt', new Date(user.createdAt).toLocaleDateString('en-GB'));  
+            user.setDataValue('updatedAt', new Date(user.updatedAt).toLocaleDateString('en-GB'));
+        });
+        res.status(200).json({ success: true, users });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Internal server error', error });
+    }
+};
+
+const noticeAllUser = async (req, res) => {
+    try {
+        const { message, isMod } = req.body;
+        // console.log(isMod)
+
+        if (!message) {
+            return res.status(400).json({ success: false, message: 'Message content is required.' });
+        }
+
+        // Gọi hàm noticeToAllUsers để gửi thông báo
+        await noticeToAllUsers(message, { isMod });
+
+        res.status(200).json({ success: true, message: 'Notification sent to all users.' });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Internal server error', error });
+    }
+};
+
 module.exports = {
     assignModerator,
     removeModerator,
     getAllModerators,
     getStatistics,
+    getAllUsers,
+    noticeAllUser
 };

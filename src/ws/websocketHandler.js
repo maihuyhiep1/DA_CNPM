@@ -1,8 +1,9 @@
 const WebSocket = require('ws');
 const PostNotification = require('../models/index').PostNotification;
 const Notification = require('../models/index').Notification;
+const User = require('../models/index').User;
 
-const userConnections = new Map(); 
+const userConnections = new Map();
 
 function initWebSocketServer(server) {
     const wss = new WebSocket.Server({ server });
@@ -22,17 +23,53 @@ function initWebSocketServer(server) {
             } catch (err) {
                 console.error('Invalid message format:', message);
             }
-        });
-        socket.on('close', () => {
+        }); socket.on('close', () => {
             console.log(`User ${userId} disconnected.`);
-            if (userId) userConnections.delete(userId);
+            if (userId) {
+                userConnections.delete(userId);
+            }
         });
+
         socket.on('error', (err) => {
-            console.error('Socket error:', err.message);
+            console.error(`Socket error for user ${userId}: `, err.message);
+            if (userId) {
+                userConnections.delete(userId);
+            }
         });
+
     });
 
     console.log('WebSocket server initialized.');
+}
+
+async function noticeToAllUsers(notificationContent, { isMod = false } = {}) {
+    try {
+        for (const [userId, { socket }] of userConnections.entries()) {
+            const user = await User.findByPk(userId);
+
+            if (!user) continue;
+            if (isMod && user.role === 'user') continue;
+
+            // console.log(`User ${userId} WebSocket state: `, socket.readyState);
+            if (socket && socket.readyState === WebSocket.OPEN) {
+                socket.send(JSON.stringify({
+                    type: 'notification',
+                    content: notificationContent
+                }));
+                console.log(`Notification sent to user ${userId}`);
+            } else {
+                console.log(`User ${userId} is not online`);
+            }
+        }
+        await Notification.create({
+            user_id: null,
+            post_id: null,
+            content: notificationContent,
+            toMod: isMod
+        });
+    } catch (error) {
+        console.error('Error sending notifications:', error);
+    }
 }
 
 async function sendNotificationToUsers(post_id, notificationContent, { delete: isDelete = false } = {}) {
@@ -61,7 +98,7 @@ async function sendNotificationToUsers(post_id, notificationContent, { delete: i
                     post_id: (isDelete ? null : post_id), // Gán giá trị cho post_id dựa trên delete
                     content: notificationContent,
                 });
-                
+
 
                 // Gửi notification qua WebSocket nếu user đang kết nối
                 const socket = userConnections.get(user_id);
@@ -81,4 +118,5 @@ async function sendNotificationToUsers(post_id, notificationContent, { delete: i
 module.exports = {
     initWebSocketServer,
     sendNotificationToUsers,
+    noticeToAllUsers
 };
