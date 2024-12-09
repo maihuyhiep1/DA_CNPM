@@ -13,8 +13,8 @@ const CommentContent = ({ avatarUrl, content, createdAt, onReply, parrentId, pos
     setShowReply((prev) => !prev);
   }
 
-  const handleReply = () => {
-    onReply({content: content, commentId: parrentId, postId: postId}); // Call parent reply logic if needed
+  const handleReply = (childContent) => {
+    onReply({content: childContent.content, commentId: parrentId, postId: postId}); // Call parent reply logic if needed
   };
 
   return (
@@ -37,6 +37,7 @@ const CommentContent = ({ avatarUrl, content, createdAt, onReply, parrentId, pos
         <WriteComment
           avatarUrl={currentUser.avatar}
           onSubmit={handleReply}
+          className={parrentId ? styles.indented : ""}
         />
       )}
     </div>

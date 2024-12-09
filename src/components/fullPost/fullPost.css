@@ -121,6 +121,12 @@
   }
 }
 
+.postTopRight {
+  margin-left: auto;
+  display: flex; 
+  align-items: center;
+}
+
 .postBottomFooterItem:hover {
   background-color: rgba(0, 0, 0, 0.3);
 }

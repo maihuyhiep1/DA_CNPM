@@ -39,7 +39,7 @@ const Dropdown = () => {
           }`}
         >
           <a href="/profile">Trang cá nhân</a>
-          <a href="#about">Cài đặt</a>
+          {/* <a href="#about">Cài đặt</a> */}
           {currentUser.role !== "user" && <a href="/admin">Quản lý</a>}
           <a href="/login">Đăng xuất</a>
         </div>

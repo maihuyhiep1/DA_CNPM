@@ -1,19 +1,37 @@
-import React from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import styles from './style_postInProfile.module.css';
+import { AuthContext } from "../../context/authContext";
+import Post from "../post/Post";
+import axios from 'axios';
+
 
 const PostInProfile = () => {
+  const [allPosts, setAllPosts] = useState([]);
+  const { currentUser } = useContext(AuthContext);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:8386/api/users/${currentUser.id}/posts`
+        );
+        console.log("LẤY THÔNG TIN POST:", response.data);
+        setAllPosts(response.data); // Store API posts
+      } catch (err) {
+        setError(err.message); // Handle any errors
+      } 
+    };
+
+    fetchPosts();
+  }, []);
+
   return (
-    <div className={styles.postItem}>
-      <div className={styles.title}>
-        <p>Dòng máy trạm di động HP ZBook sẽ bị AMdasdasdasdassadaD Strix Halo APU?</p>
-      </div>
-      <img className={styles.image} src="img_profile/postImage.png" alt="postImg" />      
-      <div className={styles.content}>
-        <div className={styles.contentValue}>
-       aslkdhasjdaksh
-        </div>
-        <div className={styles.more}>Xem thêm</div>
-      </div>
+
+    <div className={styles.pos}>
+      {allPosts.map((post) => (
+        <Post key={post.id || post.post_id} post={post} />
+      ))}
     </div>
   );
 };

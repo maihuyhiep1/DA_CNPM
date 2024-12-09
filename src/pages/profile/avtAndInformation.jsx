@@ -2,10 +2,12 @@ import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/authContext";
 import styles from "./style_avtAndInformation.module.css";
+import PostInProfile from "../../components/postInProfile/postInProfile";
 
 const AvtAndInformation = () => {
   const { currentUser } = useContext(AuthContext);
   const navigate = useNavigate();
+  console.log(currentUser)
 
   const handleUpdateInfo = () => {
     // Truyền các thông tin vào state khi điều hướng
@@ -21,44 +23,45 @@ const AvtAndInformation = () => {
   return (
     <div className={styles.AvtAndInformation}>
       <div className={styles.container}>
+        {/* Avatar */}
         <img className={styles.avatar} src={currentUser.avatar} alt="Avatar" />
-        <div className={styles.name}>
-          <p>{currentUser.name}</p>
-        </div>
-        <div className={styles.role}>
-          <div className={styles.roleValue}>{currentUser.role}</div>
-        </div>
+
+        {/* Tên và Vai trò */}
+        <div className={styles.name}>{currentUser.name}</div>
+        <div className={styles.role}>{currentUser.role}</div>
+
+        {/* Thông tin chi tiết */}
         <div className={styles.information}>
-          <div className={styles.date}>
-            <div className={styles.dateLabel}>Tham gia từ:</div>
-            <div className={styles.dateValue}>{currentUser.createdAt}</div>
-          </div>
+          <p>Tham gia từ: <strong>{currentUser.createdAt}</strong></p>
+          <p>Mô tả: {currentUser.description}</p>
         </div>
+
+        {/* Số liệu thống kê */}
         <div className={styles.informationCount}>
-          <div className={styles.post}>
-            <div className={styles.postLabel}>Bài đã đăng:</div>
-            <div className={styles.postValue}>{currentUser.post_count}</div>
+          <div>
+            <p className={styles.postLabel}>Bài đã đăng</p>
+            <p className={styles.postValue}>{currentUser.post_count}</p>
           </div>
-          <div className={styles.like}>
-            <div className={styles.likeLabel}>Lượt Like:</div>
-            <div className={styles.likeValue}>{currentUser.like_count}</div>
+          <div>
+            <p className={styles.likeLabel}>Lượt Like</p>
+            <p className={styles.likeValue}>{currentUser.like_count}</p>
           </div>
-          <div className={styles.follow}>
-            <div className={styles.followLabel}>Lượt theo dõi:</div>
-            <div className={styles.followValue}>
-              {currentUser.follower_count}
-            </div>
+          <div>
+            <p className={styles.followLabel}>Lượt theo dõi</p>
+            <p className={styles.followValue}>{currentUser.follower_count}</p>
           </div>
         </div>
 
-        {/* Nút Cập nhật thông tin */}
-        <div className={styles.updateButtonContainer}>
-          <button className={styles.updateButton} onClick={handleUpdateInfo}>
-            Cập nhật thông tin
-          </button>
-        </div>
+        {/* Nút cập nhật */}
+        <button className={styles.updateButton} onClick={handleUpdateInfo}>
+          Cập nhật thông tin
+        </button>
+
+        {/* Bài đăng */}
+        <PostInProfile />
       </div>
     </div>
+
   );
 };
 

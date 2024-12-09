@@ -208,7 +208,7 @@ const FullPost = () => {
 
     const handleAddChildComment = async (content) => {
         // content.commentId = parrentId;
-        console.log("NỘI DUNG CONTENT: ", content);
+        console.log("NỘI DUNG CONTENT CON: ", content);
         // content.userId = currentUser.id;
 
         try {
@@ -222,10 +222,19 @@ const FullPost = () => {
             console.log(response);
 
             setComments((prevComments) => {
-                const updatedComments = [...prevComments];
-                updatedComments.push([content]); // Thêm bình luận mới vào mảng
+                const updatedComments = prevComments.map((subArray) => {
+                    console.log("Súb à rây ",subArray[0].id);
+                    if (subArray[0].id === content.commentId) {
+                        // Tạo bản sao mới của subArray và thêm content
+                        return [...subArray, content];
+                    }
+                    return subArray;
+                });
+
                 return updatedComments;
             });
+
+            console.log(comments)
         } catch (err) {
             console.error("Error adding comment:", err.message);
         }
@@ -276,6 +285,11 @@ const FullPost = () => {
         }; // Tham số bạn muốn truyền
         navigate(`/create-post`, { state: params });
     }
+
+    useEffect(() => {
+        console.log(comments);
+    }, [comments]);
+    
 
     if (loading) {
         return (

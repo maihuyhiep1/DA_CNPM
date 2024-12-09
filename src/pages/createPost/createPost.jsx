@@ -209,7 +209,7 @@ const CreatePost = () => {
         <div className={styles.wordCount}>
           <span>Bài viết {totalWordCount} từ</span>
         </div>
-        <div className={styles.checkboxWrapper}>
+        {!isEditing && <div className={styles.checkboxWrapper}>
           <input
             id="example-1"
             className={styles.substituted}
@@ -220,7 +220,7 @@ const CreatePost = () => {
           <label htmlFor="example-1" className={styles.label}>
             QnA
           </label>
-        </div>
+        </div>}
         <button
           onClick={handleSubmit}
           type="submit"
