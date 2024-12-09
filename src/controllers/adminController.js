@@ -52,9 +52,26 @@ const getStatistics = async (req, res) => {
     }
 };
 
+// Controller method to get all users
+const getAllUsers = async (req, res) => {
+    try {
+        const users = await User.findAll({
+            where: { role: 'user' },
+        });
+        users.forEach(user => {
+            user.setDataValue('createdAt', new Date(user.createdAt).toLocaleDateString('en-GB'));  
+            user.setDataValue('updatedAt', new Date(user.updatedAt).toLocaleDateString('en-GB'));
+        });
+        res.status(200).json({ success: true, users });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Internal server error', error });
+    }
+};
+
 module.exports = {
     assignModerator,
     removeModerator,
     getAllModerators,
     getStatistics,
+    getAllUsers,
 };
