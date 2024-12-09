@@ -156,9 +156,9 @@ exports.getPostsByUser = async (req, res) => {
         // Định dạng lại thời gian tạo bài viết
         const formattedPosts = posts.map(post => ({
             ...post.toJSON(),
-            avatar: formatAvatarUrl(result.avatar, req),
-            content: formatContentImages(result.content, req),  // Format images in content
-            createdAt: formatDistanceToNow(new Date(result.createdAt), { addSuffix: true, locale: vi }),
+            avatar: formatAvatarUrl(post.avatar, req),
+            content: formatContentImages(post.content, req),  // Format images in content
+            createdAt: formatDistanceToNow(new Date(post.createdAt), { addSuffix: true, locale: vi }),
         }));
 
         res.status(200).json(formattedPosts);
