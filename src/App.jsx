@@ -4,7 +4,7 @@ import {
   Outlet,
   RouterProvider,
 } from "react-router-dom";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import { AuthContext } from "./context/authContext";
 
@@ -28,10 +28,27 @@ import Footer from "./components/footer/Footer";
 import AddQnA from "./components/stories/addQnA";
 import Dropdown from "./components/post/dropdown";
 function App() {
+  const [posts, setPosts] = useState([]);
+
+  const handleSearch = async (searchContent) => {
+    try {
+      if (!searchContent.trim()) {
+        console.warn("Search query is empty.");
+        return;
+      }
+      const response = await fetch(`http://localhost:8386/api/posts/search?query=${searchContent}`);
+      const data = await response.json();
+      console.log(data);
+      setPosts(data);
+    } catch (error) {
+      console.error("Search API Error:", error);
+    }
+  };
+
   const Layout = () => {
     return (
       <div>
-        <Navbar />
+        <Navbar handleSearch={handleSearch}/>
         <Outlet />
         <Footer />
         {/* <Dropdown/> */}
@@ -45,7 +62,7 @@ function App() {
       children: [
         {
           path: "/",
-          element: <Home />,
+          element: <Home posts={posts}/>,
         },
         {
           path: "/profile",

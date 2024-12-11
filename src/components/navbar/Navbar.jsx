@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from "./style_navbar.module.css"
 import Dropdown from "./dropdown"
 import { useContext } from "react";
@@ -7,12 +7,24 @@ import { Link } from "react-router-dom"; // Import Link from React Router
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/authContext";
 
-const Navbar = () => {
+const Navbar = ({ handleSearch }) => {
   const navigate = useNavigate();
   const { currentUser } = useContext(AuthContext);
+  const [ searchContent, setSearchContent ] = useState("");
+
+  const onSearch = (event) => {
+    setSearchContent(event.target.value);
+    console.log(searchContent);
+  }
+
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      handleSearch(searchContent);
+    }
+  };
 
   return (
-
     <div className={styles.navbar}>
       <Link to="/">
         <img
@@ -32,8 +44,8 @@ const Navbar = () => {
       </div>
 
 
-      <div className={styles.search}>
-        <input type="text" className={styles.searchInput} placeholder="Tìm kiếm sản phẩm công nghệ, cộng đồng, bạn bè..."></input>
+      <div className={styles.search} on>
+        <input type="text" className={styles.searchInput} placeholder="Tìm kiếm sản phẩm công nghệ, cộng đồng, bạn bè..." onKeyDown={handleKeyDown} onChange={onSearch}></input>
       </div>
 
       <div className={styles.function}>

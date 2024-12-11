@@ -6,7 +6,7 @@ import Feed from "../../components/feed/Feed";
 import Rightbar from "../../components/rightbar/Rightbar";
 import { AuthContext } from "../../context/authContext";
 
-const Home = () => {
+const Home = ({posts}) => {
   // const { currentUser } = useContext(AuthContext);
   // const navigate = useNavigate();
 
@@ -18,7 +18,7 @@ const Home = () => {
 
   return (
     <div className="homeContainer">
-      <Feed />
+      <Feed posts={posts}/>
     </div>
   );
 };

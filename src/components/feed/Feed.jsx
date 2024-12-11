@@ -5,9 +5,9 @@ import Post from "../post/Post";
 import { Posts as dummyPosts } from "../../data"; // Dummy data
 import axios from "axios";
 
-const Feed = () => {
+const Feed = ({ posts }) => {
   const [apiPosts, setApiPosts] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(posts.length === 0);
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -18,6 +18,7 @@ const Feed = () => {
         );
         console.log("LẤY THÔNG TIN POST:", response.data);
         setApiPosts(response.data); // Store API posts
+        setLoading(false);
       } catch (err) {
         setError(err.message); // Handle any errors
       } finally {
@@ -25,7 +26,7 @@ const Feed = () => {
       }
     };
 
-    fetchPosts();
+    if(posts.length === 0) fetchPosts();
   }, []);
 
   if (loading) {
@@ -36,24 +37,25 @@ const Feed = () => {
     return <div>Error: {error}</div>;
   }
 
-  // Combine dummy posts and API posts
-  const allPosts = [
-    ...apiPosts,
-    ...dummyPosts.map((post) => ({ ...post, isDummy: true })),
-  ];
+  // Combine dummy posts, API posts, and props posts
+  const allPosts = [...posts, ...apiPosts];
 
   return (
     <div className={styles.feed}>
       <div className={styles.text}> QnA hay phết</div>
       <div className={styles.text2}> Xem tất cả</div>
       <div className={styles.feedWrapper}>
-      <div className={styles.str}> <Stories /> </div>
-      <div className={styles.pos}>  
-      {allPosts.map((post) => (
-          <Post key={post.id || post.post_id} post={post} />
-        ))}
-      </div>
-       
+        <div className={styles.str}>
+          <Stories />
+        </div>
+        <div className={styles.pos}>
+          {allPosts.map((post) => (
+            <Post
+              key={post.id || post.post_id} // Ensure unique key
+              post={post} // Pass the entire post object
+            />
+          ))}
+        </div>
       </div>
     </div>
   );

@@ -79,7 +79,7 @@ const AdminDashboard = () => {
         fetchStatics();
         fetchNotices();
     }, []);
-    const handleSendNotification = () => {
+    const handleSendNotification = async () => {
         if (currentNotification.trim()) {
             setNotifications((prev) => [
                 ...prev,
@@ -87,14 +87,48 @@ const AdminDashboard = () => {
                     content: currentNotification, // Use the input value directly
                     onlyMod: onlyForMods, // Include the toggle state
                 },
-            ]); // Add the notification to the list
+            ]); 
+            
+            try {
+                const response = await axios.post(
+                    "http://localhost:8386/api/admin/notification",
+                    {
+                        message : currentNotification,
+                        isMod: onlyForMods
+                    },
+                    { withCredentials: true }
+                )
+                console.log(response);
+
+                const groupedReports = Object.values(
+                    response.data.data.reduce((acc, curr) => {
+                        if (!acc[curr.post_id]) {
+                            acc[curr.post_id] = {
+                                id: curr.id,
+                                post_id: curr.post.post_id,
+                                title: curr.post.title,
+                                author: curr.post.author.name,
+                                status: curr.status,
+                                reportCount: 0,
+                                post: curr.post,
+                            };
+                        }
+                        acc[curr.post_id].reportCount++;
+                        return acc;
+                    }, {})
+                );
+                console.log(groupedReports);
+                setDeletedPostsCount(groupedReports.length);
+            } catch (error) {
+                console.log(error.message)
+            }
 
             setCurrentNotification(""); // Clear the notification input
             setOnlyForMods(false); // Reset the toggle
-            alert(
-                `Thông báo đã được gửi ${onlyForMods ? "đến các mod" : "đến toàn hệ thống"
-                }.`
-            );
+            // alert(
+            //     `Thông báo đã được gửi ${onlyForMods ? "đến các mod" : "đến toàn hệ thống"
+            //     }.`
+            // );
         } else {
             alert("Vui lòng nhập nội dung thông báo.");
         }
