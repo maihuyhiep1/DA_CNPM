@@ -58,6 +58,7 @@ router.post(
 );
 
 // Route xem bài viết
+router.get('/posts/search', postController.searchPosts);
 router.get('/users/:userId/posts', postController.getPostsByUser);
 router.get('/posts', postController.getAllPosts);               // Lấy danh sách bài viết
 router.get('/posts/:postId', postController.getPostById);       // Lấy bài viết theo ID

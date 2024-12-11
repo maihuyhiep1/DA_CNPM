@@ -9,6 +9,8 @@ const { formatDistanceToNow } = require('date-fns');
 const { vi } = require('date-fns/locale'); // Định dạng tiếng Việt nếu cần
 const uuid = require('uuid').v4;
 const path = require('path');
+const removeAccents = require('remove-accents');
+const { Sequelize } = require('sequelize');
 const fs = require('fs');
 const { sendNotificationToUsers } = require('../ws/websocketHandler');
 const formatAvatarUrl = (avatarPath, req) => {
@@ -356,6 +358,56 @@ exports.deletePost = async (req, res) => {
   }
 };
 
+exports.searchPosts = async (req, res) => {
+    try {
+        const { query } = req.query; // Lấy từ khóa tìm kiếm từ query parameter
+
+        if (!query || query.trim() === '') {
+            return res.status(400).json({ message: 'Vui lòng nhập từ khóa tìm kiếm.' });
+        }
+
+        // Loại bỏ dấu và chuẩn hóa chuỗi tìm kiếm
+        const normalizedQuery = removeAccents(query).toLowerCase();
+
+        const results = await Post.findAll({
+            attributes: ['post_id', 'title', 'avatar', 'createdAt', 'like_count'],
+            include: [
+                {
+                    model: User,
+                    as: 'author',
+                    attributes: ['id', 'name', 'avatar'],
+                },
+            ],
+            where: {
+                [Op.or]: [
+                    // Tìm kiếm trong title bài viết
+                    Sequelize.where(
+                        Sequelize.fn('LOWER', Sequelize.col('title')),
+                        { [Op.like]: `%${normalizedQuery}%` }
+                    ),
+                    // Tìm kiếm trong name của author
+                    Sequelize.where(
+                        Sequelize.fn('LOWER', Sequelize.col('author.name')),
+                        { [Op.like]: `%${normalizedQuery}%` }
+                    ),
+                ],
+            },
+            order: [['createdAt', 'DESC']],
+        });
+
+        // Định dạng lại kết quả
+        const formattedResults = results.map(post => ({
+            ...post.toJSON(),
+            avatar: formatAvatarUrl(post.avatar, req),
+            createdAt: formatDistanceToNow(new Date(post.createdAt), { addSuffix: true, locale: vi }),
+        }));
+
+        res.status(200).json(formattedResults);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Lỗi khi tìm kiếm bài viết', error: err.message });
+    }
+};
 
 // Like bài đăng (toggle)
 exports.likePost = async (req, res) => {
