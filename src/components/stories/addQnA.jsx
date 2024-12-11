@@ -13,14 +13,12 @@ const AddQnA = ({ avatar, name }) => {
   return (
     <div className={styles.addQnACard} onClick={handleClick}>
       <div className={styles.storyOverlay}></div>
-      <img src={avatar} alt="Background" className={styles.storyBackground} />
-      <img src={avatar} alt="User" className={styles.storyProfile} />
+      <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1964&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Background" className={styles.storyBackground} />
       <img
         src="./assets/person/upload.png"
         alt="Add Story"
         className={styles.storyAdd}
       />
-      <span className={styles.storyText}>{name}</span>
     </div>
   );
 };

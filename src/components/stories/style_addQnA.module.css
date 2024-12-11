@@ -1,53 +1,62 @@
-
-.addQnACard{
+.addQnACard {
     height: 180px;
     width: 108px;
-
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease; 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
 }
 
-    .storyProfile {
-        width: 32px;
-        height: 32px;
-        flex-shrink: 0;
-        position: relative;
-        top:-167px;
-        left: 10px;
-        border-radius: 32px;
-        border: 1px solid #1570EF;
-        background-size: cover; /* Ensures the image covers the entire background */
-        background-position: center; /* Centers the image */
-        background-repeat: no-repeat; /* Avoids tiling */
-    }
+.addQnACard:hover {
+    transform: scale(1.05); 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+}
 
-    .storyBackground {
-        background-size: cover; /* Ensures the image covers the entire background */
-        background-position: center; /* Centers the image */
-        background-repeat: no-repeat; /* Avoids tiling */
-        border-radius: 8px;
-        width: 100%;
-        height: 100%;
-    }
+.storyBackground {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; 
+    border-radius: 8px; 
+    transition: transform 0.3s ease; 
+}
 
-    .storyAdd {
-        position: relative;
-        top : -100px;
-        color: #0047a3;
-        width: 30px;
-        bottom: 40px;
-        cursor: pointer;
-        left: 6.5px;
-    }
+.addQnACard:hover .storyBackground {
+    transform: scale(1.1);
+}
 
-    .storyText {
-        width: 56px;
-        height: 16px;
-        color: #FFfffF;
-        font-family: "Roboto-Regular", Helvetica;
-        font-size: 15px;
-        font-style: normal;
-        font-weight: 500;
-        line-height: 30px; 
-        position: relative;
-        top :-50px;
-        border: solid 1px;
-    }
+.storyAdd {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); 
+    width: 30px;
+    height: 30px;
+    background-color: white;
+    border-radius: 50%; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); 
+    cursor: pointer;
+    z-index: 2; 
+}
+
+.storyAdd img {
+    width: 18px; 
+    height: 18px;
+}
+
+.storyProfile {
+    width: 32px;
+    height: 32px;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    border-radius: 50%;
+    border: 1px solid #1570EF;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
