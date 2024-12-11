@@ -27,6 +27,10 @@ import ReportDetailPage from "./pages/moderator/detailPage";
 import Footer from "./components/footer/Footer";
 import AddQnA from "./components/stories/addQnA";
 import Dropdown from "./components/post/dropdown";
+
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 function App() {
   const [posts, setPosts] = useState([]);
 
@@ -34,21 +38,25 @@ function App() {
     try {
       if (!searchContent.trim()) {
         console.warn("Search query is empty.");
+        toast.warn("Search query is empty.");
         return;
       }
-      const response = await fetch(`http://localhost:8386/api/posts/search?query=${searchContent}`);
+      const response = await fetch(
+        `http://localhost:8386/api/posts/search?query=${searchContent}`
+      );
       const data = await response.json();
       console.log(data);
       setPosts(data);
     } catch (error) {
       console.error("Search API Error:", error);
+      toast.error("Search API error");
     }
   };
 
   const Layout = () => {
     return (
       <div>
-        <Navbar handleSearch={handleSearch}/>
+        <Navbar handleSearch={handleSearch} />
         <Outlet />
         <Footer />
         {/* <Dropdown/> */}
@@ -124,7 +132,23 @@ function App() {
     },
   ]);
 
-  return <RouterProvider router={router} />;
+  return (
+    <>
+      <RouterProvider router={router} />
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
+    </>
+  );
 }
 
 export default App;

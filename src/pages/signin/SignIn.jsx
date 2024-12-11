@@ -3,6 +3,7 @@ import styles from "./style_signin.module.css";
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const SignIn = () => {
   const [password, setPassword] = useState("");
@@ -18,7 +19,7 @@ const SignIn = () => {
     
     e.preventDefault();
     if (password !== password2) {
-      alert("Mật khẩu không đúng. Vui lòng nhập lại mật khẩu");
+      toast.error("Mật khẩu không đúng. Vui lòng nhập lại mật khẩu")
     } else {
       let updatedValue = { ...value, password: password };
       setValue(updatedValue);
@@ -32,10 +33,10 @@ const SignIn = () => {
             console.log(res);
             localStorage.setItem("formData", JSON.stringify(updatedValue));
             if (res.data.errCode === 1) {
-              alert('Email này đã được sử dụng')
+              toast.error('Email này đã được sử dụng')
             } else if (res.data.errCode === 0) {
               navigate("/verify");
-              alert(`Mã OTP đã được gửi về email ${updatedValue.email}`)
+              toast.info(`Mã OTP đã được gửi về email ${updatedValue.email}`)
             }
           })
       } catch(err) {setErr(err)}
