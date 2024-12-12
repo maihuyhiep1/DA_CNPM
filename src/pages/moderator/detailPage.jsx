@@ -34,11 +34,11 @@ const ReportDetailPage = () => {
                     { withCredentials: true }
                 );
                 console.log(response);
-                alert(response.data.message);
+                toast(response.data.message);
                 // setOpenDialog(false)
             } catch (error) {
                 console.error("Lỗi khi xoá bài viết:", error.message);
-                alert("Có lỗi xảy ra khi xoá bài viết.");
+                toast("Có lỗi xảy ra khi xoá bài viết.");
                 setOpenDialog(false)
             }
         } else {
@@ -54,10 +54,10 @@ const ReportDetailPage = () => {
                     console.log(`Report with ID ${id} deleted:`, response.data.message);
                 }
 
-                alert("Tất cả các báo cáo đã được xóa thành công!");
+                toast("Tất cả các báo cáo đã được xóa thành công!");
             } catch (error) {
                 console.error("Lỗi khi xoá báo cáo:", error.message);
-                alert("Có lỗi xảy ra khi xóa một số báo cáo.");
+                toast("Có lỗi xảy ra khi xóa một số báo cáo.");
             }
         }
         navigate("/admin");
@@ -71,7 +71,7 @@ const ReportDetailPage = () => {
                 <p><strong>Tác giả:</strong> {reportDetails[0].post.author.name}</p>
             </div>
 
-            <td className="border px-6 py-4 text-center">
+            <td className="post-button">
                 <a
                     href={`/post/${postId}`}
                     className="bg-blue-500 text-white px-6 py-3 rounded-lg shadow-md hover:bg-blue-600 transition-colors"

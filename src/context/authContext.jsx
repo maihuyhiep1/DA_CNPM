@@ -38,12 +38,12 @@ export const AuthContextProvider = ({ children }) => {
 
           return true; // Login and user fetch successful
         } else {
-          alert(res.data.message || "Đăng nhập thất bại.");
+          toast(res.data.message || "Đăng nhập thất bại.");
           return false; // Login failed
         }
       } catch (err) {
         console.log("Login error:", err);
-        alert(
+        toast(
           err.response?.data?.message || "Mật khẩu hoặc tên tài khoản sai !!!"
         );
         return false; // Error during login process
@@ -53,6 +53,7 @@ export const AuthContextProvider = ({ children }) => {
       const userRes = await axios.get("http://localhost:8386/login-success", {
         withCredentials: true,
       });
+      alert("Lấy thông tin người dùng", userRes);
       console.log("Lấy thông tin người dùng", userRes);
       setCurrentUser(userRes.data.user);
 
@@ -75,7 +76,7 @@ export const AuthContextProvider = ({ children }) => {
       localStorage.removeItem("user");
     } catch (err) {
       console.log("Logout error:", err);
-      alert("Đăng xuất thất bại. Vui lòng thử lại.");
+      toast("Đăng xuất thất bại. Vui lòng thử lại.");
     }
   };
 

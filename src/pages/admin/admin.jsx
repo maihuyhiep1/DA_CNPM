@@ -2,11 +2,13 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import "./admin.css";
+import { toast } from 'react-toastify';
 
-const AdminDashboard = () => {
+const AdminDashboard = ({ isAdmin }) => {
     const [postCount, setPostCount] = useState(0);
     const [accountCount, setAccountCount] = useState(0);
     const [deletedPostsCount, setDeletedPostsCount] = useState(0);
+    const [isadmin, setIsAdmin] = useState(false || isAdmin);
     const navigate = useNavigate();
 
     const [notifications, setNotifications] = useState([]); // Danh sách thông báo đã gửi
@@ -54,8 +56,8 @@ const AdminDashboard = () => {
 
                 const groupedReports = Object.values(
                     response.data.data.reduce((acc, curr) => {
-                        if (!acc[curr.post_id]) {
-                            acc[curr.post_id] = {
+                        if (!acc[curr.post.post_id]) {
+                            acc[curr.post.post_id] = {
                                 id: curr.id,
                                 post_id: curr.post.post_id,
                                 title: curr.post.title,
@@ -65,7 +67,7 @@ const AdminDashboard = () => {
                                 post: curr.post,
                             };
                         }
-                        acc[curr.post_id].reportCount++;
+                        acc[curr.post.post_id].reportCount++;
                         return acc;
                     }, {})
                 );
@@ -77,7 +79,7 @@ const AdminDashboard = () => {
         }
         fetchReports();
         fetchStatics();
-        fetchNotices();
+        if(isadmin) fetchNotices();
     }, []);
     const handleSendNotification = async () => {
         if (currentNotification.trim()) {
@@ -87,23 +89,24 @@ const AdminDashboard = () => {
                     content: currentNotification, // Use the input value directly
                     onlyMod: onlyForMods, // Include the toggle state
                 },
-            ]); 
-            
+            ]);
+
             try {
                 const response = await axios.post(
                     "http://localhost:8386/api/admin/notification",
                     {
-                        message : currentNotification,
+                        message: currentNotification,
                         isMod: onlyForMods
                     },
                     { withCredentials: true }
                 )
                 console.log(response);
+                toast("Đã gửi thông báo!")
 
                 const groupedReports = Object.values(
                     response.data.data.reduce((acc, curr) => {
-                        if (!acc[curr.post_id]) {
-                            acc[curr.post_id] = {
+                        if (!acc[curr.post.post_id]) {
+                            acc[curr.post.post_id] = {
                                 id: curr.id,
                                 post_id: curr.post.post_id,
                                 title: curr.post.title,
@@ -113,11 +116,11 @@ const AdminDashboard = () => {
                                 post: curr.post,
                             };
                         }
-                        acc[curr.post_id].reportCount++;
+                        acc[curr.post.post_id].reportCount++;
                         return acc;
                     }, {})
                 );
-                console.log(groupedReports);
+                console.log("Lấy báo cáo",groupedReports);
                 setDeletedPostsCount(groupedReports.length);
             } catch (error) {
                 console.log(error.message)
@@ -125,18 +128,17 @@ const AdminDashboard = () => {
 
             setCurrentNotification(""); // Clear the notification input
             setOnlyForMods(false); // Reset the toggle
-            // alert(
+            // toast(
             //     `Thông báo đã được gửi ${onlyForMods ? "đến các mod" : "đến toàn hệ thống"
             //     }.`
             // );
         } else {
-            alert("Vui lòng nhập nội dung thông báo.");
+            toast("Vui lòng nhập nội dung thông báo.");
         }
     };
 
-
     const handleNavigation = (path) => {
-        navigate(path);
+      navigate(path, { state: isAdmin });
     };
 
     const toggleShowNotifications = () => {
@@ -145,7 +147,7 @@ const AdminDashboard = () => {
 
     return (
         <div className="admin-dashboard">
-            <h1>Admin Dashboard</h1>
+            {isadmin?<h1>Admin Dashboard</h1>:<h1>Moderator Dashboard</h1>}
 
             <div className="stats">
                 <div className="stat-item"
@@ -161,13 +163,13 @@ const AdminDashboard = () => {
                     <p>Tài khoản</p>
                 </div>
                 <div className="stat-item"
-                    onClick={() => handleNavigation("/moderator")}
+                    onClick={() => handleNavigation("/admin/reports")}
                     role="button">
                     <h2>{deletedPostsCount}</h2>
                     <p>Bài viết bị báo cáo</p>
                 </div>
             </div>
-            <div className="notification-section">
+            {isadmin && <div className="notification-section">
                 <h3>Gửi Thông Báo</h3>
                 <textarea
                     className="notification-input"
@@ -187,9 +189,9 @@ const AdminDashboard = () => {
                 <button className="send-button" onClick={handleSendNotification}>
                     Gửi Thông Báo
                 </button>
-            </div>
+            </div>}
 
-            <div className="show-notifications-section">
+            {isadmin && <div className="show-notifications-section">
                 <button className="show-button" onClick={toggleShowNotifications}>
                     {showNotifications ? "Ẩn Thông Báo" : "Hiển Thị Tất Cả Thông Báo"}
                 </button>
@@ -210,7 +212,7 @@ const AdminDashboard = () => {
                     </div>
                 )}
 
-            </div>
+            </div>}
         </div>
     );
 };

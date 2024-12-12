@@ -33,6 +33,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   const [posts, setPosts] = useState([]);
+  const { currentUser } = useContext(AuthContext);
 
   const handleSearch = async (searchContent) => {
     try {
@@ -89,16 +90,12 @@ function App() {
           element: <SetupInformation />,
         },
         {
-          path: "/moderator",
-          element: <ReportsPage />,
-        },
-        {
-          path: "/moderator/:postId",
+          path: "/report/:postId",
           element: <ReportDetailPage />,
         },
         {
           path: "/admin",
-          element: <AdminDashboard />,
+          element: <AdminDashboard isAdmin={currentUser && currentUser.role==="admin"}/>,
         },
         {
           path: "/admin/:route",

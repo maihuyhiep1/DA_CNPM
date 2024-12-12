@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from 'axios';
 import Editor from "../../components/CKEditor/CKEditor5";
+import { toast } from 'react-toastify';
 
 const CreatePost = () => {
   const location = useLocation();
@@ -54,12 +55,12 @@ const CreatePost = () => {
     e.preventDefault();
 
     if (!title.trim()) {
-      alert("Vui lòng nhập tiêu đề.");
+      toast("Vui lòng nhập tiêu đề.");
       return;
     }
 
     if (!content.trim() && !isQna) {
-      alert("Vui lòng nhập nội dung bài viết.");
+      toast("Vui lòng nhập nội dung bài viết.");
       return;
     }
 
@@ -91,7 +92,7 @@ const CreatePost = () => {
       }
 
       const result = await response.json();
-      alert(isEditing ?"Bài viết được cập nhật thành công":"Bài viết đã được đăng thành công!");
+      toast(isEditing ?"Bài viết được cập nhật thành công":"Bài viết đã được đăng thành công!");
       if(isEditing) {
         navigate(`/post/${postId}`);
       } else {
@@ -101,9 +102,10 @@ const CreatePost = () => {
       setContent("");
       setImage(null);
       setIsQna(false);
+      navigate("/");
     } catch (error) {
       console.error("Error submitting form:", error);
-      alert("Có lỗi xảy ra khi đăng bài viết.");
+      toast("Có lỗi xảy ra khi đăng bài viết.");
     }
   };
 
@@ -130,7 +132,7 @@ const CreatePost = () => {
     if (file && file.type.startsWith("image/")) {
       setImage(file);
     } else {
-      alert("Chỉ chấp nhận file hình ảnh!");
+      toast("Chỉ chấp nhận file hình ảnh!");
     }
   };
 

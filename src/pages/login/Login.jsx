@@ -13,7 +13,7 @@ const Login = () => {
     e.preventDefault();
 
     if (!value.username || !value.password) {
-      alert("Username and password are required.");
+      toast("Username and password are required.");
       return;
     }
 

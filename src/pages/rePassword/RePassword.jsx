@@ -17,7 +17,7 @@ const RePassword = () => {
     console.log(value)
 
     if (password !== password2) {
-      alert("Mật khẩu không khớp. Vui lòng kiểm tra lại!");
+      toast("Mật khẩu không khớp. Vui lòng kiểm tra lại!");
       return;
     } else {
       let updatedValue = { ...value, password: password };
@@ -37,11 +37,11 @@ const RePassword = () => {
           navigate("/login"); // Redirect on successful OTP verification
         } else {
           console.error("Incorrect OTP:", response.data.message);
-          alert("Mã OTP sai. Vui lòng điền lại !!!"); // Inform user of incorrect OTP
+          toast("Mã OTP sai. Vui lòng điền lại !!!"); // Inform user of incorrect OTP
         }
       } catch (error) {
         console.error("An error occurred during OTP verification:", error);
-        alert("Đã xảy ra lỗi, vui lòng thử lại sau."); // General error message
+        toast("Đã xảy ra lỗi, vui lòng thử lại sau."); // General error message
       }
     }
   };

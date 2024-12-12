@@ -20,6 +20,7 @@ import {
 } from "@mui/icons-material";
 import { useNavigate } from 'react-router-dom';
 import Popup from '../popUp/popUp';
+import { toast } from 'react-toastify';
 
 
 const FullPost = () => {
@@ -70,12 +71,12 @@ const FullPost = () => {
                 },
                 { withCredentials: true }
             );
-            alert("Báo cáo đã được gửi thành công!");
+            toast("Báo cáo đã được gửi thành công!");
             setOpenDialog(false)
             console.log(response.data);
         } catch (error) {
             console.error("Lỗi khi báo cáo bài viết:", error.message);
-            alert("Có lỗi xảy ra khi báo cáo bài viết.");
+            toast("Có lỗi xảy ra khi báo cáo bài viết.");
             setOpenDialog(false)
         }
     };
@@ -87,13 +88,13 @@ const FullPost = () => {
                 `http://localhost:8386/api/admin/posts/${id}`,
                 { withCredentials: true }
             );
-            alert("Xoá post thành công!");
+            toast("Xoá post thành công!");
             setOpenPopUp(false);
             window.location.reload()
             console.log(response.data);
         } catch (error) {
             console.error("Lỗi khi xoá bài viết:", error.message);
-            alert("Có lỗi xảy ra khi xoá bài viết.");
+            toast("Có lỗi xảy ra khi xoá bài viết.");
             setOpenPopUp(false);
         }
     }
@@ -108,12 +109,12 @@ const FullPost = () => {
                 { withCredentials: true }
             );
             console.log(response);
-            alert(response.data.message);
+            toast(response.data.message);
             setOpenDialog(false);
             setIsFollowing(response.data.message === "Đã theo dõi bài viết thành công!");
         } catch (error) {
             console.error("Lỗi khi theo dõi bài viết:", error.message);
-            alert("Có lỗi xảy ra khi theo dõi bài viết.");
+            toast("Có lỗi xảy ra khi theo dõi bài viết.");
             setOpenDialog(false);
             setIsFollowing(false);
         }
@@ -268,11 +269,11 @@ const FullPost = () => {
         const currentUrl = window.location.href; // Lấy link hiện tại
         navigator.clipboard.writeText(currentUrl) // Copy link vào clipboard
             .then(() => {
-                alert("Link đã được copy vào clipboard!");
+                toast("Link đã được copy vào clipboard!");
             })
             .catch((error) => {
                 console.error("Lỗi khi copy link:", error);
-                alert("Không thể copy link. Vui lòng thử lại!");
+                toast("Không thể copy link. Vui lòng thử lại!");
             });
     };
 

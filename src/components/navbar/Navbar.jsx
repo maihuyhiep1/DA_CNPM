@@ -10,6 +10,7 @@ import { AuthContext } from "../../context/authContext";
 const Navbar = ({ handleSearch }) => {
   const navigate = useNavigate();
   const { currentUser } = useContext(AuthContext);
+  console.log(currentUser);
   const [searchContent, setSearchContent] = useState("");
 
   const onSearch = (event) => {
@@ -63,7 +64,7 @@ const Navbar = ({ handleSearch }) => {
         <div className={styles.avatar}>
           <Link to="/profile"> {/* Link the avatar to the "/profile" route */}
             {
-              currentUser.avatar ? (
+              currentUser && currentUser.avatar ? (
                 <img
                   appearance="circle"
                   src={currentUser.avatar}

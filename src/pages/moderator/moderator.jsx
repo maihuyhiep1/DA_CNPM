@@ -12,10 +12,11 @@ const ReportsPage = () => {
             .then((res) => res.json())
             .then((data) => {
                 // Nhóm báo cáo theo post_id
+                console.log(data);
                 const groupedReports = Object.values(
                     data.data.reduce((acc, curr) => {
-                        if (!acc[curr.post_id]) {
-                            acc[curr.post_id] = {
+                        if (!acc[curr.post.post_id]) {
+                            acc[curr.post.post_id] = {
                                 id: curr.id,
                                 post_id: curr.post.post_id,
                                 title: curr.post.title,
@@ -25,10 +26,11 @@ const ReportsPage = () => {
                                 post: curr.post,
                             };
                         }
-                        acc[curr.post_id].reportCount++;
+                        acc[curr.post.post_id].reportCount++;
                         return acc;
                     }, {})
                 );
+                console.log(groupedReports);
                 setReports(groupedReports);
             })
             .catch((err) => console.error(err));
@@ -36,7 +38,7 @@ const ReportsPage = () => {
 
     const handleReportClick = (postId) => {
         // Chuyển hướng tới trang chi tiết báo cáo
-        navigate(`/moderator/${postId}`);
+        navigate(`/report/${postId}`);
     };
 
     return (
@@ -66,7 +68,7 @@ const ReportsPage = () => {
                             <td className="border px-6 py-4 text-center">{report.reportCount}</td>
                             <td className="border px-6 py-4 text-center">
                                 <a
-                                    href={`/post/${report.post_id}`}
+                                    href={`/report/${report.post_id}`}
                                     className="bg-blue-500 text-white px-6 py-3 rounded-lg shadow-md hover:bg-blue-600 transition-colors"
                                 >
                                     Xem bài viết

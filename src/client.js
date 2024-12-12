@@ -1,3 +1,5 @@
+import { toast } from "react-toastify";
+
 function connectWebSocket(userId) {
     const socket = new WebSocket('ws://localhost:8386'); // Thay bằng địa chỉ server BE
     socket.onopen = () => {
@@ -15,7 +17,7 @@ function connectWebSocket(userId) {
         if (data.type === 'notification') {
             console.log('Notification received:', data.data);
             // Thay alert bằng toast hoặc logic tùy chỉnh
-            alert(`Notification: ${data.data}`);
+            toast(`Notification: ${data.data}`);
         }
     };
     socket.onclose = () => {

@@ -3,6 +3,7 @@ import { AuthContext } from "../../context/authContext";
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import './style_setup.css';
+import { toast } from 'react-toastify';
 
 const SetupInformation = () => {
   const { currentUser, setCurrentUser } = useContext(AuthContext);
@@ -53,10 +54,10 @@ const SetupInformation = () => {
       setCurrentUser(updatedUser);  // Cập nhật user trong context
       localStorage.setItem('user', JSON.stringify(updatedUser));  // Cập nhật localStorage
 
-      alert('Thông tin đã được cập nhật thành công!');
+      toast('Thông tin đã được cập nhật thành công!');
     } catch (error) {
       console.error('Error updating information:', error);
-      alert('Đã xảy ra lỗi khi cập nhật thông tin!');
+      toast('Đã xảy ra lỗi khi cập nhật thông tin!');
     }
   };
 

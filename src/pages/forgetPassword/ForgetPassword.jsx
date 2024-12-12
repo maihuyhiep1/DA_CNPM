@@ -15,18 +15,18 @@ const ForgetPassword = () => {
 
       if (response.data.errCode === 0) {
         console.log(response);
-        alert(`Mã OTP đã được gửi về email: ${response.data.email}`);
+        toast(`Mã OTP đã được gửi về email: ${response.data.email}`);
 
         // Store username and email in localStorage
         localStorage.setItem('forgotPasswordData', JSON.stringify({ username: value.username }));
         navigate('/re-password'); // Redirect to Verify page
       } else {
         console.error('Sai tên đăng nhập', response.data.message);
-        alert('Tên đăng nhập sai. Vui lòng điền lại !!!');
+        toast('Tên đăng nhập sai. Vui lòng điền lại !!!');
       }
     } catch (error) {
       console.error('An error occurred during OTP verification:', error);
-      alert('Đã xảy ra lỗi, vui lòng thử lại sau.'); // General error message
+      toast('Đã xảy ra lỗi, vui lòng thử lại sau.'); // General error message
     }
   };
 

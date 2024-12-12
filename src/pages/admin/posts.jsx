@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./posts.css";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { toast } from 'react-toastify';
 
 const PostManagementPage = () => {
     const navigate = useNavigate();
@@ -54,11 +55,11 @@ const PostManagementPage = () => {
                 { withCredentials: true }
             );
             console.log(response);
-            // alert(response.data.message);
+            toast("Bài viết đã bị xoá!");
             setPosts((prevPosts) => prevPosts.filter((post) => post.post_id !== postId));
         } catch (error) {
             console.error("Lỗi khi xoá bài viết:", error.message);
-            alert("Có lỗi xảy ra khi xoá bài viết.");
+            toast("Có lỗi xảy ra khi xoá bài viết.");
         }
     };
 

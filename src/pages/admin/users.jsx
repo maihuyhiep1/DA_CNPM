@@ -1,29 +1,36 @@
 import React, { useState, useEffect } from "react";
 import "./users.css";
 import axios from "axios";
+import { useLocation } from "react-router-dom";
+import { toast } from 'react-toastify';
 
 const UserManagementPage = () => {
     const [users, setUsers] = useState([]);
+    const location = useLocation();
+    const params = location.state;
+    console.log(params)
+    const [admin, setAdmin] = useState(params || false);
+
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const [userResponse, modResponse] = await Promise.all([
-                    axios.get(`http://localhost:8386/api/admin/users`,{
+                    axios.get(`http://localhost:8386/api/admin/users`, {
                         withCredentials: true,
                     }),
-                    axios.get(`http://localhost:8386/api/admin/moderators`, {
+                    admin ? axios.get(`http://localhost:8386/api/admin/moderators`, {
                         withCredentials: true,
-                    }),
+                    }) : Promise.resolve(null),
                 ]);
 
                 console.log("LẤY USERS:", userResponse.data);
-                console.log("LẤY MODS:", modResponse.data);
+                if (admin) console.log("LẤY MODS:", modResponse.data);
 
                 // Combine both responses into one array
                 const combinedData = [
                     ...userResponse.data.users.map((user) => ({ ...user, role: "user" })),
-                    ...modResponse.data.moderators.map((mod) => ({ ...mod, role: "mod" })),
+                    ...(admin ? modResponse.data.moderators.map((mod) => ({ ...mod, role: "mod" })) : []),
                 ];
 
                 setUsers(combinedData);
@@ -51,7 +58,7 @@ const UserManagementPage = () => {
             { withCredentials: true }
         );
         console.log(response)
-        // alert("Role đã được thay đổi.");
+        toast("Role đã được thay đổi.");
     };
 
     const handleDelete = async (id) => {
@@ -60,7 +67,7 @@ const UserManagementPage = () => {
             await axios.delete(`http://localhost:8386/api/admin/delete-user/${id}`, {
                 withCredentials: true,
             });
-            alert("Tài khoản đã bị xoá.");
+            toast("Tài khoản đã bị xoá.");
         } catch (err) {
             console.error("Error deleting user:", err.message);
         }
@@ -74,8 +81,8 @@ const UserManagementPage = () => {
                     <tr>
                         <th>Tên</th>
                         <th>Ngày Tạo Tài Khoản</th>
-                        <th>Role</th>
-                        <th>Thay Đổi Role</th>
+                        {admin && <th>Role</th>}
+                        {admin && <th>Thay Đổi Role</th>}
                         <th>Xoá Tài Khoản</th>
                     </tr>
                 </thead>
@@ -85,15 +92,15 @@ const UserManagementPage = () => {
                             <tr key={user.id}>
                                 <td>{user.name}</td>
                                 <td>{user.createdAt}</td>
-                                <td>{user.role === "mod" ? "Quản trị viên":"Người dùng"}</td>
-                                <td>
+                                {admin && <td>{user.role === "mod" ? "Quản trị viên" : "Người dùng"}</td>}
+                                {admin && <td>
                                     <button
                                         className="role-button"
                                         onClick={() => handleRoleChange(user.id)}
                                     >
                                         {user.role === "user" ? "Set to Mod" : "Set to User"}
                                     </button>
-                                </td>
+                                </td>}
                                 <td>
                                     <button
                                         className="delete-button"
