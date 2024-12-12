@@ -53,9 +53,7 @@ export const AuthContextProvider = ({ children }) => {
       const userRes = await axios.get("http://localhost:8386/login-success", {
         withCredentials: true,
       });
-      alert("Lấy thông tin người dùng", userRes);
-      console.log("Lấy thông tin người dùng", userRes);
-      setCurrentUser(userRes.data.user);
+      setCurrentUser(userRes.user);
 
       return true;
     }

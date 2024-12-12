@@ -7,6 +7,18 @@ import Rightbar from "../../components/rightbar/Rightbar";
 import { AuthContext } from "../../context/authContext";
 
 const Home = ({posts}) => {
+  const { currentUser, setCurrentUser } = useContext(AuthContext);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const userRes = await axios.get("http://localhost:8386/login-success", {
+        withCredentials: true,
+      });
+      setCurrentUser(userRes.user);
+    };
+
+    fetchUser();
+  }, []);
   // const { currentUser } = useContext(AuthContext);
   // const navigate = useNavigate();
 

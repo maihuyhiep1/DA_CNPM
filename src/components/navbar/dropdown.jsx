@@ -57,7 +57,7 @@ const Dropdown = () => {
         >
           <a href="/profile">Trang cá nhân</a>
           {/* <a href="#about">Cài đặt</a> */}
-          {currentUser.role !== "user" && <a href="/admin">Quản lý</a>}
+          {currentUser && currentUser.role !== "user" && <a href="/admin">Quản lý</a>}
           <a
             href="#"
             onClick={(e) => {

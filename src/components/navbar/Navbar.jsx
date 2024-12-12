@@ -68,9 +68,9 @@ const Navbar = ({ handleSearch }) => {
                 <img
                   appearance="circle"
                   src={currentUser.avatar}
-                  alt={currentUser.fullname}
+                  alt={currentUser.name}
                   size="large"
-                  name={currentUser.fullname}
+                  name={currentUser.name}
                   style={{ cursor: "pointer" }}
                 />
               ) : (
@@ -87,7 +87,7 @@ const Navbar = ({ handleSearch }) => {
                     color: "white",
                   }}
                 >
-                  {currentUser.name.charAt(0).toUpperCase()}
+                  {currentUser && currentUser.name.charAt(0).toUpperCase()}
                 </div>
               )
             }
