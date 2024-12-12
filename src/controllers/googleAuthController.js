@@ -2,14 +2,14 @@ require("passport");
 let callbackUser = (req, res) => {
   // res.redirect(`${process.env.CLIENT_URL}/login-success/${req.user?.id}`);
 
-  res.redirect(process.env.CLIENT_URL)
+  res.redirect(`${process.env.CLIENT_URL}/login-success`)
 }
 
 const loginSuccess = async (req, res) => {
     if (req.isAuthenticated()) {
       const user = req.user;
       user.setDataValue('createdAt', new Date(user.createdAt).toLocaleDateString('en-GB'));
-      user.setDataValue('updatedAt', new date(user.updatedAt).toLocaleDateString('en-GB'));
+      user.setDataValue('updatedAt', new Date(user.updatedAt).toLocaleDateString('en-GB'));
       res.status(200).json({
         errCode: 0,
         message: "Ok",
