@@ -10,11 +10,11 @@ import { AuthContext } from "../../context/authContext";
 const Navbar = ({ handleSearch }) => {
   const navigate = useNavigate();
   const { currentUser } = useContext(AuthContext);
-  const [ searchContent, setSearchContent ] = useState("");
+  const [searchContent, setSearchContent] = useState("");
 
   const onSearch = (event) => {
     setSearchContent(event.target.value);
-    console.log(searchContent);
+    // console.log(searchContent);
   }
 
   const handleKeyDown = (event) => {
@@ -62,14 +62,34 @@ const Navbar = ({ handleSearch }) => {
         </div>
         <div className={styles.avatar}>
           <Link to="/profile"> {/* Link the avatar to the "/profile" route */}
-            <img
-              appearance="circle"
-              src={currentUser.avatar}
-              alt="Scott Farquhar"
-              size="large"
-              name="Scott Farquhar"
-              style={{ cursor: "pointer" }} // Optional: Make it clear that it's clickable
-            />
+            {
+              currentUser.avatar ? (
+                <img
+                  appearance="circle"
+                  src={currentUser.avatar}
+                  alt={currentUser.fullname}
+                  size="large"
+                  name={currentUser.fullname}
+                  style={{ cursor: "pointer" }}
+                />
+              ) : (
+                <div
+                  style={{
+                    width: "40px",
+                    height: "40px",
+                    borderRadius: "50%",
+                    backgroundColor: "purple",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    fontSize: "24px",
+                    color: "white",
+                  }}
+                >
+                  {currentUser.name.charAt(0).toUpperCase()}
+                </div>
+              )
+            }
           </Link>
         </div>
 

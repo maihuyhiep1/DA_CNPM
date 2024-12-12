@@ -24,7 +24,33 @@ const AvtAndInformation = () => {
     <div className={styles.AvtAndInformation}>
       <div className={styles.container}>
         {/* Avatar */}
-        <img className={styles.avatar} src={currentUser.avatar} alt="Avatar" />
+        {
+              currentUser.avatar ? (
+                <img
+                className={styles.avatar}
+                  appearance="circle"
+                  src={currentUser.avatar}
+                  alt={currentUser.fullname}
+                  size="large"
+                  name={currentUser.fullname}
+                  style={{ cursor: "pointer" }}
+                />
+              ) : (
+                <div
+                  style={{
+                    backgroundColor: "purple",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    fontSize: "24px",
+                    color: "white",
+                  }}
+                  className={styles.avatar}
+                >
+                  {currentUser.name.charAt(0).toUpperCase()}
+                </div>
+              )
+            }
 
         {/* Tên và Vai trò */}
         <div className={styles.name}>{currentUser.name}</div>
