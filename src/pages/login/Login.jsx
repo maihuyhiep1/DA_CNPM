@@ -5,7 +5,7 @@ import { AuthContext } from "../../context/authContext";
 import axios from "axios";
 
 const Login = () => {
-  const { login } = useContext(AuthContext);
+  const { login, gglogIn } = useContext(AuthContext);
   const [value, setValue] = useState({});
   const navigate = useNavigate();
 
@@ -31,16 +31,7 @@ const Login = () => {
 
   const handleGGSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const isLoggedIn = await login();
-      if (isLoggedIn) {
-        navigate("/"); // Redirect on successful login
-      } else {
-        console.log("Login failed. Please check your credentials.");
-      }
-    } catch (err) {
-      console.log("Error during login submission:", err);
-    }
+    window.location.href = "http://localhost:8386/google/auth";
   };
 
   const handleForgetPassword = () => {

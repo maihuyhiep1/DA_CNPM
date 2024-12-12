@@ -5,9 +5,13 @@ import connectWebSocket from "../client.js";
 export const AuthContext = createContext();
 
 export const AuthContextProvider = ({ children }) => {
-  const [currentUser, setCurrentUser] = useState(
-    JSON.parse(localStorage.getItem("user")) || null
-  );
+  const [currentUser, setCurrentUser] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem("user")) || null;
+    } catch {
+      return null;
+    }
+  });
 
   const login = async (inputs) => {
     if (inputs) {
@@ -48,14 +52,6 @@ export const AuthContextProvider = ({ children }) => {
         );
         return false; // Error during login process
       }
-    } else {
-      window.location.href = "http://localhost:8386/google/auth";
-      const userRes = await axios.get("http://localhost:8386/login-success", {
-        withCredentials: true,
-      });
-      setCurrentUser(userRes.user);
-
-      return true;
     }
   };
 
@@ -83,7 +79,9 @@ export const AuthContextProvider = ({ children }) => {
   }, [currentUser]);
 
   return (
-    <AuthContext.Provider value={{ currentUser, setCurrentUser, login, logout }}>
+    <AuthContext.Provider
+      value={{ currentUser, setCurrentUser, login, logout }}
+    >
       {children}
     </AuthContext.Provider>
   );

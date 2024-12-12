@@ -27,6 +27,7 @@ import ReportDetailPage from "./pages/moderator/detailPage";
 import Footer from "./components/footer/Footer";
 import AddQnA from "./components/stories/addQnA";
 import Dropdown from "./components/post/dropdown";
+import LoginSuccess from "./pages/loginSuccess/LoginSuccess";
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -126,6 +127,10 @@ function App() {
     {
       path: "/re-password",
       element: <RePassword />,
+    },
+    {
+      path: "/login-success",
+      element: <LoginSuccess />,
     },
   ]);
 
