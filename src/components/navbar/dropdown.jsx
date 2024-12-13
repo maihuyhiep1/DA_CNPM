@@ -22,7 +22,7 @@ const Dropdown = () => {
   const handleLogout = async () => {
     try {
       console.log("LOG OUT");
-      localStorage.removeItem('user');
+      // localStorage.removeItem('user');
       const response = await axios.get(
         "http://localhost:8386/logout",
         { withCredentials: true }

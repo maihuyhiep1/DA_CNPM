@@ -28,7 +28,6 @@ const FullPost = () => {
     const [post, setPost] = useState(null);
     const [comments, setComments] = useState();
     const [loading, setLoading] = useState(true); // Trạng thái loading
-    const { currentUser } = useContext(AuthContext);
     const [like, setLike] = useState(false);
     const [anchorEl, setAnchorEl] = useState(null);
     const [openDialog, setOpenDialog] = useState(false);
@@ -36,6 +35,25 @@ const FullPost = () => {
     const [isFollowing, setIsFollowing] = useState(false);
     const [openPopUp, setOpenPopUp] = useState(false);
     const navigate = useNavigate();
+    const [user, setUser] = useState(null);
+
+    // Fetch thông tin người dùng khi component được mount
+    useEffect(() => {
+        const fetchUserInfo = async () => {
+            try {
+                const response = await axios.get("http://localhost:8386/login-success", {
+                    withCredentials: true,
+                });
+                const userData = response.data.user;
+                setUser(userData);
+                console.log("Thông tin người dùng:", userData);
+            } catch (error) {
+                console.error("Lỗi khi lấy thông tin người dùng:", error);
+                // navigate("/login"); // Điều hướng về trang đăng nhập nếu không đăng nhập
+            }
+        };
+        fetchUserInfo();
+    }, []);
 
     // Hàm mở menu
     const handleMenuOpen = (event) => {
@@ -65,7 +83,7 @@ const FullPost = () => {
             const response = await axios.post(
                 `http://localhost:8386/api/reports`,
                 {
-                    reporterId: currentUser.id,
+                    reporterId: user.id,
                     post_id: id,
                     reason: reason
                 },
@@ -126,7 +144,7 @@ const FullPost = () => {
                 const response = await axios.get(`http://localhost:8386/api/posts/${id}`, {
                     withCredentials: true
                 });
-                console.log(response.data);
+                console.log("Post có định dạng như sau: .data", response.data);
                 setPost(response.data);  // Lưu dữ liệu bài viết
                 setLoading(false);        // Dữ liệu đã tải xong
             } catch (err) {
@@ -186,11 +204,11 @@ const FullPost = () => {
 
     const handleAddComment = async (content) => {
         console.log("NỘI DUNG CONTENT: ", content);
-        content.userId = currentUser.id;
+        content.userId = user.id;
 
         try {
-            content.user = currentUser;
-            console.log(currentUser);
+            content.user = user;
+            console.log(user);
             content.createdAt = "Vừa xong";
             const response = await axios.post(
                 `http://localhost:8386/api/comments/post/${id}`,
@@ -212,10 +230,10 @@ const FullPost = () => {
     const handleAddChildComment = async (content) => {
         // content.commentId = parrentId;
         console.log("NỘI DUNG CONTENT CON: ", content);
-        // content.userId = currentUser.id;
+        // content.userId = user.id;
 
         try {
-            content.user = currentUser;
+            content.user = user;
             content.createdAt = "Vừa xong";
             const response = await axios.post(
                 `http://localhost:8386/api/comments/post/${id}`,
@@ -226,7 +244,7 @@ const FullPost = () => {
 
             setComments((prevComments) => {
                 const updatedComments = prevComments.map((subArray) => {
-                    console.log("Súb à rây ",subArray[0].id);
+                    console.log("Súb à rây ", subArray[0].id);
                     if (subArray[0].id === content.commentId) {
                         // Tạo bản sao mới của subArray và thêm content
                         return [...subArray, content];
@@ -292,7 +310,7 @@ const FullPost = () => {
     useEffect(() => {
         console.log(comments);
     }, [comments]);
-    
+
 
     if (loading) {
         return (
@@ -350,18 +368,18 @@ const FullPost = () => {
                         onClose={handleMenuClose}
                     >
                         {/* Lựa chọn báo cáo */}
-                        {currentUser.id !== post.author.id && (
-                            currentUser.role === "user" ? (
+                        {user.id !== post.author.id && (
+                            user.role === "user" ? (
                                 <MenuItem onClick={handleOpenDialog}>Report</MenuItem>
                             ) : (
                                 <MenuItem onClick={handleOpenPopup}>Xoá bài</MenuItem>
                             )
                         )}
-
-                        {/* Lựa chọn theo dõi */}
-                        {currentUser.id === post.author.id && <MenuItem onClick={handleEdit}>
-                            Chỉnh sửa
-                        </MenuItem>}
+                        {user.id === post.author.id &&
+                            <>
+                                <MenuItem onClick={handleOpenPopup}>Xoá bài</MenuItem>
+                                <MenuItem onClick={handleEdit}>Chỉnh sửa</MenuItem>
+                            </>}
                         <MenuItem onClick={handleFollow}>
                             {isFollowing ? "Bỏ theo dõi" : "Theo dõi"}
                         </MenuItem>
@@ -421,7 +439,7 @@ const FullPost = () => {
             <div className="commentSection">
                 {/* Viết bình luận mới */}
                 <WriteComment
-                    avatarUrl={currentUser.avatar}
+                    avatarUrl={user.avatar}
                     onSubmit={handleAddComment}
                 />
 
